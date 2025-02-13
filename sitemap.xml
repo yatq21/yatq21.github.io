@@ -2,6 +2,15 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>http://yatq.xyz/baidu_verify_codeva-lhVctE631N.html</loc>
+    
+    <lastmod>2025-02-13</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
     <loc>http://yatq.xyz/2025/02/02/Blog%E6%90%AD%E5%BB%BA%E4%B9%8B%E8%B7%AF/</loc>
     
     <lastmod>2025-02-13</lastmod>
@@ -151,14 +160,14 @@
   </url>
   
   <url>
-    <loc>http://yatq.xyz/tags/wsl/</loc>
+    <loc>http://yatq.xyz/tags/vscode/</loc>
     <lastmod>2025-02-13</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
-    <loc>http://yatq.xyz/tags/vscode/</loc>
+    <loc>http://yatq.xyz/tags/wsl/</loc>
     <lastmod>2025-02-13</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
