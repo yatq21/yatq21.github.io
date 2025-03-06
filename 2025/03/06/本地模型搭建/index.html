@@ -23,21 +23,22 @@
     var CONFIG = {"hostname":"yatq.xyz","root":"/","scheme":"Mist","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":true,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
   </script>
 
-  <meta name="description" content="在B站MIT的线代课评论区中，看到有人提到了此课程，于是带着好奇心去看了这门课。">
+  <meta name="description" content="本地模型的搭建我个人用Ollama+openUI来实现本地模型的搭建。下面详细说明具体细节。 详细步骤安装Ollama 这里贴一下Ollama的下载链接：https:&#x2F;&#x2F;ollama.com&#x2F;download 安装了启动程序之后先别着急安装，因为默认Ollama是安装在C盘的，而我想大多数人都不会想装在这里。 那么如何安装在其它盘符中呢？ 在要安装的目录下面新建文件夹并放入.exe文件，例如在E:">
 <meta property="og:type" content="article">
-<meta property="og:title" content="线性代数的本质（3B1B）听课笔记">
-<meta property="og:url" content="http://yatq.xyz/2020/07/26/%E7%BA%BF%E6%80%A7%E4%BB%A3%E6%95%B0%E7%9A%84%E6%9C%AC%E8%B4%A8%EF%BC%883B1B%EF%BC%89%E5%90%AC%E8%AF%BE%E7%AC%94%E8%AE%B0/index.html">
+<meta property="og:title" content="本地模型搭建">
+<meta property="og:url" content="http://yatq.xyz/2025/03/06/%E6%9C%AC%E5%9C%B0%E6%A8%A1%E5%9E%8B%E6%90%AD%E5%BB%BA/index.html">
 <meta property="og:site_name" content="幽暗天琴の小屋">
-<meta property="og:description" content="在B站MIT的线代课评论区中，看到有人提到了此课程，于是带着好奇心去看了这门课。">
+<meta property="og:description" content="本地模型的搭建我个人用Ollama+openUI来实现本地模型的搭建。下面详细说明具体细节。 详细步骤安装Ollama 这里贴一下Ollama的下载链接：https:&#x2F;&#x2F;ollama.com&#x2F;download 安装了启动程序之后先别着急安装，因为默认Ollama是安装在C盘的，而我想大多数人都不会想装在这里。 那么如何安装在其它盘符中呢？ 在要安装的目录下面新建文件夹并放入.exe文件，例如在E:">
 <meta property="og:locale" content="zh_CN">
-<meta property="article:published_time" content="2020-07-25T16:00:00.000Z">
-<meta property="article:modified_time" content="2025-03-06T06:36:34.905Z">
+<meta property="og:image" content="http://yatq.xyz/%E6%9C%AC%E5%9C%B0%E6%A8%A1%E5%9E%8B%E6%90%AD%E5%BB%BA%5Cimage.png">
+<meta property="article:published_time" content="2025-03-06T11:18:02.000Z">
+<meta property="article:modified_time" content="2025-03-06T13:30:32.664Z">
 <meta property="article:author" content="幽暗天琴">
-<meta property="article:tag" content="线性代数">
-<meta property="article:tag" content="3B1B">
+<meta property="article:tag" content="本地模型">
 <meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://yatq.xyz/%E6%9C%AC%E5%9C%B0%E6%A8%A1%E5%9E%8B%E6%90%AD%E5%BB%BA%5Cimage.png">
 
-<link rel="canonical" href="http://yatq.xyz/2020/07/26/%E7%BA%BF%E6%80%A7%E4%BB%A3%E6%95%B0%E7%9A%84%E6%9C%AC%E8%B4%A8%EF%BC%883B1B%EF%BC%89%E5%90%AC%E8%AF%BE%E7%AC%94%E8%AE%B0/">
+<link rel="canonical" href="http://yatq.xyz/2025/03/06/%E6%9C%AC%E5%9C%B0%E6%A8%A1%E5%9E%8B%E6%90%AD%E5%BB%BA/">
 
 
 <script id="page-configurations">
@@ -50,7 +51,7 @@
   };
 </script>
 
-  <title>线性代数的本质（3B1B）听课笔记 | 幽暗天琴の小屋</title>
+  <title>本地模型搭建 | 幽暗天琴の小屋</title>
   
 
 
@@ -175,7 +176,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://yatq.xyz/2020/07/26/%E7%BA%BF%E6%80%A7%E4%BB%A3%E6%95%B0%E7%9A%84%E6%9C%AC%E8%B4%A8%EF%BC%883B1B%EF%BC%89%E5%90%AC%E8%AF%BE%E7%AC%94%E8%AE%B0/">
+    <link itemprop="mainEntityOfPage" href="http://yatq.xyz/2025/03/06/%E6%9C%AC%E5%9C%B0%E6%A8%A1%E5%9E%8B%E6%90%AD%E5%BB%BA/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/daiwei.webp">
@@ -188,7 +189,7 @@
     </span>
       <header class="post-header">
         <h1 class="post-title" itemprop="name headline">
-          线性代数的本质（3B1B）听课笔记
+          本地模型搭建
         </h1>
 
         <div class="post-meta">
@@ -197,16 +198,10 @@
                 <i class="far fa-calendar"></i>
               </span>
               <span class="post-meta-item-text">发表于</span>
+              
 
-              <time title="创建时间：2020-07-26 00:00:00" itemprop="dateCreated datePublished" datetime="2020-07-26T00:00:00+08:00">2020-07-26</time>
+              <time title="创建时间：2025-03-06 19:18:02 / 修改时间：21:30:32" itemprop="dateCreated datePublished" datetime="2025-03-06T19:18:02+08:00">2025-03-06</time>
             </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2025-03-06 14:36:34" itemprop="dateModified" datetime="2025-03-06T14:36:34+08:00">2025-03-06</time>
-              </span>
 
           <br>
             <span class="post-meta-item" title="本文字数">
@@ -214,14 +209,14 @@
                 <i class="far fa-file-word"></i>
               </span>
                 <span class="post-meta-item-text">本文字数：</span>
-              <span>690</span>
+              <span>1.9k</span>
             </span>
             <span class="post-meta-item" title="阅读时长">
               <span class="post-meta-item-icon">
                 <i class="far fa-clock"></i>
               </span>
                 <span class="post-meta-item-text">阅读时长 &asymp;</span>
-              <span>1 分钟</span>
+              <span>2 分钟</span>
             </span>
 
         </div>
@@ -233,28 +228,27 @@
     <div class="post-body" itemprop="articleBody">
 
       
-        <p>在B站MIT的线代课评论区中，看到有人提到了此课程，于是带着好奇心去看了这门课。</p>
-<span id="more"></span>
-<h2 id="个人感受"><a href="#个人感受" class="headerlink" title="个人感受"></a>个人感受</h2><p>视频全程伴随着大量的图形动画，生动形象地解释了线代中诸如，矩阵、行列式、矩阵乘法、、零矩阵等相关概念的几何意义（本质），让我对线代有了更为清晰的理解和兴趣。强烈推荐你去听一下，相信你会对这些晦涩的概念有一个全新的认识！</p>
-<h2 id="视频地址"><a href="#视频地址" class="headerlink" title="视频地址"></a>视频地址</h2><p><a target="_blank" rel="noopener" href="https://www.bilibili.com/video/BV1ys411472E">线性代数的本质（3B1B）</a></p>
-<h2 id="笔记"><a href="#笔记" class="headerlink" title="笔记"></a>笔记</h2><h3 id="线性组合-张成空间"><a href="#线性组合-张成空间" class="headerlink" title="线性组合&amp;张成空间"></a>线性组合&amp;张成空间</h3><p>形如$a\vec{v}+b\vec{w}$的表达式，其中a、b为标量，$\vec{v}$、$\vec{w}$为向量，称为$\vec{v}$、$\vec{w}$的线性组合。<br>任意给定向量的线性组合的集合则称之为向量的张成空间（又名向量空间&#x2F;列空间）。</p>
-<h3 id="矩阵如同线性变换"><a href="#矩阵如同线性变换" class="headerlink" title="矩阵如同线性变换"></a>矩阵如同线性变换</h3><blockquote>
-<blockquote>
-<blockquote>
-<p>“变换”如同“函数”，但更为特殊,按时着某种运动。</p>
-</blockquote>
-</blockquote>
-</blockquote>
-<p><strong>什么是线性变换？</strong><br>需要符合两点条件：</p>
-<ol>
-<li>直线 -&gt; 直线</li>
-<li>原点 -&gt; 原点</li>
+        <h2 id="本地模型的搭建"><a href="#本地模型的搭建" class="headerlink" title="本地模型的搭建"></a>本地模型的搭建</h2><p>我个人用Ollama+openUI来实现本地模型的搭建。下面详细说明具体细节。</p>
+<h3 id="详细步骤"><a href="#详细步骤" class="headerlink" title="详细步骤"></a>详细步骤</h3><h4 id="安装Ollama"><a href="#安装Ollama" class="headerlink" title="安装Ollama"></a>安装Ollama</h4><ol>
+<li>这里贴一下Ollama的下载链接：<a target="_blank" rel="noopener" href="https://ollama.com/download">https://ollama.com/download</a><br> 安装了启动程序之后先别着急安装，因为默认Ollama是安装在C盘的，而我想大多数人都不会想装在这里。<br> <strong>那么如何安装在其它盘符中呢？</strong><ol>
+<li>在要安装的目录下面新建文件夹并放入.exe文件，例如在E:\Ollama下放入OllamaSetup.exe文件。在该目录下右键打开cmd&#x2F;powershell</li>
+<li>输入以下命令：<code>.\OllamaSetup.exe /DIR=E:\Ollama</code>&#x2F;DIR处值替换为自己的安装目录，正常安装即可。</li>
 </ol>
-<p>eg:<br>$v&#x3D;-1\vec{i}+2\vec{j}$ -&gt; $\vec{v’} &#x3D; -1\vec{i’} + 2\vec{j’}$，则这是一个线性变换。变换之后，v和v’ 之间的特定的线性组合关系仍然不变，也就是说，只要知道变化后的基向量，即可推出来变换后的v。<br>现在知道一个向量x,y, i’,j’，如何求x’,y’呢?</p>
-<p><strong>通常，我们将两个基向量放在一个2*2的格子中，这就是矩阵。</strong></p>
-<p>给定一个输入向量v，通过矩阵的线性变换，得到一个输入的结果向量w。</p>
-<p>![](线性代数的本质（3B1B）听课笔记&#x2F;屏幕截图 2025-03-05 211236.png)</p>
-<p>事实上，我们完全可以把矩阵看作一种法则一样的东西，例如：f()</p>
+</li>
+</ol>
+<h4 id="部署本地模型"><a href="#部署本地模型" class="headerlink" title="部署本地模型"></a>部署本地模型</h4><ol start="2">
+<li>在Ollama主页右上角的model界面中，搜索自己想要部署的模型，然后复制相关命令到命令行中即可,eg:<code>ollama run deepseek-r1</code></li>
+</ol>
+<h4 id="open-WebUI的安装与使用"><a href="#open-WebUI的安装与使用" class="headerlink" title="open WebUI的安装与使用"></a>open WebUI的安装与使用</h4><ol start="3">
+<li>首先安装Docker<br><strong>默认安装目录的替换</strong><br><img src="/%E6%9C%AC%E5%9C%B0%E6%A8%A1%E5%9E%8B%E6%90%AD%E5%BB%BA%5Cimage.png" alt="alt text"><br>同上面一样先不要运行安装程序，在<code>Docker Desktop Installer.exe</code>所在目录打开cmd输入<code>start /w &quot;&quot; &quot;Docker Desktop Installer.exe&quot; install --backend=wsl-2 --installation-dir=E:\docker --wsl-default- data-root=E:\wsl --accept-license</code>即可安装到指定目录中。</li>
+</ol>
+<h5 id="安装中遇到的问题："><a href="#安装中遇到的问题：" class="headerlink" title="安装中遇到的问题："></a>安装中遇到的问题：</h5><p>遇到了如下报错：<br><code>Unpacking failed: 文件“E:\docker\Docker Desktop Installer.exe”正由另一进程使用，因此该进程无法访问此文件。    在 Docker.Installer.InstallWorkflow.&lt;DoHandleD4WPackageAsync&gt;d__30.MoveNext() 位置 C:\workspaces\4.38.x\src\github.com\docker\pinata\win\src\Docker.Installer\InstallWorkflow.cs:行号 465 --- 引发异常的上一位置中堆栈跟踪的末尾 ---    在 System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()    在 System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)    在 Docker.Installer.InstallWorkflow.&lt;DoProcessAsync&gt;d__23.MoveNext() 位置 C:\workspaces\4.38.x\src\github.com\docker\pinata\win\src\Docker.Installer\InstallWorkflow.cs:行号 166</code><br>   在<a target="_blank" rel="noopener" href="https://github.com/docker/for-win/issues/14068">https://github.com/docker/for-win/issues/14068</a> 中找到了相关回答：</p>
+<ol>
+<li>如果卸载过docker可以把文件卸载干净，用清理软件清理干净，再重新安装</li>
+<li>确保安装包与安装路径不同，假如想把docker安装在D:Docker，那么安装包务必不要放在此文件夹</li>
+<li>确保只有一个安装程序在运行，以及打开任务管理器先结束其他docker相关进程，再尝试重新安装<br>经过我的尝试，确认是第二个问题，将安装包放在其他目录下，再次运行命令即可。<br>安装好Docker后，终端执行Open WebUI的安装命令：<code>docker run -d -p 3000:8080 --add-host=host.docker.internal:host-gateway -v open-webui:/app/backend/data --name open-webui --restart always ghcr.io/open-webui/open-webui:main </code><br>输入docker ps即可看到，映射在本地3000端口，访问127.0.0.1:3000即可。</li>
+</ol>
+<p>参考文章&#x2F;内容：<br><a target="_blank" rel="noopener" href="https://www.cnblogs.com/LaiYun/p/18696931">https://www.cnblogs.com/LaiYun/p/18696931</a><br><a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/21906535884">https://zhuanlan.zhihu.com/p/21906535884</a><br><a target="_blank" rel="noopener" href="https://github.com/docker/for-win/issues/14068">https://github.com/docker/for-win/issues/14068</a></p>
 
     </div>
 
@@ -270,7 +264,7 @@
   </li>
   <li class="post-copyright-link">
     <strong>本文链接：</strong>
-    <a href="http://yatq.xyz/2020/07/26/%E7%BA%BF%E6%80%A7%E4%BB%A3%E6%95%B0%E7%9A%84%E6%9C%AC%E8%B4%A8%EF%BC%883B1B%EF%BC%89%E5%90%AC%E8%AF%BE%E7%AC%94%E8%AE%B0/" title="线性代数的本质（3B1B）听课笔记">http://yatq.xyz/2020/07/26/线性代数的本质（3B1B）听课笔记/</a>
+    <a href="http://yatq.xyz/2025/03/06/%E6%9C%AC%E5%9C%B0%E6%A8%A1%E5%9E%8B%E6%90%AD%E5%BB%BA/" title="本地模型搭建">http://yatq.xyz/2025/03/06/本地模型搭建/</a>
   </li>
   <li class="post-copyright-license">
     <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
@@ -281,8 +275,7 @@
 
       <footer class="post-footer">
           <div class="post-tags">
-              <a href="/tags/%E7%BA%BF%E6%80%A7%E4%BB%A3%E6%95%B0/" rel="tag"># 线性代数</a>
-              <a href="/tags/3B1B/" rel="tag"># 3B1B</a>
+              <a href="/tags/%E6%9C%AC%E5%9C%B0%E6%A8%A1%E5%9E%8B/" rel="tag"># 本地模型</a>
           </div>
 
         
@@ -290,11 +283,11 @@
 
         
     <div class="post-nav">
-      <div class="post-nav-item"></div>
       <div class="post-nav-item">
-    <a href="/2025/02/02/Blog%E6%90%AD%E5%BB%BA%E4%B9%8B%E8%B7%AF/" rel="next" title="我的Blog搭建之路">
-      我的Blog搭建之路 <i class="fa fa-chevron-right"></i>
+    <a href="/2025/02/19/day-schedule_0/" rel="prev" title="每日计划">
+      <i class="fa fa-chevron-left"></i> 每日计划
     </a></div>
+      <div class="post-nav-item"></div>
     </div>
       </footer>
     
@@ -353,7 +346,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%AA%E4%BA%BA%E6%84%9F%E5%8F%97"><span class="nav-number">1.</span> <span class="nav-text">个人感受</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%A7%86%E9%A2%91%E5%9C%B0%E5%9D%80"><span class="nav-number">2.</span> <span class="nav-text">视频地址</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%AC%94%E8%AE%B0"><span class="nav-number">3.</span> <span class="nav-text">笔记</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%BA%BF%E6%80%A7%E7%BB%84%E5%90%88-%E5%BC%A0%E6%88%90%E7%A9%BA%E9%97%B4"><span class="nav-number">3.1.</span> <span class="nav-text">线性组合&amp;张成空间</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%9F%A9%E9%98%B5%E5%A6%82%E5%90%8C%E7%BA%BF%E6%80%A7%E5%8F%98%E6%8D%A2"><span class="nav-number">3.2.</span> <span class="nav-text">矩阵如同线性变换</span></a></li></ol></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%9C%AC%E5%9C%B0%E6%A8%A1%E5%9E%8B%E7%9A%84%E6%90%AD%E5%BB%BA"><span class="nav-number">1.</span> <span class="nav-text">本地模型的搭建</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%AF%A6%E7%BB%86%E6%AD%A5%E9%AA%A4"><span class="nav-number">1.1.</span> <span class="nav-text">详细步骤</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%AE%89%E8%A3%85Ollama"><span class="nav-number">1.1.1.</span> <span class="nav-text">安装Ollama</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E9%83%A8%E7%BD%B2%E6%9C%AC%E5%9C%B0%E6%A8%A1%E5%9E%8B"><span class="nav-number">1.1.2.</span> <span class="nav-text">部署本地模型</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#open-WebUI%E7%9A%84%E5%AE%89%E8%A3%85%E4%B8%8E%E4%BD%BF%E7%94%A8"><span class="nav-number">1.1.3.</span> <span class="nav-text">open WebUI的安装与使用</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#%E5%AE%89%E8%A3%85%E4%B8%AD%E9%81%87%E5%88%B0%E7%9A%84%E9%97%AE%E9%A2%98%EF%BC%9A"><span class="nav-number">1.1.3.1.</span> <span class="nav-text">安装中遇到的问题：</span></a></li></ol></li></ol></li></ol></li></ol></div>
       </div>
       <!--/noindex-->
 
