@@ -170,7 +170,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://yatq.xyz/2025/03/10/sqli-libs%E5%88%B7%E9%A2%98/">
+    <link itemprop="mainEntityOfPage" href="http://yatq.xyz/2025/03/20/upload-labs/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/daiwei.webp">
@@ -184,7 +184,7 @@
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
           
-            <a href="/2025/03/10/sqli-libs%E5%88%B7%E9%A2%98/" class="post-title-link" itemprop="url">sqli-libs刷题</a>
+            <a href="/2025/03/20/upload-labs/" class="post-title-link" itemprop="url">upload-labs</a>
         </h2>
 
         <div class="post-meta">
@@ -193,16 +193,10 @@
                 <i class="far fa-calendar"></i>
               </span>
               <span class="post-meta-item-text">发表于</span>
+              
 
-              <time title="创建时间：2025-03-10 20:34:54" itemprop="dateCreated datePublished" datetime="2025-03-10T20:34:54+08:00">2025-03-10</time>
+              <time title="创建时间：2025-03-20 04:52:34 / 修改时间：14:15:26" itemprop="dateCreated datePublished" datetime="2025-03-20T04:52:34+08:00">2025-03-20</time>
             </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2025-03-17 22:16:58" itemprop="dateModified" datetime="2025-03-17T22:16:58+08:00">2025-03-17</time>
-              </span>
 
           <br>
             <span class="post-meta-item" title="本文字数">
@@ -210,14 +204,14 @@
                 <i class="far fa-file-word"></i>
               </span>
                 <span class="post-meta-item-text">本文字数：</span>
-              <span>8.1k</span>
+              <span>1.9k</span>
             </span>
             <span class="post-meta-item" title="阅读时长">
               <span class="post-meta-item-icon">
                 <i class="far fa-clock"></i>
               </span>
                 <span class="post-meta-item-text">阅读时长 &asymp;</span>
-              <span>7 分钟</span>
+              <span>2 分钟</span>
             </span>
 
         </div>
@@ -229,15 +223,169 @@
     <div class="post-body" itemprop="articleBody">
 
       
-          <h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>花了两天时间，终于把sqli-lab前20关都刷完了！感觉之前只有朦胧的对sqli的印象，结果现在才知道我见过的只是get类型的union注入，最简单的那种（晕）。。。<br>了解和实践了很多注入手法，union，报错，延时，布尔…..前段时间面试实验室的时候其实还不了解就敢说自己懂（惭愧<br>《从0到1：CTFer成长之路》这本书我觉得很棒，希望能尽快看完！<br>我参考了很多师傅的wp以及相关文章，一并附在了文章结尾。那么，下面是我的题目总结，有一些没写或者简写，以及没有图片（还没想到怎样简化插入图片还能上传到网站的办法），如果观感不好请多担待。</p>
+          <h1 id="upload-labs靶场刷题个人总结"><a href="#upload-labs靶场刷题个人总结" class="headerlink" title="upload-labs靶场刷题个人总结"></a>upload-labs靶场刷题个人总结</h1><h2 id="文件上传基本思路"><a href="#文件上传基本思路" class="headerlink" title="文件上传基本思路"></a>文件上传基本思路</h2><p>一般是网站有相关的文件上传的地方，例如传图片文本之类，我们会尝试在这里绕过各种waf最终达到上传一个后门来达到连接服务器的目的。</p>
           <!--noindex-->
             <div class="post-button">
-              <a class="btn" href="/2025/03/10/sqli-libs%E5%88%B7%E9%A2%98/#more" rel="contents">
+              <a class="btn" href="/2025/03/20/upload-labs/#more" rel="contents">
                 阅读全文 &raquo;
               </a>
             </div>
           <!--/noindex-->
         
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://yatq.xyz/2025/03/18/ssti%E5%AD%A6%E4%B9%A0/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/daiwei.webp">
+      <meta itemprop="name" content="幽暗天琴">
+      <meta itemprop="description" content="每个时期即永恒, 每个瞬间即永恒">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="幽暗天琴の小屋">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2025/03/18/ssti%E5%AD%A6%E4%B9%A0/" class="post-title-link" itemprop="url">未命名</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2025-03-18 23:22:56 / 修改时间：23:23:53" itemprop="dateCreated datePublished" datetime="2025-03-18T23:22:56+08:00">2025-03-18</time>
+            </span>
+
+          <br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>80</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>1 分钟</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <p><a target="_blank" rel="noopener" href="https://www.cnblogs.com/bmjoker/p/13508538.html">https://www.cnblogs.com/bmjoker/p/13508538.html</a></p>
+<p><a target="_blank" rel="noopener" href="https://hello-ctf.com/hc-web/ssti">https://hello-ctf.com/hc-web/ssti</a></p>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://yatq.xyz/2025/03/18/%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E8%AF%BB%E5%8F%96%E6%BC%8F%E6%B4%9E/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/daiwei.webp">
+      <meta itemprop="name" content="幽暗天琴">
+      <meta itemprop="description" content="每个时期即永恒, 每个瞬间即永恒">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="幽暗天琴の小屋">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2025/03/18/%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E8%AF%BB%E5%8F%96%E6%BC%8F%E6%B4%9E/" class="post-title-link" itemprop="url">任意文件读取漏洞</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2025-03-18 04:24:22 / 修改时间：05:14:06" itemprop="dateCreated datePublished" datetime="2025-03-18T04:24:22+08:00">2025-03-18</time>
+            </span>
+
+          <br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>856</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>1 分钟</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h1 id="任意文件读取漏洞"><a href="#任意文件读取漏洞" class="headerlink" title="任意文件读取漏洞"></a>任意文件读取漏洞</h1><h2 id="敏感文件总结"><a href="#敏感文件总结" class="headerlink" title="敏感文件总结"></a>敏感文件总结</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">Linux：</span><br><span class="line">/proc/self/cmdline //当前进程</span><br><span class="line">/proc/self/environ //环境变量</span><br><span class="line">/etc/passwd // 账户信息</span><br><span class="line">/etc/shadow // 账户密码文件</span><br><span class="line">/etc/my.conf //mysql 配置文件</span><br><span class="line">/etc/httpd/conf/httpd.conf // Apache配置文件</span><br><span class="line">/usr/local/app/apache2/conf/httpd.conf //Apache2默认配置文件</span><br><span class="line">/usr/local/app/apache2/conf/extra/httpd-vhost.conf //虚拟网站配置</span><br><span class="line">/usr/local/app/php5/lib/php.ini //PHP相关配置</span><br><span class="line"></span><br><span class="line">Windows：</span><br><span class="line">C:\boot.ini //查看系统版本</span><br><span class="line">C:\Windows\System32\inetsrv\MetaBase.xml //IIS配置文件</span><br><span class="line">C:\Windows\repair\sam //存储系统初次安装的密码</span><br><span class="line">C:\Program Files\mysql\my.ini //Mysql配置</span><br><span class="line">C:\Program Files\mysql\data\mysql\user.MYD //Mysql root密码</span><br><span class="line">C:\Windows\php.ini //php配置信息</span><br></pre></td></tr></table></figure>
+
+<h2 id="php相关漏洞"><a href="#php相关漏洞" class="headerlink" title="php相关漏洞"></a>php相关漏洞</h2><h3 id="Wrapper机制"><a href="#Wrapper机制" class="headerlink" title="Wrapper机制"></a>Wrapper机制</h3><p> PHP 提供的文件打开方式不仅仅是简单的文件路径，而是通过文件流的方式进行操作。这些文件流可以被看作是一种特殊的协议，即 Wrapper 协议（PHP中有很多功能不同但形式相似的协议，统称为Wrapper）。</p>
+<h3 id="Filter机制"><a href="#Filter机制" class="headerlink" title="Filter机制"></a>Filter机制</h3><p><img src="/%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E8%AF%BB%E5%8F%96%E6%BC%8F%E6%B4%9E/%5Blab.magiconch.com%5D%5B90s-time-machine%5D-1740204622856.jpg" alt="[lab.magiconch.com][90s-time-machine]-1740204622856"></p>
+<p><del>（为什么莫名其妙插入了一张图片？原因是我终于找到能粘贴图片并直接放在同名文件夹中的方法了，太兴奋了！！！）</del></p>
+<p>参考文章：</p>
+<p><a target="_blank" rel="noopener" href="https://www.cnblogs.com/ikn0w1T/p/17299303.html">https://www.cnblogs.com/ikn0w1T/p/17299303.html</a></p>
+<p><a target="_blank" rel="noopener" href="https://www.cnblogs.com/zyfzjuer/articles/15408680.html">https://www.cnblogs.com/zyfzjuer/articles/15408680.html</a></p>
+
       
     </div>
 
@@ -446,7 +594,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2025-03-05 08:14:36" itemprop="dateModified" datetime="2025-03-05T08:14:36+08:00">2025-03-05</time>
+                <time title="修改时间：2025-03-18 00:20:30" itemprop="dateModified" datetime="2025-03-18T00:20:30+08:00">2025-03-18</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -885,94 +1033,11 @@
   
   
 
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://yatq.xyz/2020/07/26/%E7%BA%BF%E6%80%A7%E4%BB%A3%E6%95%B0%E7%9A%84%E6%9C%AC%E8%B4%A8%EF%BC%883B1B%EF%BC%89%E5%90%AC%E8%AF%BE%E7%AC%94%E8%AE%B0/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/daiwei.webp">
-      <meta itemprop="name" content="幽暗天琴">
-      <meta itemprop="description" content="每个时期即永恒, 每个瞬间即永恒">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="幽暗天琴の小屋">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2020/07/26/%E7%BA%BF%E6%80%A7%E4%BB%A3%E6%95%B0%E7%9A%84%E6%9C%AC%E8%B4%A8%EF%BC%883B1B%EF%BC%89%E5%90%AC%E8%AF%BE%E7%AC%94%E8%AE%B0/" class="post-title-link" itemprop="url">线性代数的本质（3B1B）听课笔记</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2020-07-26 00:00:00" itemprop="dateCreated datePublished" datetime="2020-07-26T00:00:00+08:00">2020-07-26</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2025-03-08 14:33:21" itemprop="dateModified" datetime="2025-03-08T14:33:21+08:00">2025-03-08</time>
-              </span>
-
-          <br>
-            <span class="post-meta-item" title="本文字数">
-              <span class="post-meta-item-icon">
-                <i class="far fa-file-word"></i>
-              </span>
-                <span class="post-meta-item-text">本文字数：</span>
-              <span>690</span>
-            </span>
-            <span class="post-meta-item" title="阅读时长">
-              <span class="post-meta-item-icon">
-                <i class="far fa-clock"></i>
-              </span>
-                <span class="post-meta-item-text">阅读时长 &asymp;</span>
-              <span>1 分钟</span>
-            </span>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <p>在B站MIT的线代课评论区中，看到有人提到了此课程，于是带着好奇心去看了这门课。</p>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/2020/07/26/%E7%BA%BF%E6%80%A7%E4%BB%A3%E6%95%B0%E7%9A%84%E6%9C%AC%E8%B4%A8%EF%BC%883B1B%EF%BC%89%E5%90%AC%E8%AF%BE%E7%AC%94%E8%AE%B0/#more" rel="contents">
-                阅读全文 &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
 
   
+  <nav class="pagination">
+    <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="extend next" rel="next" href="/page/2/"><i class="fa fa-angle-right" aria-label="下一页"></i></a>
+  </nav>
 
 
 
@@ -1039,7 +1104,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">9</span>
+          <span class="site-state-item-count">11</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -1052,7 +1117,7 @@
       <div class="site-state-item site-state-tags">
             <a href="/tags/">
           
-        <span class="site-state-item-count">9</span>
+        <span class="site-state-item-count">10</span>
         <span class="site-state-item-name">标签</span></a>
       </div>
   </nav>
@@ -1096,19 +1161,19 @@
     <span class="post-meta-item-icon">
       <i class="fa fa-chart-area"></i>
     </span>
-    <span title="站点总字数">23k</span>
+    <span title="站点总字数">18k</span>
     <span class="post-meta-divider">|</span>
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
-    <span title="站点阅读时长">21 分钟</span>
+    <span title="站点阅读时长">16 分钟</span>
 </div>
   <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://mist.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Mist</a> 强力驱动
   </div>
 
 <div class="theme-info">
   <div class="powered-by"></div>
-  <span class="post-count">博客全站共7.8k字</span>
+  <span class="post-count">博客全站共6.5k字</span>
 </div>
         
 
