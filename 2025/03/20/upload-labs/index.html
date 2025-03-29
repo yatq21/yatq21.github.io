@@ -44,7 +44,7 @@
 <meta property="og:image" content="http://yatq.xyz/upload-labs/1742559457977.png">
 <meta property="og:image" content="http://yatq.xyz/upload-labs/1742560288759.png">
 <meta property="article:published_time" content="2025-03-19T20:52:34.000Z">
-<meta property="article:modified_time" content="2025-03-21T13:16:39.785Z">
+<meta property="article:modified_time" content="2025-03-21T13:37:38.341Z">
 <meta property="article:author" content="幽暗天琴">
 <meta property="article:tag" content="CTF">
 <meta property="article:tag" content="刷题">
@@ -220,7 +220,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2025-03-21 21:16:39" itemprop="dateModified" datetime="2025-03-21T21:16:39+08:00">2025-03-21</time>
+                <time title="修改时间：2025-03-21 21:37:38" itemprop="dateModified" datetime="2025-03-21T21:37:38+08:00">2025-03-21</time>
               </span>
 
           <br>
@@ -366,6 +366,7 @@
 <p><strong>解决方案</strong>：</p>
 <p> <a target="_blank" rel="noopener" href="https://msb-netdisk.mashibing.com/share/035086ad3f62416ba49f3cb66c9313bc">https://msb-netdisk.mashibing.com/share/035086ad3f62416ba49f3cb66c9313bc</a> </p>
 <p>在这里有全部版本的php,下载之后选择对应版本拖到phpstudy的Extensions目录下的php下，然后重启phpstudy即可。</p>
+<p><a target="_blank" rel="noopener" href="https://blog.csdn.net/En_ter/article/details/141598053">phpstudy安装php5.2.17显示下载失败_php5.2.17下载不了 phpstudy-CSDN博客</a></p>
 <h2 id="Pass-12（白名单-00截断-POST）"><a href="#Pass-12（白名单-00截断-POST）" class="headerlink" title="Pass-12（白名单 %00截断 POST）"></a>Pass-12（白名单 <code>%00</code>截断 POST）</h2><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">$is_upload</span> = <span class="literal">false</span>;</span><br><span class="line"><span class="variable">$msg</span> = <span class="literal">null</span>;</span><br><span class="line"><span class="keyword">if</span>(<span class="keyword">isset</span>(<span class="variable">$_POST</span>[<span class="string">&#x27;submit&#x27;</span>]))&#123;</span><br><span class="line">    <span class="variable">$ext_arr</span> = <span class="keyword">array</span>(<span class="string">&#x27;jpg&#x27;</span>,<span class="string">&#x27;png&#x27;</span>,<span class="string">&#x27;gif&#x27;</span>);</span><br><span class="line">    <span class="variable">$file_ext</span> = <span class="title function_ invoke__">substr</span>(<span class="variable">$_FILES</span>[<span class="string">&#x27;upload_file&#x27;</span>][<span class="string">&#x27;name&#x27;</span>],<span class="title function_ invoke__">strrpos</span>(<span class="variable">$_FILES</span>[<span class="string">&#x27;upload_file&#x27;</span>][<span class="string">&#x27;name&#x27;</span>],<span class="string">&quot;.&quot;</span>)+<span class="number">1</span>);</span><br><span class="line">    <span class="keyword">if</span>(<span class="title function_ invoke__">in_array</span>(<span class="variable">$file_ext</span>,<span class="variable">$ext_arr</span>))&#123;</span><br><span class="line">        <span class="variable">$temp_file</span> = <span class="variable">$_FILES</span>[<span class="string">&#x27;upload_file&#x27;</span>][<span class="string">&#x27;tmp_name&#x27;</span>];</span><br><span class="line">        <span class="variable">$img_path</span> = <span class="variable">$_POST</span>[<span class="string">&#x27;save_path&#x27;</span>].<span class="string">&quot;/&quot;</span>.<span class="title function_ invoke__">rand</span>(<span class="number">10</span>, <span class="number">99</span>).<span class="title function_ invoke__">date</span>(<span class="string">&quot;YmdHis&quot;</span>).<span class="string">&quot;.&quot;</span>.<span class="variable">$file_ext</span>;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span>(<span class="title function_ invoke__">move_uploaded_file</span>(<span class="variable">$temp_file</span>,<span class="variable">$img_path</span>))&#123;</span><br><span class="line">            <span class="variable">$is_upload</span> = <span class="literal">true</span>;</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            <span class="variable">$msg</span> = <span class="string">&quot;上传失败&quot;</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        <span class="variable">$msg</span> = <span class="string">&quot;只允许上传.jpg|.png|.gif类型文件！&quot;</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 <p>遇上一关类似，但是变成了POST参数。</p>
@@ -395,6 +396,7 @@
 <p><a target="_blank" rel="noopener" href="https://wiki.bafangwy.com/doc/83/">PHPStudy下载PHP提示“当前网络不稳定，下载失败” - 软件工具使用类 - 八方网域</a></p>
 <p><a target="_blank" rel="noopener" href="https://blog.csdn.net/m0_47505062/article/details/123230308">关于upload-labs实验pass-11的00截断报上传出错的解决办法_uploadlabs显示上传出错-CSDN博客</a></p>
 <p><a target="_blank" rel="noopener" href="https://www.c6sec.com/index.php/archives/402/">upload-labs WP - 硝基苯摸鱼记录</a></p>
+<p><a target="_blank" rel="noopener" href="https://blog.csdn.net/En_ter/article/details/141598053">phpstudy安装php5.2.17显示下载失败_php5.2.17下载不了 phpstudy-CSDN博客</a></p>
 
     </div>
 
@@ -513,7 +515,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">12</span>
+          <span class="site-state-item-count">15</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -526,7 +528,7 @@
       <div class="site-state-item site-state-tags">
             <a href="/tags/">
           
-        <span class="site-state-item-count">14</span>
+        <span class="site-state-item-count">17</span>
         <span class="site-state-item-name">标签</span></a>
       </div>
   </nav>
@@ -570,19 +572,19 @@
     <span class="post-meta-item-icon">
       <i class="fa fa-chart-area"></i>
     </span>
-    <span title="站点总字数">45k</span>
+    <span title="站点总字数">48k</span>
     <span class="post-meta-divider">|</span>
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
-    <span title="站点阅读时长">41 分钟</span>
+    <span title="站点阅读时长">43 分钟</span>
 </div>
   <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://mist.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Mist</a> 强力驱动
   </div>
 
 <div class="theme-info">
   <div class="powered-by"></div>
-  <span class="post-count">博客全站共13.5k字</span>
+  <span class="post-count">博客全站共14.7k字</span>
 </div>
         
 
