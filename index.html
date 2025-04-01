@@ -115,6 +115,21 @@
     <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
 
   </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a>
+
+  </li>
         <li class="menu-item menu-item-archives">
 
     <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
@@ -228,7 +243,7 @@
 <h3 id="贪婪与非贪婪模式"><a href="#贪婪与非贪婪模式" class="headerlink" title="贪婪与非贪婪模式"></a>贪婪与非贪婪模式</h3><blockquote>
 <p> 通过在 *<strong><strong>、</strong>+</strong> 或 <strong>?</strong> 限定符之后放置 **?**，该表达式从”贪婪”表达式转换为”非贪婪”表达式或者最小匹配。 </p>
 </blockquote>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;h1&gt;RUNOOB-菜鸟教程&lt;/h1&gt;</span><br></pre></td></tr></table></figure>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">h1</span>&gt;</span>RUNOOB-菜鸟教程<span class="tag">&lt;/<span class="name">h1</span>&gt;</span></span><br></pre></td></tr></table></figure>
 
 <p>如果是用<code>/&lt;.*&gt;/</code>来匹配则会匹配上面的所有字符。而要想只匹配h1标签头，则可以在<strong>*</strong> 限定符之后放置 **?**，<code>/&lt;.*?&gt;/</code>这样即可。</p>
 <h1 id="Python3中的正则表达式"><a href="#Python3中的正则表达式" class="headerlink" title="Python3中的正则表达式"></a>Python3中的正则表达式</h1><p>在python中常常用<code>re</code>模块来处理正则。</p>
@@ -770,7 +785,7 @@
       
           <span id="more"></span>
 
-<h2 id="敏感文件总结"><a href="#敏感文件总结" class="headerlink" title="敏感文件总结"></a>敏感文件总结</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">Linux：</span><br><span class="line">/proc/self/cmdline //当前进程</span><br><span class="line">/proc/self/environ //环境变量</span><br><span class="line">/etc/passwd // 账户信息</span><br><span class="line">/etc/shadow // 账户密码文件</span><br><span class="line">/etc/my.conf //mysql 配置文件</span><br><span class="line">/etc/httpd/conf/httpd.conf // Apache配置文件</span><br><span class="line">/usr/local/app/apache2/conf/httpd.conf //Apache2默认配置文件</span><br><span class="line">/usr/local/app/apache2/conf/extra/httpd-vhost.conf //虚拟网站配置</span><br><span class="line">/usr/local/app/php5/lib/php.ini //PHP相关配置</span><br><span class="line"></span><br><span class="line">Windows：</span><br><span class="line">C:\boot.ini //查看系统版本</span><br><span class="line">C:\Windows\System32\inetsrv\MetaBase.xml //IIS配置文件</span><br><span class="line">C:\Windows\repair\sam //存储系统初次安装的密码</span><br><span class="line">C:\Program Files\mysql\my.ini //Mysql配置</span><br><span class="line">C:\Program Files\mysql\data\mysql\user.MYD //Mysql root密码</span><br><span class="line">C:\Windows\php.ini //php配置信息</span><br></pre></td></tr></table></figure>
+<h2 id="敏感文件总结"><a href="#敏感文件总结" class="headerlink" title="敏感文件总结"></a>敏感文件总结</h2><figure class="highlight dts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">Linux：</span><br><span class="line"><span class="keyword">/proc/</span>self/cmdline <span class="comment">//当前进程</span></span><br><span class="line"><span class="keyword">/proc/</span>self/environ <span class="comment">//环境变量</span></span><br><span class="line"><span class="keyword">/etc/</span>passwd <span class="comment">// 账户信息</span></span><br><span class="line"><span class="keyword">/etc/</span>shadow <span class="comment">// 账户密码文件</span></span><br><span class="line"><span class="keyword">/etc/</span>my.conf <span class="comment">//mysql 配置文件</span></span><br><span class="line"><span class="keyword">/etc/</span>httpd<span class="keyword">/conf/</span>httpd.conf <span class="comment">// Apache配置文件</span></span><br><span class="line"><span class="keyword">/usr/</span>local<span class="keyword">/app/</span>apache2<span class="keyword">/conf/</span>httpd.conf <span class="comment">//Apache2默认配置文件</span></span><br><span class="line"><span class="keyword">/usr/</span>local<span class="keyword">/app/</span>apache2<span class="keyword">/conf/</span>extra/httpd-vhost.conf <span class="comment">//虚拟网站配置</span></span><br><span class="line"><span class="keyword">/usr/</span>local<span class="keyword">/app/</span>php5<span class="keyword">/lib/</span>php.ini <span class="comment">//PHP相关配置</span></span><br><span class="line"></span><br><span class="line">Windows：</span><br><span class="line"><span class="symbol">C:</span>\boot.ini <span class="comment">//查看系统版本</span></span><br><span class="line"><span class="symbol">C:</span>\Windows\System32\inetsrv\MetaBase.xml <span class="comment">//IIS配置文件</span></span><br><span class="line"><span class="symbol">C:</span>\Windows\repair\sam <span class="comment">//存储系统初次安装的密码</span></span><br><span class="line"><span class="symbol">C:</span>\Program Files\mysql\my.ini <span class="comment">//Mysql配置</span></span><br><span class="line"><span class="symbol">C:</span>\Program Files\mysql\data\mysql\user.MYD <span class="comment">//Mysql root密码</span></span><br><span class="line"><span class="symbol">C:</span>\Windows\php.ini <span class="comment">//php配置信息</span></span><br></pre></td></tr></table></figure>
 
 <h2 id="php相关漏洞"><a href="#php相关漏洞" class="headerlink" title="php相关漏洞"></a>php相关漏洞</h2><h3 id="Wrapper机制"><a href="#Wrapper机制" class="headerlink" title="Wrapper机制"></a>Wrapper机制</h3><p> PHP 提供的文件打开方式不仅仅是简单的文件路径，而是通过文件流的方式进行操作。这些文件流可以被看作是一种特殊的协议，即 Wrapper 协议（PHP中有很多功能不同但形式相似的协议，统称为Wrapper）。</p>
 <h3 id="Filter机制"><a href="#Filter机制" class="headerlink" title="Filter机制"></a>Filter机制</h3><p><img src="/%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E8%AF%BB%E5%8F%96%E6%BC%8F%E6%B4%9E/%5Blab.magiconch.com%5D%5B90s-time-machine%5D-1740204622856.jpg" alt="[lab.magiconch.com][90s-time-machine]-1740204622856"></p>
@@ -778,85 +793,6 @@
 <p>参考文章：</p>
 <p><a target="_blank" rel="noopener" href="https://www.cnblogs.com/ikn0w1T/p/17299303.html">https://www.cnblogs.com/ikn0w1T/p/17299303.html</a></p>
 <p><a target="_blank" rel="noopener" href="https://www.cnblogs.com/zyfzjuer/articles/15408680.html">https://www.cnblogs.com/zyfzjuer/articles/15408680.html</a></p>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://yatq.xyz/2025/03/06/%E9%9B%86%E8%AE%AD1/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="y@7q">
-      <meta itemprop="description" content="每个时期即永恒, 每个瞬间即永恒">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="y@7qの小屋">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2025/03/06/%E9%9B%86%E8%AE%AD1/" class="post-title-link" itemprop="url">集训1</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2025-03-06 19:18:02" itemprop="dateCreated datePublished" datetime="2025-03-06T19:18:02+08:00">2025-03-06</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2025-03-20 16:35:43" itemprop="dateModified" datetime="2025-03-20T16:35:43+08:00">2025-03-20</time>
-              </span>
-
-          <br>
-            <span class="post-meta-item" title="本文字数">
-              <span class="post-meta-item-icon">
-                <i class="far fa-file-word"></i>
-              </span>
-                <span class="post-meta-item-text">本文字数：</span>
-              <span>19</span>
-            </span>
-            <span class="post-meta-item" title="阅读时长">
-              <span class="post-meta-item-icon">
-                <i class="far fa-clock"></i>
-              </span>
-                <span class="post-meta-item-text">阅读时长 &asymp;</span>
-              <span>1 分钟</span>
-            </span>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h2 id="上传fscan"><a href="#上传fscan" class="headerlink" title="上传fscan"></a>上传fscan</h2><p>蚁剑打开终端直接拖拽即可</p>
 
       
     </div>
@@ -962,7 +898,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://yatq.xyz/2025/02/19/day-schedule_0/">
+    <link itemprop="mainEntityOfPage" href="http://yatq.xyz/2025/03/06/%E9%9B%86%E8%AE%AD1/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.gif">
@@ -976,7 +912,7 @@
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
           
-            <a href="/2025/02/19/day-schedule_0/" class="post-title-link" itemprop="url">每日计划</a>
+            <a href="/2025/03/06/%E9%9B%86%E8%AE%AD1/" class="post-title-link" itemprop="url">集训1</a>
         </h2>
 
         <div class="post-meta">
@@ -986,24 +922,15 @@
               </span>
               <span class="post-meta-item-text">发表于</span>
 
-              <time title="创建时间：2025-02-19 12:07:20" itemprop="dateCreated datePublished" datetime="2025-02-19T12:07:20+08:00">2025-02-19</time>
+              <time title="创建时间：2025-03-06 19:18:02" itemprop="dateCreated datePublished" datetime="2025-03-06T19:18:02+08:00">2025-03-06</time>
             </span>
               <span class="post-meta-item">
                 <span class="post-meta-item-icon">
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2025-03-18 00:20:30" itemprop="dateModified" datetime="2025-03-18T00:20:30+08:00">2025-03-18</time>
+                <time title="修改时间：2025-03-20 16:35:43" itemprop="dateModified" datetime="2025-03-20T16:35:43+08:00">2025-03-20</time>
               </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/%E6%97%A5%E8%AE%A1%E5%88%92/" itemprop="url" rel="index"><span itemprop="name">日计划</span></a>
-                </span>
-            </span>
 
           <br>
             <span class="post-meta-item" title="本文字数">
@@ -1011,14 +938,14 @@
                 <i class="far fa-file-word"></i>
               </span>
                 <span class="post-meta-item-text">本文字数：</span>
-              <span>2.4k</span>
+              <span>19</span>
             </span>
             <span class="post-meta-item" title="阅读时长">
               <span class="post-meta-item-icon">
                 <i class="far fa-clock"></i>
               </span>
                 <span class="post-meta-item-text">阅读时长 &asymp;</span>
-              <span>2 分钟</span>
+              <span>1 分钟</span>
             </span>
 
         </div>
@@ -1030,16 +957,93 @@
     <div class="post-body" itemprop="articleBody">
 
       
-          <p><strong>注：</strong></p>
-<ol>
-<li><strong>切实完成的，只需打勾</strong></li>
-<li><strong>由于时间安排问题或其他原因未完成的，不打勾或者打勾并划线</strong></li>
-<li><strong>每日总结并优化后一天的安排</strong></li>
-</ol>
-<h1 id="1-Day-2025-02-19"><a href="#1-Day-2025-02-19" class="headerlink" title="1 Day(2025-02-19)"></a>1 Day(2025-02-19)</h1><h2 id="Important-mission"><a href="#Important-mission" class="headerlink" title="Important mission:"></a>Important mission:</h2>
+          <h2 id="上传fscan"><a href="#上传fscan" class="headerlink" title="上传fscan"></a>上传fscan</h2><p>蚁剑打开终端直接拖拽即可</p>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://yatq.xyz/2025/02/13/VScode%E4%B8%ADcopilot%E4%BB%A3%E7%A0%81%E6%8F%90%E7%A4%BA%E5%A6%82%E4%BD%95%E5%85%B3%E9%97%AD%E5%92%8C%E5%BC%80%E5%90%AF/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="y@7q">
+      <meta itemprop="description" content="每个时期即永恒, 每个瞬间即永恒">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="y@7qの小屋">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2025/02/13/VScode%E4%B8%ADcopilot%E4%BB%A3%E7%A0%81%E6%8F%90%E7%A4%BA%E5%A6%82%E4%BD%95%E5%85%B3%E9%97%AD%E5%92%8C%E5%BC%80%E5%90%AF/" class="post-title-link" itemprop="url">VScode中copilot代码提示如何关闭和开启</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2025-02-13 17:34:19 / 修改时间：18:11:22" itemprop="dateCreated datePublished" datetime="2025-02-13T17:34:19+08:00">2025-02-13</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E9%97%AE%E9%A2%98%E6%9D%82%E9%A1%B9/" itemprop="url" rel="index"><span itemprop="name">问题杂项</span></a>
+                </span>
+            </span>
+
+          <br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>169</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>1 分钟</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <p>​	 在我有一次手贱关闭了copilot代码补全之后想重新开启便遇到了此问题。</p>
+<h5 id="解决方案："><a href="#解决方案：" class="headerlink" title="解决方案："></a>解决方案：</h5>
           <!--noindex-->
             <div class="post-button">
-              <a class="btn" href="/2025/02/19/day-schedule_0/#more" rel="contents">
+              <a class="btn" href="/2025/02/13/VScode%E4%B8%ADcopilot%E4%BB%A3%E7%A0%81%E6%8F%90%E7%A4%BA%E5%A6%82%E4%BD%95%E5%85%B3%E9%97%AD%E5%92%8C%E5%BC%80%E5%90%AF/#more" rel="contents">
                 阅读全文 &raquo;
               </a>
             </div>
@@ -1128,18 +1132,20 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">15</span>
+          <span class="site-state-item-count">14</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
       <div class="site-state-item site-state-categories">
             <a href="/categories/">
-        <span class="site-state-item-count">3</span>
+          
+        <span class="site-state-item-count">2</span>
         <span class="site-state-item-name">分类</span></a>
       </div>
       <div class="site-state-item site-state-tags">
             <a href="/tags/">
-        <span class="site-state-item-count">17</span>
+          
+        <span class="site-state-item-count">16</span>
         <span class="site-state-item-name">标签</span></a>
       </div>
   </nav>
@@ -1175,12 +1181,12 @@
     <span class="post-meta-item-icon">
       <i class="fa fa-chart-area"></i>
     </span>
-    <span title="站点总字数">48k</span>
+    <span title="站点总字数">45k</span>
     <span class="post-meta-divider">|</span>
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
-    <span title="站点阅读时长">43 分钟</span>
+    <span title="站点阅读时长">41 分钟</span>
 </div>
   <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://muse.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a> 强力驱动
   </div>
