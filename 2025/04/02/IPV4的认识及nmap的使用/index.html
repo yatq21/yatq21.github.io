@@ -20,19 +20,26 @@
     var CONFIG = {"hostname":"yatq.xyz","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"right","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
   </script>
 
-  <meta name="description" content="心不畏死，踏屍前行">
-<meta property="og:type" content="website">
-<meta property="og:title" content="分类">
-<meta property="og:url" content="http://yatq.xyz/categories/index.html">
+  <meta name="description" content="IPv4的认识IPv4Internet Protocol version 4，缩写：IPv4，又称互联网通信协议第四版。ipv4有四段8bit，共32bit的二进制字符组成，而我们一般见到的ip地址则一般被写作点分十进制，例如一个最常见的ip：192.168.1.1，他的二进制形式为：11000000.10101000.00000001.00000001。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="IPV4的认识及nmap的使用">
+<meta property="og:url" content="http://yatq.xyz/2025/04/02/IPV4%E7%9A%84%E8%AE%A4%E8%AF%86%E5%8F%8Anmap%E7%9A%84%E4%BD%BF%E7%94%A8/index.html">
 <meta property="og:site_name" content="y@7q">
-<meta property="og:description" content="心不畏死，踏屍前行">
+<meta property="og:description" content="IPv4的认识IPv4Internet Protocol version 4，缩写：IPv4，又称互联网通信协议第四版。ipv4有四段8bit，共32bit的二进制字符组成，而我们一般见到的ip地址则一般被写作点分十进制，例如一个最常见的ip：192.168.1.1，他的二进制形式为：11000000.10101000.00000001.00000001。">
 <meta property="og:locale" content="zh_CN">
-<meta property="article:published_time" content="2025-02-01T12:30:28.000Z">
-<meta property="article:modified_time" content="2025-02-01T12:34:10.351Z">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/yatq21/Pictures@master/Blog/study/image-20250402212113381.png">
+<meta property="og:image" content="https://saucer-man.com/usr/uploads/sina/5cc5cfbd8cbb6.jpg">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/yatq21/Pictures@master/Blog/study/image-20250402220346114.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/yatq21/Pictures@master/Blog/study/image-20250402220813428.png">
+<meta property="article:published_time" content="2025-04-02T13:03:15.200Z">
+<meta property="article:modified_time" content="2025-04-03T13:22:47.835Z">
 <meta property="article:author" content="y@7q">
+<meta property="article:tag" content="ipv4">
+<meta property="article:tag" content="nmap">
 <meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://cdn.jsdelivr.net/gh/yatq21/Pictures@master/Blog/study/image-20250402212113381.png">
 
-<link rel="canonical" href="http://yatq.xyz/categories/">
+<link rel="canonical" href="http://yatq.xyz/2025/04/02/IPV4%E7%9A%84%E8%AE%A4%E8%AF%86%E5%8F%8Anmap%E7%9A%84%E4%BD%BF%E7%94%A8/">
 
 
 <script id="page-configurations">
@@ -40,13 +47,12 @@
   CONFIG.page = {
     sidebar: "",
     isHome : false,
-    isPost : false,
+    isPost : true,
     lang   : 'zh-CN'
   };
 </script>
 
-  <title>分类 | y@7q
-</title>
+  <title>IPV4的认识及nmap的使用 | y@7q</title>
   
 
 
@@ -158,51 +164,151 @@
       <div class="main-inner">
         <div class="content-wrap">
           
-  
-  
 
-          <div class="content page posts-expand">
+          <div class="content post posts-expand">
             
 
     
-    
-    
-    <div class="post-block" lang="zh-CN">
-      <header class="post-header">
-
-<h1 class="post-title" itemprop="name headline">分类
-</h1>
-
-<div class="post-meta">
   
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://yatq.xyz/2025/04/02/IPV4%E7%9A%84%E8%AE%A4%E8%AF%86%E5%8F%8Anmap%E7%9A%84%E4%BD%BF%E7%94%A8/">
 
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/wz.jpg">
+      <meta itemprop="name" content="y@7q">
+      <meta itemprop="description" content="心不畏死，踏屍前行">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="y@7q">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          IPV4的认识及nmap的使用
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2025-04-02 21:03:15" itemprop="dateCreated datePublished" datetime="2025-04-02T21:03:15+08:00">2025-04-02</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2025-04-03 21:22:47" itemprop="dateModified" datetime="2025-04-03T21:22:47+08:00">2025-04-03</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/" itemprop="url" rel="index"><span itemprop="name">计算机网络</span></a>
+                </span>
+            </span>
+
+          
+            <span class="post-meta-item" title="阅读次数" id="busuanzi_container_page_pv" style="display: none;">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span id="busuanzi_value_page_pv"></span>
+            </span><br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>614</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>1 分钟</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h1 id="IPv4的认识"><a href="#IPv4的认识" class="headerlink" title="IPv4的认识"></a>IPv4的认识</h1><h2 id="IPv4"><a href="#IPv4" class="headerlink" title="IPv4"></a>IPv4</h2><p><strong>I</strong>nternet <strong>P</strong>rotocol <strong>v</strong>ersion <strong>4</strong>，缩写：<strong>IPv4</strong>，又称<strong>互联网通信协议第四版</strong>。ipv4有四段8bit，共32bit的二进制字符组成，而我们一般见到的ip地址则一般被写作<a target="_blank" rel="noopener" href="https://zh.wikipedia.org/wiki/%E7%82%B9%E5%88%86%E5%8D%81%E8%BF%9B%E5%88%B6">点分十进制</a>，例如一个最常见的ip：<code>192.168.1.1</code>，他的二进制形式为：<code>11000000.10101000.00000001.00000001</code>。</p>
+<span id="more"></span>
+
+<h2 id="八位二进制与十进制的转化规律"><a href="#八位二进制与十进制的转化规律" class="headerlink" title="八位二进制与十进制的转化规律"></a>八位二进制与十进制的转化规律</h2><p><img src="https://cdn.jsdelivr.net/gh/yatq21/Pictures@master/Blog/study/image-20250402212113381.png" alt="image-20250402212113381"></p>
+<p>根据图片显示，2的n次方所对应的二进制数位置均恰好为1，而<code>128+64+32+16+8+4+2+1</code>恰好等于<code>255</code>。拿上面的IP中168举例，他就对应：<code>128+0+32+0+8+0+0+0</code>将对应的位置改为1，即可得到对应的二进制形式：<code>10101000</code>。</p>
+<h2 id="网络号与主机号"><a href="#网络号与主机号" class="headerlink" title="网络号与主机号"></a>网络号与主机号</h2><p><img src="https://saucer-man.com/usr/uploads/sina/5cc5cfbd8cbb6.jpg" alt="ip address"></p>
+<p>通常用前面几位称为网络号，后面的为主机号，而根据位数的占比又可以分为A,B,C几大类。目前大量使用的是A、B、C三类地址。</p>
+<h2 id="子网掩码"><a href="#子网掩码" class="headerlink" title="子网掩码"></a>子网掩码</h2><p>那么如何指定网络号和主机号的分界呢？这里就要说到子网掩码了，</p>
+<p><img src="https://cdn.jsdelivr.net/gh/yatq21/Pictures@master/Blog/study/image-20250402220346114.png" alt="image-20250402220346114"></p>
+<p>先把这些十进制的IP地址转换为二进制 ，我们将不变的位置记作1表示锁定，剩下的用0填补，再转换为十进制，于是就得到了一串划分网络号和主机号的数字，我们称作<strong>子网掩码</strong>。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/yatq21/Pictures@master/Blog/study/image-20250402220813428.png" alt="image-20250402220813428"></p>
+<p>但这还是有点麻烦，于是有了更为简单的表达形式，称为“CIDR表示法”。**我们用<code>/</code>加上前面1的个数，例如<code>/16</code>表示前面16bit为网络码。</p>
+<p>参考资料：</p>
+<p><a target="_blank" rel="noopener" href="https://zh.wikipedia.org/wiki/IPv4">IPv4 - 维基百科，自由的百科全书</a></p>
+<p><a target="_blank" rel="noopener" href="https://www.bilibili.com/video/BV1xu411f7UW/?spm_id_from=333.1007.top_right_bar_window_history.content.click&vd_source=b2effd0e83eadb128c29a86f4543ee15">IPv4地址和子网掩码_哔哩哔哩_bilibili</a></p>
+
+    </div>
+
+    
+    
+    
+        
+
+<div>
+<ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>本文作者： </strong>y@7q
+  </li>
+  <li class="post-copyright-link">
+    <strong>本文链接：</strong>
+    <a href="http://yatq.xyz/2025/04/02/IPV4%E7%9A%84%E8%AE%A4%E8%AF%86%E5%8F%8Anmap%E7%9A%84%E4%BD%BF%E7%94%A8/" title="IPV4的认识及nmap的使用">http://yatq.xyz/2025/04/02/IPV4的认识及nmap的使用/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
 </div>
 
-</header>
 
-      
-      
-      
-      <div class="post-body">
-          <div class="category-all-page">
-            <div class="category-all-title">
-              目前共计 5 个分类
-            </div>
-            <div class="category-all">
-              <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/CTF%E6%80%BB%E7%BB%93/">CTF总结</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/math/">math</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86%E6%90%AD%E5%BB%BA/">基础知识搭建</a><span class="category-list-count">4</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/">计算机网络</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E9%97%AE%E9%A2%98%E6%9D%82%E9%A1%B9/">问题杂项</a><span class="category-list-count">1</span></li></ul>
-            </div>
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/ipv4/" rel="tag"># ipv4</a>
+              <a href="/tags/nmap/" rel="tag"># nmap</a>
           </div>
-        
-      </div>
-      
-      
-      
-    </div>
-    
 
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2025/04/01/xss%E5%AD%A6%E4%B9%A0/" rel="prev" title="关于xss漏洞的学习">
+      <i class="fa fa-chevron-left"></i> 关于xss漏洞的学习
+    </a></div>
+      <div class="post-nav-item"></div>
+    </div>
+      </footer>
     
-    
-    
+  </article>
+  
+  
+  
+
 
 
           </div>
@@ -253,6 +359,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#IPv4%E7%9A%84%E8%AE%A4%E8%AF%86"><span class="nav-number">1.</span> <span class="nav-text">IPv4的认识</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#IPv4"><span class="nav-number">1.1.</span> <span class="nav-text">IPv4</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%85%AB%E4%BD%8D%E4%BA%8C%E8%BF%9B%E5%88%B6%E4%B8%8E%E5%8D%81%E8%BF%9B%E5%88%B6%E7%9A%84%E8%BD%AC%E5%8C%96%E8%A7%84%E5%BE%8B"><span class="nav-number">1.2.</span> <span class="nav-text">八位二进制与十进制的转化规律</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%BD%91%E7%BB%9C%E5%8F%B7%E4%B8%8E%E4%B8%BB%E6%9C%BA%E5%8F%B7"><span class="nav-number">1.3.</span> <span class="nav-text">网络号与主机号</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AD%90%E7%BD%91%E6%8E%A9%E7%A0%81"><span class="nav-number">1.4.</span> <span class="nav-text">子网掩码</span></a></li></ol></li></ol></div>
       </div>
       <!--/noindex-->
 
