@@ -162,6 +162,99 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://yatq.xyz/2025/04/04/Linux%E7%9B%B8%E5%85%B3%E6%93%8D%E4%BD%9C%E6%80%BB%E7%BB%93/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/wz.jpg">
+      <meta itemprop="name" content="y@7q">
+      <meta itemprop="description" content="心不畏死，踏屍前行">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="y@7q">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2025/04/04/Linux%E7%9B%B8%E5%85%B3%E6%93%8D%E4%BD%9C%E6%80%BB%E7%BB%93/" class="post-title-link" itemprop="url">Linux相关操作总结</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2025-04-04 11:23:13 / 修改时间：13:03:35" itemprop="dateCreated datePublished" datetime="2025-04-04T11:23:13+08:00">2025-04-04</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86%E6%90%AD%E5%BB%BA/" itemprop="url" rel="index"><span itemprop="name">基础知识搭建</span></a>
+                </span>
+            </span>
+
+          <br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>584</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>1 分钟</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h1 id="Linux相关操作总结"><a href="#Linux相关操作总结" class="headerlink" title="Linux相关操作总结"></a>Linux相关操作总结</h1><p>我会在这里总结一些Linux操作上的一些常用但我不熟的操作，用来查阅和回忆。</p>
+<h2 id="grep全局搜索"><a href="#grep全局搜索" class="headerlink" title="grep全局搜索"></a>grep全局搜索</h2><p>可以用<code>grep -r &quot;关键字&quot;</code>来进行基于关键字的全局搜索相关行。我从<a target="_blank" rel="noopener" href="https://1cepeak.cn/posts/szzg2025-datasecurity-writeup/#%E6%95%B0%E6%8D%AE%E7%A4%BE%E5%B7%A5">2025数字中国创新大赛数字安全赛道｜数据安全产业积分争夺赛初赛Writeup - 1cePeak</a>这篇文章中学到的。同时可以和find命令结合使用提高效率，先根据文件名搜出所有文件，再进行筛选。例如：<code>find -name / &quot;*.html&quot; | grep -r &quot;张华强&quot;</code>。</p>
+<h2 id="chmod权限管理"><a href="#chmod权限管理" class="headerlink" title="chmod权限管理"></a>chmod权限管理</h2><h3 id="Linux文件权限"><a href="#Linux文件权限" class="headerlink" title="Linux文件权限"></a>Linux文件权限</h3><p><img src="https://cdn.jsdelivr.net/gh/yatq21/Pictures@master/Blog/study/ipcjszt20190119-04.jpg" alt="img"></p>
+<p>图源：<a target="_blank" rel="noopener" href="https://www.zlg.cn/ipc/article/detail/id/953.html">【Linux学习小技巧】浅析linux权限管理-广州致远电子股份有限公司</a></p>
+<p>使用<code>ls -l</code>即可查看文件的权限详情，最右边的d为<strong>directory（目录）</strong>。接下来每三个一组，分别是，文件创建者，创建者所在组，其他人员（管理员）的权限<code>r-&gt;read w-&gt;write x-&gt;execute</code>。接下来是用户名和组名。在<code>/etc/passwd</code>和<code>/etc/group</code>目录下可以看到所有用户和用户组的权限。</p>
+<h3 id="权限管理"><a href="#权限管理" class="headerlink" title="权限管理"></a>权限管理</h3><p>用<code>chmod</code>命令可以来设置这些权限</p>
+<p><img src="https://cdn.jsdelivr.net/gh/yatq21/Pictures@master/Blog/study/ipcjszt20190119-06.jpg" alt="img"></p>
+<p><code>u/g/o</code>:即user&#x2F;group&#x2F;other</p>
+<p><code>+/-</code>:加减权限</p>
+<p>另外还可以用数字来代替：</p>
+<p><img src="https://cdn.jsdelivr.net/gh/yatq21/Pictures@master/Blog/study/ipcjszt20190119-07.jpg" alt="ipcjszt20190119-07"></p>
+<p>r、w、x对应为数字4、2、1，用数字之和代表该组权限值，比如rwx可用 7 表示。</p>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="http://yatq.xyz/2025/04/02/IPV4%E7%9A%84%E8%AE%A4%E8%AF%86%E5%8F%8Anmap%E7%9A%84%E4%BD%BF%E7%94%A8/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -288,7 +381,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2025-04-03 23:02:45" itemprop="dateModified" datetime="2025-04-03T23:02:45+08:00">2025-04-03</time>
+                <time title="修改时间：2025-04-05 12:31:10" itemprop="dateModified" datetime="2025-04-05T12:31:10+08:00">2025-04-05</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -306,14 +399,14 @@
                 <i class="far fa-file-word"></i>
               </span>
                 <span class="post-meta-item-text">本文字数：</span>
-              <span>1.2k</span>
+              <span>5.1k</span>
             </span>
             <span class="post-meta-item" title="阅读时长">
               <span class="post-meta-item-icon">
                 <i class="far fa-clock"></i>
               </span>
                 <span class="post-meta-item-text">阅读时长 &asymp;</span>
-              <span>1 分钟</span>
+              <span>5 分钟</span>
             </span>
 
         </div>
@@ -325,7 +418,7 @@
     <div class="post-body" itemprop="articleBody">
 
       
-          <h1 id="xss的认识和学习"><a href="#xss的认识和学习" class="headerlink" title="xss的认识和学习"></a><code>xss</code>的认识和学习</h1><p><code>xss</code>平台：<a target="_blank" rel="noopener" href="https://xssaq.com/">XSS平台-XSS测试网站-仅用于安全免费测试</a></p>
+          <h1 id="xss的认识和学习"><a href="#xss的认识和学习" class="headerlink" title="xss的认识和学习"></a><code>xss</code>的认识和学习</h1><p><code>xss</code>平台：<a target="_blank" rel="noopener" href="https://xssaq.com/">XSS平台-XSS测试网站-仅用于安全免费测试</a>（有时候不太好用，推荐用服务器）</p>
 <p>跨站脚本（Cross-Site Scripting，XSS）是一种经常出现在 WEB 应用程序中的计算机安全漏洞，是由于 WEB 应用程序对用户的输入过滤不足而产生的。<strong>攻击者利用网站漏洞把恶意的脚本代码注入到网页中，当其他用户浏览这些网页时，就会执行其中的恶意代码，对受害用户可能采取 Cookies 资料窃取、会话劫持、钓鱼欺骗等各种攻击。</strong></p>
 <p>一般的，<code>xss</code>攻击会分为三种情况，危害程度从低到高分别是：<strong>反射型</strong>、<strong>持久型</strong>、<strong>DOM型</strong>。</p>
           <!--noindex-->
@@ -741,7 +834,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2025-04-03 21:28:40" itemprop="dateModified" datetime="2025-04-03T21:28:40+08:00">2025-04-03</time>
+                <time title="修改时间：2025-04-04 15:31:10" itemprop="dateModified" datetime="2025-04-04T15:31:10+08:00">2025-04-04</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -979,92 +1072,6 @@
   
   
 
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://yatq.xyz/2025/03/06/%E6%9C%AC%E5%9C%B0%E6%A8%A1%E5%9E%8B%E6%90%AD%E5%BB%BA/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/wz.jpg">
-      <meta itemprop="name" content="y@7q">
-      <meta itemprop="description" content="心不畏死，踏屍前行">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="y@7q">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2025/03/06/%E6%9C%AC%E5%9C%B0%E6%A8%A1%E5%9E%8B%E6%90%AD%E5%BB%BA/" class="post-title-link" itemprop="url">本地模型搭建</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2025-03-06 19:18:02" itemprop="dateCreated datePublished" datetime="2025-03-06T19:18:02+08:00">2025-03-06</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2025-03-17 11:42:28" itemprop="dateModified" datetime="2025-03-17T11:42:28+08:00">2025-03-17</time>
-              </span>
-
-          <br>
-            <span class="post-meta-item" title="本文字数">
-              <span class="post-meta-item-icon">
-                <i class="far fa-file-word"></i>
-              </span>
-                <span class="post-meta-item-text">本文字数：</span>
-              <span>1.9k</span>
-            </span>
-            <span class="post-meta-item" title="阅读时长">
-              <span class="post-meta-item-icon">
-                <i class="far fa-clock"></i>
-              </span>
-                <span class="post-meta-item-text">阅读时长 &asymp;</span>
-              <span>2 分钟</span>
-            </span>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h2 id="本地模型的搭建"><a href="#本地模型的搭建" class="headerlink" title="本地模型的搭建"></a>本地模型的搭建</h2><p>我个人用Ollama+openUI来实现本地模型的搭建。下面详细说明具体细节。</p>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/2025/03/06/%E6%9C%AC%E5%9C%B0%E6%A8%A1%E5%9E%8B%E6%90%AD%E5%BB%BA/#more" rel="contents">
-                阅读全文 &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
 
   
   <nav class="pagination">
@@ -1136,7 +1143,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">13</span>
+          <span class="site-state-item-count">14</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -1149,7 +1156,7 @@
       <div class="site-state-item site-state-tags">
             <a href="/tags/">
           
-        <span class="site-state-item-count">16</span>
+        <span class="site-state-item-count">18</span>
         <span class="site-state-item-name">标签</span></a>
       </div>
   </nav>
@@ -1196,12 +1203,12 @@
     <span class="post-meta-item-icon">
       <i class="fa fa-chart-area"></i>
     </span>
-    <span title="站点总字数">47k</span>
+    <span title="站点总字数">51k</span>
     <span class="post-meta-divider">|</span>
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
-    <span title="站点阅读时长">42 分钟</span>
+    <span title="站点阅读时长">47 分钟</span>
 </div>
   <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://pisces.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Pisces</a> 强力驱动
   </div>
@@ -1260,6 +1267,8 @@ setInterval("createtime()",250);
   </div>
 
   
+  
+  <script color='0,0,255' opacity='0.5' zIndex='-1' count='99' src="/lib/canvas-nest/canvas-nest.min.js"></script>
   <script src="/lib/anime.min.js"></script>
   <script src="/lib/velocity/velocity.min.js"></script>
   <script src="/lib/velocity/velocity.ui.min.js"></script>
