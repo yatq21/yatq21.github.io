@@ -20,30 +20,48 @@
     var CONFIG = {"hostname":"yatq.xyz","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"right","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
   </script>
 
-  <meta name="description" content="心不畏死，踏屍前行">
-<meta property="og:type" content="website">
-<meta property="og:title" content="y@7q">
-<meta property="og:url" content="http://yatq.xyz/index.html">
+  <meta name="description" content="[TOC] SSRF(Server-Side Request Forgery)概述SSRF(Server-Side Request Forgery:服务器端请求伪造),字面意思来理解就是：攻击者通过一些手段来达到伪装了一个由服务端对服务器所在内网发起的恶意请求。 也因此，一般情况下，SSRF攻击的目标是从外网无法访问的内部系统。 形成原理及危害大多是因为服务端提供了可以从其他服务器获取数据的功能，">
+<meta property="og:type" content="article">
+<meta property="og:title" content="SSRF学习">
+<meta property="og:url" content="http://yatq.xyz/2025/04/15/SSRF%E5%AD%A6%E4%B9%A0/index.html">
 <meta property="og:site_name" content="y@7q">
-<meta property="og:description" content="心不畏死，踏屍前行">
+<meta property="og:description" content="[TOC] SSRF(Server-Side Request Forgery)概述SSRF(Server-Side Request Forgery:服务器端请求伪造),字面意思来理解就是：攻击者通过一些手段来达到伪装了一个由服务端对服务器所在内网发起的恶意请求。 也因此，一般情况下，SSRF攻击的目标是从外网无法访问的内部系统。 形成原理及危害大多是因为服务端提供了可以从其他服务器获取数据的功能，">
 <meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/yatq21/Pictures@master/Blog/study/image-20250416011910810.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/yatq21/Pictures@master/Blog/study/image-20250416002956517.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/yatq21/Pictures@master/Blog/study/image-20250416080803299.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/yatq21/Pictures@master/Blog/study/image-20250416083848457.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/yatq21/Pictures@master/Blog/study/image-20250416084453141.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/yatq21/Pictures@master/Blog/study/Quicker_20250416_091903.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/yatq21/Pictures@master/Blog/study/image-20250416102926004.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/yatq21/Pictures@master/Blog/study/image-20250416105222070.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/yatq21/Pictures@master/Blog/study/image-20250416112945370.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/yatq21/Pictures@master/Blog/study/image-20250416193201139.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/yatq21/Pictures@master/Blog/study/image-20250416194828764.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/yatq21/Pictures@master/Blog/study/2289942-20220124211658010-532695203.png">
+<meta property="article:published_time" content="2025-04-15T13:03:09.000Z">
+<meta property="article:modified_time" content="2025-04-16T12:07:09.022Z">
 <meta property="article:author" content="y@7q">
+<meta property="article:tag" content="刷题">
+<meta property="article:tag" content="CTF">
+<meta property="article:tag" content="SSRF">
 <meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://cdn.jsdelivr.net/gh/yatq21/Pictures@master/Blog/study/image-20250416011910810.png">
 
-<link rel="canonical" href="http://yatq.xyz/">
+<link rel="canonical" href="http://yatq.xyz/2025/04/15/SSRF%E5%AD%A6%E4%B9%A0/">
 
 
 <script id="page-configurations">
   // https://hexo.io/docs/variables.html
   CONFIG.page = {
     sidebar: "",
-    isHome : true,
-    isPost : false,
+    isHome : false,
+    isPost : true,
     lang   : 'zh-CN'
   };
 </script>
 
-  <title>y@7q</title>
+  <title>SSRF学习 | y@7q</title>
   
 
 
@@ -156,9 +174,10 @@
         <div class="content-wrap">
           
 
-          <div class="content index posts-expand">
+          <div class="content post posts-expand">
             
-      
+
+    
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
@@ -174,10 +193,9 @@
       <meta itemprop="name" content="y@7q">
     </span>
       <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2025/04/15/SSRF%E5%AD%A6%E4%B9%A0/" class="post-title-link" itemprop="url">SSRF学习</a>
-        </h2>
+        <h1 class="post-title" itemprop="name headline">
+          SSRF学习
+        </h1>
 
         <div class="post-meta">
             <span class="post-meta-item">
@@ -205,7 +223,14 @@
                 </span>
             </span>
 
-          <br>
+          
+            <span class="post-meta-item" title="阅读次数" id="busuanzi_container_page_pv" style="display: none;">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span id="busuanzi_value_page_pv"></span>
+            </span><br>
             <span class="post-meta-item" title="本文字数">
               <span class="post-meta-item-icon">
                 <i class="far fa-file-word"></i>
@@ -230,7 +255,7 @@
     <div class="post-body" itemprop="articleBody">
 
       
-          <p>[TOC]</p>
+        <p>[TOC]</p>
 <h1 id="SSRF-Server-Side-Request-Forgery-概述"><a href="#SSRF-Server-Side-Request-Forgery-概述" class="headerlink" title="SSRF(Server-Side Request Forgery)概述"></a>SSRF(Server-Side Request Forgery)概述</h1><p><strong>SSRF(Server-Side Request Forgery:服务器端请求伪造)</strong>,字面意思来理解就是：攻击者通过一些手段来达到伪装了一个由服务端对服务器所在内网发起的恶意请求。</p>
 <p>也因此，一般情况下，SSRF攻击的目标是从外网无法访问的内部系统。</p>
 <h2 id="形成原理及危害"><a href="#形成原理及危害" class="headerlink" title="形成原理及危害"></a>形成原理及危害</h2><p>大多是因为服务端提供了可以从其他服务器获取数据的功能，但没有加以过滤和限制，导致了攻击者可以轻易的任意读取文件，进行内网渗透，对内网Web应用进行攻击等恶意操作。</p>
@@ -537,987 +562,53 @@
 <p><a target="_blank" rel="noopener" href="https://nanian-233.github.io/posts/ssrf.html#%E5%AD%97%E7%AC%A6%E7%BB%95%E8%BF%87">SSRF | Nanian233🍊’s Blog</a></p>
 <p><a target="_blank" rel="noopener" href="https://blog.csdn.net/weixin_39190897/article/details/140337605">SSRF漏洞深入利用与防御方案绕过技巧_ssrf绕过-CSDN博客</a></p>
 
-      
     </div>
 
     
     
     
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
+        
 
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://yatq.xyz/2025/04/12/CSRF%E5%AD%A6%E4%B9%A0/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/wz.jpg">
-      <meta itemprop="name" content="y@7q">
-      <meta itemprop="description" content="心不畏死，踏屍前行">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="y@7q">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2025/04/12/CSRF%E5%AD%A6%E4%B9%A0/" class="post-title-link" itemprop="url">CSRF学习</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2025-04-12 21:59:26" itemprop="dateCreated datePublished" datetime="2025-04-12T21:59:26+08:00">2025-04-12</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2025-04-16 07:11:49" itemprop="dateModified" datetime="2025-04-16T07:11:49+08:00">2025-04-16</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86%E6%90%AD%E5%BB%BA/" itemprop="url" rel="index"><span itemprop="name">基础知识搭建</span></a>
-                </span>
-            </span>
-
-          <br>
-            <span class="post-meta-item" title="本文字数">
-              <span class="post-meta-item-icon">
-                <i class="far fa-file-word"></i>
-              </span>
-                <span class="post-meta-item-text">本文字数：</span>
-              <span>1.2k</span>
-            </span>
-            <span class="post-meta-item" title="阅读时长">
-              <span class="post-meta-item-icon">
-                <i class="far fa-clock"></i>
-              </span>
-                <span class="post-meta-item-text">阅读时长 &asymp;</span>
-              <span>1 分钟</span>
-            </span>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <p>[TOC]</p>
-<h1 id="CSRF概述"><a href="#CSRF概述" class="headerlink" title="CSRF概述"></a>CSRF概述</h1><p>Cross-site request forgery 简称为“CSRF”，中文名为跨站请求伪造。攻击者精心构造一个请求来诱导受害者点击，假如此时受害者刚好打开了相关网站，则有可能会导致执行了相关恶意操作。</p>
-<p><strong>攻击场景（某购物网站）</strong></p>
-<p>攻击者A尝试修改受害者B的账户邮箱地址，他发现该网站在修改邮箱时候发送的请求类似于<code>http://xxx.com/edit.php?email=123@123.com&amp;Change=Change</code>，通过加以包装和诱导B进行点击，这便可能会使得B的邮箱被修改从而达到了A的目的。</p>
-<p><strong>CSRF攻击需要条件</strong></p>
-<ul>
-<li><p>目标网站没有防CSRF的处理，导致了请求容易被伪造</p>
-<blockquote>
-<p>判断一个网站是否有CSRF漏洞，就要看他的增删改操作是否容易被伪造。</p>
-</blockquote>
-</li>
-<li><p>受害者再点击恶意链接时，必须是在同一台设备处于已登录的状态</p>
-</li>
+<div>
+<ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>本文作者： </strong>y@7q
+  </li>
+  <li class="post-copyright-link">
+    <strong>本文链接：</strong>
+    <a href="http://yatq.xyz/2025/04/15/SSRF%E5%AD%A6%E4%B9%A0/" title="SSRF学习">http://yatq.xyz/2025/04/15/SSRF学习/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
+  </li>
 </ul>
-<p><strong>CSRF与XSS的区别</strong></p>
-<p>XSS攻击中，攻击者确确实实拿到了被害者的身份验证信息，即<strong>直接盗取了用户的权限</strong>。而CSRF攻击过程中，攻击者<strong>实际上并未切实拿到被害者权限</strong>，而是而是被害者自己“主动”发送的，颇有一种借刀杀人的感觉。</p>
-<h2 id="CSRF攻击过程示例"><a href="#CSRF攻击过程示例" class="headerlink" title="CSRF攻击过程示例"></a>CSRF攻击过程示例</h2><p>这里以Pikachu靶场的三道题目进行演示：</p>
-<h3 id="CSRF-GET"><a href="#CSRF-GET" class="headerlink" title="CSRF(GET)"></a>CSRF(GET)</h3><p>随便登陆一个用户账号，修改信息时抓包查看，</p>
-<figure class="highlight dts"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">GET <span class="keyword">/vul/</span>csrf<span class="keyword">/csrfget/</span>csrf_get_edit.php?<span class="attr">sex</span><span class="operator">=</span>boy<span class="variable">&amp;phonenum</span>=<span class="number">15988767673</span><span class="variable">&amp;add</span>=hacker<span class="variable">&amp;email</span>=kobe%<span class="number">40</span>pikachu.com<span class="variable">&amp;submit</span>=submit</span><br></pre></td></tr></table></figure>
+</div>
 
-<p>发现并没有token之类的认证手段。将这段URL适当修改，然后登录另一个账户，点击点击刚刚构造好的URL来模拟该用户被攻击，发现该用户的信息被成功修改成了我们想要的情况。</p>
-<p><img src="https://cdn.jsdelivr.net/gh/yatq21/Pictures@master/Blog/study/image-20250413210824877.png" alt="image-20250413210824877"></p>
-<h3 id="CSRF-POST"><a href="#CSRF-POST" class="headerlink" title="CSRF(POST)"></a>CSRF(POST)</h3><p>发现修改信息被放在了POST请求体中，那么就无法像GET型一样直接构造恶意URL了。</p>
-<p>但我们可以自己建一个网站，修改相关参数发送请求抓包后自己写一个html页面，诱导受害者进行点击等操作从而发送了恶意的POST请求修改了数据。</p>
-<p>而BP中就有相关功能可以根据请求包直接生成可用的CSRF PoC:</p>
-<p><img src="https://cdn.jsdelivr.net/gh/yatq21/Pictures@master/Blog/study/image-20250414210324500.png" alt="image-20250414210324500"></p>
-<p>生成之后点击测试一下：</p>
-<p><img src="https://cdn.jsdelivr.net/gh/yatq21/Pictures@master/Blog/study/image-20250414210545681.png" alt="image-20250414210545681"></p>
-<p>点击提交按钮后发现信息被成功修改。</p>
-<h3 id="CSRF-Token"><a href="#CSRF-Token" class="headerlink" title="CSRF Token"></a>CSRF Token</h3><p>抓包发现有token验证：</p>
-<p><img src="https://cdn.jsdelivr.net/gh/yatq21/Pictures@master/Blog/study/image-20250414210914121.png" alt="image-20250414210914121"></p>
-<p>查看源码即可发现，token发现Tokenmeici发送请求后会被和Session中的Token值进行比较，相同才会修改成功</p>
-<p><img src="https://cdn.jsdelivr.net/gh/yatq21/Pictures@master/Blog/study/image-20250414213540245.png" alt="image-20250414213540245"></p>
-<p>，并且在修改之后还会重新生成一个新的值放在html的隐藏标签中。</p>
-<p><img src="https://cdn.jsdelivr.net/gh/yatq21/Pictures@master/Blog/study/image-20250414213447382.png" alt="image-20250414213447382"></p>
-<p>只要生成的Token足够随机，就会在一定程度上防止了CSRF攻击。</p>
-<h2 id="防御措施"><a href="#防御措施" class="headerlink" title="防御措施"></a>防御措施</h2><ol>
-<li><p>每次设置随机Token</p>
-</li>
-<li><p>二次验证</p>
-<p>例如：修改账号密码，需要判断旧密码。</p>
-</li>
-<li><p>Referer监测</p>
-<p>检测跳转的站点是否符合规范。</p>
-</li>
-</ol>
-<p>这三种措施若同时使用基本可以杜绝CSRF攻击。</p>
-<p>参考文章：</p>
-<p><a target="_blank" rel="noopener" href="https://www.cnblogs.com/Mchacha/p/18184186">CSRF(Pikachu靶场练习) - machacha - 博客园</a></p>
-<p><a target="_blank" rel="noopener" href="https://www.cnblogs.com/dogecheng/p/11583412.html">Pikachu漏洞练习平台实验——CSRF（三） - 那少年和狗 - 博客园</a></p>
 
-      
-    </div>
-
-    
-    
-    
       <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
+          <div class="post-tags">
+              <a href="/tags/%E5%88%B7%E9%A2%98/" rel="tag"># 刷题</a>
+              <a href="/tags/CTF/" rel="tag"># CTF</a>
+              <a href="/tags/SSRF/" rel="tag"># SSRF</a>
+          </div>
 
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://yatq.xyz/2025/04/11/XML%20XPath%E6%B3%A8%E5%85%A5%E4%BB%A5%E5%8F%8AXXE/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/wz.jpg">
-      <meta itemprop="name" content="y@7q">
-      <meta itemprop="description" content="心不畏死，踏屍前行">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="y@7q">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2025/04/11/XML%20XPath%E6%B3%A8%E5%85%A5%E4%BB%A5%E5%8F%8AXXE/" class="post-title-link" itemprop="url">XML XPath注入以及XXE</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2025-04-11 21:12:40" itemprop="dateCreated datePublished" datetime="2025-04-11T21:12:40+08:00">2025-04-11</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2025-04-12 15:17:37" itemprop="dateModified" datetime="2025-04-12T15:17:37+08:00">2025-04-12</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86%E6%90%AD%E5%BB%BA/" itemprop="url" rel="index"><span itemprop="name">基础知识搭建</span></a>
-                </span>
-            </span>
-
-          <br>
-            <span class="post-meta-item" title="本文字数">
-              <span class="post-meta-item-icon">
-                <i class="far fa-file-word"></i>
-              </span>
-                <span class="post-meta-item-text">本文字数：</span>
-              <span>327</span>
-            </span>
-            <span class="post-meta-item" title="阅读时长">
-              <span class="post-meta-item-icon">
-                <i class="far fa-clock"></i>
-              </span>
-                <span class="post-meta-item-text">阅读时长 &asymp;</span>
-              <span>1 分钟</span>
-            </span>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h1 id="XML、XPath注入以及XXE"><a href="#XML、XPath注入以及XXE" class="headerlink" title="XML、XPath注入以及XXE"></a>XML、XPath注入以及XXE</h1><h2 id="什么是XML"><a href="#什么是XML" class="headerlink" title="什么是XML"></a>什么是XML</h2><p><a target="_blank" rel="noopener" href="https://xz.aliyun.com/news/6483">从XML相关一步一步到XXE漏洞-先知社区</a></p>
-<p>XXE(XML External Entity Injection)全称为XML外部实体注入。想要了解XXE首先得了解XML。</p>
-<h3 id="XML与HTML的区别"><a href="#XML与HTML的区别" class="headerlink" title="XML与HTML的区别"></a>XML与HTML的区别</h3><ul>
-<li><p>XML被设计为传输和存储数据，其焦点是数据的内容。</p>
-</li>
-<li><p>HTML被设计用来显示数据，其焦点是数据的外观。</p>
-</li>
-</ul>
-<h3 id="实体引用"><a href="#实体引用" class="headerlink" title="实体引用"></a>实体引用</h3><p>和HTML一样，XML也具有实体引用，类似于转义特殊符号。XML 中有 5 个预定义的实体引用：</p>
-<table>
-<thead>
-<tr>
-<th>&amp;lt;</th>
-<th>&lt;</th>
-<th>小于</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>&amp;gt;</td>
-<td>&gt;</td>
-<td>大于</td>
-</tr>
-<tr>
-<td>&amp;amp;</td>
-<td>&amp;</td>
-<td>和号</td>
-</tr>
-<tr>
-<td>&amp;apos;</td>
-<td>‘</td>
-<td>省略号</td>
-</tr>
-<tr>
-<td>&amp;quot;</td>
-<td>“</td>
-<td>引号</td>
-</tr>
-</tbody></table>
-<p><a target="_blank" rel="noopener" href="http://www.dnslog.cn/">DNSLog Platform</a></p>
-<p><a target="_blank" rel="noopener" href="https://www.cnblogs.com/mysticbinary/p/12668547.html">XXE漏洞原理、检测与修复 - Mysticbinary - 博客园</a></p>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://yatq.xyz/2025/04/06/javascript%E5%BF%AB%E9%80%9F%E5%85%A5%E9%97%A8%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/wz.jpg">
-      <meta itemprop="name" content="y@7q">
-      <meta itemprop="description" content="心不畏死，踏屍前行">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="y@7q">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2025/04/06/javascript%E5%BF%AB%E9%80%9F%E5%85%A5%E9%97%A8%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/" class="post-title-link" itemprop="url">javascript快速入门学习笔记</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-              
-
-              <time title="创建时间：2025-04-06 13:23:23 / 修改时间：17:54:00" itemprop="dateCreated datePublished" datetime="2025-04-06T13:23:23+08:00">2025-04-06</time>
-            </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86%E6%90%AD%E5%BB%BA/" itemprop="url" rel="index"><span itemprop="name">基础知识搭建</span></a>
-                </span>
-            </span>
-
-          <br>
-            <span class="post-meta-item" title="本文字数">
-              <span class="post-meta-item-icon">
-                <i class="far fa-file-word"></i>
-              </span>
-                <span class="post-meta-item-text">本文字数：</span>
-              <span>3.6k</span>
-            </span>
-            <span class="post-meta-item" title="阅读时长">
-              <span class="post-meta-item-icon">
-                <i class="far fa-clock"></i>
-              </span>
-                <span class="post-meta-item-text">阅读时长 &asymp;</span>
-              <span>3 分钟</span>
-            </span>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h1 id="javascript快速入门"><a href="#javascript快速入门" class="headerlink" title="javascript快速入门"></a>javascript快速入门</h1><p>[TOC]</p>
-<h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>最近在看xss的DOM型，需要了解一些js基础，所以想快速过一遍语法部分。于是在B站上找了一门速成课来初步的过一遍，链接在文章末尾。下面正式开始。</p>
-<h2 id="less-0-简单语句"><a href="#less-0-简单语句" class="headerlink" title="less-0(简单语句)"></a>less-0(简单语句)</h2><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 输出语句</span></span><br><span class="line">&gt; <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&quot;Hello World!&quot;</span>);</span><br><span class="line"><span class="comment">// Hello World!</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 数学运算</span></span><br><span class="line">&gt; <span class="number">2</span> + <span class="number">2</span></span><br><span class="line"><span class="comment">// 4</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 弹窗</span></span><br><span class="line">&gt; <span class="title function_">alert</span>(<span class="string">&quot;yo&quot;</span>);</span><br></pre></td></tr></table></figure>
-
-<h2 id="less-1-html中的js"><a href="#less-1-html中的js" class="headerlink" title="less-1(html中的js)"></a>less-1(html中的js)</h2><p>新建一个html文件，<code>!</code>+<code>Tab键</code>即可生成默认html模板。通常在body标签末尾添加script标签并书写js代码，不然会先运行js再加载内容导致页面缓慢。</p>
-<p><img src="https://cdn.jsdelivr.net/gh/yatq21/Pictures@master/Blog/study/image-20250406135027673.png" alt="image-20250406135027673"></p>
-<p>如上图，在其中输入我们之前的输出语句，然后用live Server插件映射在本机端口之后用浏览器打开，摁下F12即可在控制台中看见结果。（<strong>如果你没有显示，可能是没有开启VScode中的自动保存，需要Ctrl+S即可，或者直接开启设置中的自动保存 一劳永逸</strong>）</p>
-<h2 id="less-2-关注点分离"><a href="#less-2-关注点分离" class="headerlink" title="less-2(关注点分离)"></a>less-2(关注点分离)</h2><p>当前我们的代码量少，所以可以直接把js代码插入html中，但之后代码量 多了之后就显得泰国臃肿了。一个好的做法是把html和js分离，一个只负责内容，另一个只负责行为。</p>
-<p>在相同文件夹中新建index.js文件，</p>
-<p><img src="https://cdn.jsdelivr.net/gh/yatq21/Pictures@master/Blog/study/image-20250406140909265.png" alt="image-20250406140909265"></p>
-<p>将原来的script标签中的内容迁移过来，并在script标签中假如src属性指明要包含的js文件，可以达到相同的显示效果。</p>
-<p><img src="https://cdn.jsdelivr.net/gh/yatq21/Pictures@master/Blog/study/image-20250406142506885.png" alt="image-20250406142506885"></p>
-<h2 id="less-3-用Node运行js"><a href="#less-3-用Node运行js" class="headerlink" title="less-3(用Node运行js)"></a>less-3(用Node运行js)</h2><h3 id="Node是什么？"><a href="#Node是什么？" class="headerlink" title="Node是什么？"></a>Node是什么？</h3><p>原来的js代码是在浏览器中通过js引擎运行，而Node则是把Chrome中的V8引擎和一个C++引擎结合起来的，因此你也可以在Node中运行js代码。所以说：Node是一个包含了Chrome的V8引擎的C++程序。</p>
-<p>打开终端，输入<code>node index.js</code>，可以看到成功执行了代码。</p>
-<p><img src="https://cdn.jsdelivr.net/gh/yatq21/Pictures@master/Blog/study/image-20250406145543310.png" alt="image-20250406145543310"></p>
-<h2 id="less-4-变量与常量"><a href="#less-4-变量与常量" class="headerlink" title="less-4(变量与常量)"></a>less-4(变量与常量)</h2><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// var, let, const var已被淘汰</span></span><br></pre></td></tr></table></figure>
-
-<p>其中let为变量，可以被修改，const不能被修改。其中const必须声明的同时赋值，否则会报错。</p>
-<h2 id="less-5-原生数据类型"><a href="#less-5-原生数据类型" class="headerlink" title="less-5(原生数据类型)"></a>less-5(原生数据类型)</h2><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// string Number Boolean null undefined</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// String</span></span><br><span class="line"><span class="keyword">const</span> username = <span class="string">&quot;John&quot;</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">// Number</span></span><br><span class="line"><span class="keyword">const</span> age = <span class="number">30</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 浮点型照样属于Number</span></span><br><span class="line"><span class="keyword">const</span> rate = <span class="number">4.5</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">// Boolean</span></span><br><span class="line"><span class="keyword">const</span> isCool = <span class="literal">true</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">// null</span></span><br><span class="line"><span class="keyword">const</span> x = <span class="literal">null</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">// undefined</span></span><br><span class="line"><span class="keyword">const</span> y = <span class="literal">undefined</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 同样是undefined</span></span><br><span class="line"><span class="keyword">let</span> z;</span><br><span class="line"></span><br><span class="line"><span class="comment">//如果你需要查看某个数据的类型，可以用typeof对此你可以一一尝试上面的变量</span></span><br><span class="line"></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="keyword">typeof</span> a);</span><br><span class="line"><span class="comment">// Number</span></span><br></pre></td></tr></table></figure>
-
-<p>你可能会发现，在检验x变量的类型时它并没有返回预期的null，而是object</p>
-<p><img src="https://cdn.jsdelivr.net/gh/yatq21/Pictures@master/Blog/study/image-20250406152958661.png" alt="image-20250406152958661"></p>
-<p>但是事实上他就是null，这是一个历史遗留1问题，我们在此不再细究，如果感兴趣可自行查阅。</p>
-<h2 id="less-6-模板字符串"><a href="#less-6-模板字符串" class="headerlink" title="less-6(模板字符串)"></a>less-6(模板字符串)</h2><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> username = <span class="string">&quot;John&quot;</span>;</span><br><span class="line"><span class="keyword">const</span> age = <span class="number">9</span>;</span><br><span class="line"><span class="comment">//我们使用反引号代替引号，把需要替换的量用$&#123;&#125;括起来即可。</span></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">`My name is <span class="subst">$&#123;username&#125;</span> and i&#x27;m <span class="subst">$&#123;age&#125;</span>.`</span>);</span><br></pre></td></tr></table></figure>
-
-<p><img src="https://cdn.jsdelivr.net/gh/yatq21/Pictures@master/Blog/study/image-20250406153944827.png" alt="image-20250406153944827"></p>
-<p>python中的格式化字符串和这个非常相像。</p>
-<h2 id="less-7-字符串的内置属性、方法"><a href="#less-7-字符串的内置属性、方法" class="headerlink" title="less-7(字符串的内置属性、方法)"></a>less-7(字符串的内置属性、方法)</h2><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> hw = <span class="string">&quot;hello world&quot;</span>;</span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(hw.<span class="property">length</span>); <span class="comment">// 长度</span></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(hw.<span class="title function_">toUpperCase</span>()); <span class="comment">// 大写</span></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(hw.<span class="title function_">toLowerCase</span>()); <span class="comment">// 小写</span></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(hw.<span class="title function_">substring</span>(<span class="number">0</span>, <span class="number">5</span>)); <span class="comment">// 子字符串</span></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(hw.<span class="title function_">split</span>(<span class="string">&#x27;&#x27;</span>)); <span class="comment">//split方法和python中一样，给的参数为分割标记</span></span><br></pre></td></tr></table></figure>
-
-<p><img src="https://cdn.jsdelivr.net/gh/yatq21/Pictures@master/Blog/study/image-20250406154806123.png" alt="image-20250406154806123"></p>
-<h2 id="less-8-数组"><a href="#less-8-数组" class="headerlink" title="less-8(数组)"></a>less-8(数组)</h2><p>此部分和py基本没什么区别，只记录不同的：</p>
-<p>*push()*方法：往末尾添加元素</p>
-<p>*unshift()*方法：往前面添加元素</p>
-<p>*pop()*方法：删除末尾一个元素</p>
-<p>*Array.isArray()*方法：判断是否是数组</p>
-<p><em>indexOf()</em>:得到特定元素索引（从1开始）</p>
-<h2 id="less-9-对象"><a href="#less-9-对象" class="headerlink" title="less-9(对象)"></a>less-9(对象)</h2><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> person = &#123;</span><br><span class="line">    <span class="attr">firstName</span>: <span class="string">&quot;John&quot;</span>,</span><br><span class="line">    <span class="attr">lastName</span>:<span class="string">&quot;Doe&quot;</span>,</span><br><span class="line">    <span class="attr">age</span>: <span class="number">30</span>,</span><br><span class="line">    <span class="attr">hobbies</span>: [<span class="string">&quot;music&quot;</span>, <span class="string">&quot;movies&quot;</span>, <span class="string">&quot;sports&quot;</span>],</span><br><span class="line">    <span class="attr">address</span>: &#123;</span><br><span class="line">    <span class="attr">street</span>: <span class="string">&quot;50 main st&quot;</span>,</span><br><span class="line">    <span class="attr">city</span>: <span class="string">&quot;Boston&quot;</span>,</span><br><span class="line">    <span class="attr">state</span>: <span class="string">&quot;MA&quot;</span>,</span><br><span class="line">    &#125;,</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(person.<span class="property">address</span>.<span class="property">street</span>);</span><br></pre></td></tr></table></figure>
-
-
-
-<p><img src="https://cdn.jsdelivr.net/gh/yatq21/Pictures@master/Blog/study/image-20250406161230905.png" alt="image-20250406161230905"></p>
-<p>这里的对象不像py中的对象，更像py中的字典（</p>
-<p><img src="https://cdn.jsdelivr.net/gh/yatq21/Pictures@master/Blog/study/image-20250406161712362.png" alt="image-20250406161712362"></p>
-<p>如上图，js中的对象属性chouqv很是容易只需要根据结构在左边写出属性名，右边只需要对象名称即可。</p>
-<p>甚至还能更深入：</p>
-<p><img src="https://cdn.jsdelivr.net/gh/yatq21/Pictures@master/Blog/study/image-20250406161935370.png" alt="image-20250406161935370"></p>
-<p>也可以直接添加新属性，直接写<code>对象名.属性名 = xxx</code>即可。</p>
-<h2 id="less-10-对象数组和json"><a href="#less-10-对象数组和json" class="headerlink" title="less-10(对象数组和json)"></a>less-10(对象数组和json)</h2><h3 id="对象数组"><a href="#对象数组" class="headerlink" title="对象数组"></a>对象数组</h3><p>可以理解为数组里面有多个对象。如下图：</p>
-<p><img src="https://cdn.jsdelivr.net/gh/yatq21/Pictures@master/Blog/study/image-20250406163942855.png" alt="image-20250406163942855"></p>
-<h3 id="JSON"><a href="#JSON" class="headerlink" title="JSON"></a>JSON</h3><p><strong>JSON</strong>是一种数据格式，和对象数组十分类似。那如何把对象数组转变为JSON呢？</p>
-<p>我们使用<code>JSON.stringify()</code>把要转换的对象数组当作参数传入即可：</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> todos = [</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="attr">id</span>: <span class="number">1</span>,</span><br><span class="line">        <span class="attr">text</span>: <span class="string">&quot;Take out trash&quot;</span>,</span><br><span class="line">        <span class="attr">isCompleted</span>: <span class="literal">true</span></span><br><span class="line">    &#125;,</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="attr">id</span>: <span class="number">2</span>,</span><br><span class="line">        <span class="attr">text</span>: <span class="string">&quot;Meeting with boss&quot;</span>,</span><br><span class="line">        <span class="attr">isCompleted</span>: <span class="literal">true</span></span><br><span class="line">    &#125;,</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="attr">id</span>: <span class="number">3</span>,</span><br><span class="line">        <span class="attr">text</span>: <span class="string">&quot;Dentist appt&quot;</span>,</span><br><span class="line">        <span class="attr">isCompleted</span>: <span class="literal">false</span></span><br><span class="line">    &#125;</span><br><span class="line">];</span><br><span class="line"></span><br><span class="line">todoJSON = <span class="title class_">JSON</span>.<span class="title function_">stringify</span>(todos);</span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(todoJSON);</span><br></pre></td></tr></table></figure>
-
-
-
-<p><img src="https://cdn.jsdelivr.net/gh/yatq21/Pictures@master/Blog/study/image-20250406165243261.png" alt="image-20250406165243261"></p>
-<p>可以看出和对象数组的唯一区别是每个key值dou多了一个引号，除此之外无任何变化。</p>
-<h2 id="less-11-if语句"><a href="#less-11-if语句" class="headerlink" title="less-11(if语句)"></a>less-11(if语句)</h2><p>和php一样都有强相等和弱相等。&#x3D;&#x3D; 表示值相同，类型可以不同， &#x3D;&#x3D;&#x3D;表示值和类型都相同。基本语法如下：</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> x = <span class="number">10</span>;</span><br><span class="line"><span class="keyword">if</span> (x === <span class="number">10</span>)&#123;</span><br><span class="line">    <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&quot;x is 10&quot;</span>);</span><br><span class="line">&#125;<span class="keyword">else</span> <span class="keyword">if</span> (x &gt; <span class="number">10</span>)&#123;</span><br><span class="line">	<span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&quot;x is greater than 10&quot;</span>);</span><br><span class="line">&#125;<span class="keyword">else</span> &#123;</span><br><span class="line">	<span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&quot;x is less than 10&quot;</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-
-
-<h2 id="less-12-三目运算符"><a href="#less-12-三目运算符" class="headerlink" title="less-12(三目运算符)"></a>less-12(三目运算符)</h2><p>和C无区别，这里贴一下图看一下即可：</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(person.<span class="property">address</span>.<span class="property">street</span>);</span><br><span class="line"><span class="keyword">const</span> color = <span class="number">1</span> ? <span class="string">&quot;red&quot;</span> : <span class="string">&quot;blue&quot;</span>;</span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(color)</span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="keyword">typeof</span> color)</span><br></pre></td></tr></table></figure>
-
-
-
-<p><img src="https://cdn.jsdelivr.net/gh/yatq21/Pictures@master/Blog/study/image-20250406170718419.png" alt="image-20250406170718419"></p>
-<p>color为string类型。</p>
-<h2 id="less-13-switch语句"><a href="#less-13-switch语句" class="headerlink" title="less-13(switch语句)"></a>less-13(switch语句)</h2><p>可以理解为单值匹配的if语句，</p>
-<p><img src="https://cdn.jsdelivr.net/gh/yatq21/Pictures@master/Blog/study/image-20250406172840622.png" alt="image-20250406172840622"></p>
-<h2 id="less-13-for-loop-and-while-loop"><a href="#less-13-for-loop-and-while-loop" class="headerlink" title="less-13(for loop and while loop)"></a>less-13(for loop and while loop)</h2><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// for loop </span></span><br><span class="line"><span class="keyword">for</span> (<span class="keyword">let</span> i = <span class="number">0</span>; i &lt;= <span class="number">5</span>;  i++) &#123;</span><br><span class="line">    <span class="variable language_">console</span>.<span class="title function_">log</span>(i);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">//for loop(python version)(误</span></span><br><span class="line">is = [<span class="number">0</span>, <span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>, <span class="number">5</span>]</span><br><span class="line"><span class="keyword">for</span> (<span class="keyword">let</span> i <span class="keyword">of</span> is) &#123;</span><br><span class="line">    <span class="variable language_">console</span>.<span class="title function_">log</span>(i);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">//while loop</span></span><br><span class="line"><span class="keyword">let</span> i = <span class="number">0</span>;</span><br><span class="line"><span class="keyword">while</span> (i &lt;= <span class="number">5</span>) &#123;</span><br><span class="line">    <span class="variable language_">console</span>.<span class="title function_">log</span>(i);</span><br><span class="line">    i++;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-<p>和C中的语法是一致的。</p>
-<h2 id="结语"><a href="#结语" class="headerlink" title="结语"></a>结语</h2><p>结束！用了一个下午，约4个小时的时间完成了对js语法的初步学习，算是正在对前端入门吧。</p>
-<p><strong>参考资料</strong>：</p>
-<p><a target="_blank" rel="noopener" href="https://www.bilibili.com/video/BV15L4y1a7or?spm_id_from=333.788.videopod.episodes&vd_source=b2effd0e83eadb128c29a86f4543ee15">四十分钟JavaScript快速入门 | 无废话且清晰流畅 | 手敲键盘 | WEB前端必备程序语言~_哔哩哔哩_bilibili</a></p>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://yatq.xyz/2025/04/05/%E8%B6%A3%E4%BA%8B1/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/wz.jpg">
-      <meta itemprop="name" content="y@7q">
-      <meta itemprop="description" content="心不畏死，踏屍前行">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="y@7q">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2025/04/05/%E8%B6%A3%E4%BA%8B1/" class="post-title-link" itemprop="url">趣事1</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-              
-
-              <time title="创建时间：2025-04-05 19:35:33 / 修改时间：19:52:50" itemprop="dateCreated datePublished" datetime="2025-04-05T19:35:33+08:00">2025-04-05</time>
-            </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/%E8%B6%A3%E4%BA%8B/" itemprop="url" rel="index"><span itemprop="name">趣事</span></a>
-                </span>
-            </span>
-
-          <br>
-            <span class="post-meta-item" title="本文字数">
-              <span class="post-meta-item-icon">
-                <i class="far fa-file-word"></i>
-              </span>
-                <span class="post-meta-item-text">本文字数：</span>
-              <span>104</span>
-            </span>
-            <span class="post-meta-item" title="阅读时长">
-              <span class="post-meta-item-icon">
-                <i class="far fa-clock"></i>
-              </span>
-                <span class="post-meta-item-text">阅读时长 &asymp;</span>
-              <span>1 分钟</span>
-            </span>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <p>在进行61A的Ants project中的一个问题时，困扰了很久，最后在没有AI的帮助下，print大法之后（<del>我是debug大神</del>），终于意识到问题所在了！</p>
-<p><img src="https://cdn.jsdelivr.net/gh/yatq21/Pictures@master/Blog/study/05fac446d5770ba4d5699029eb798be.png" alt="05fac446d5770ba4d5699029eb798be"></p>
-<p>在这判断了一只蜜蜂之后就返回值了，没考虑后面的，哈哈哈。</p>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://yatq.xyz/2025/04/04/Linux%E7%9B%B8%E5%85%B3%E6%93%8D%E4%BD%9C%E6%80%BB%E7%BB%93/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/wz.jpg">
-      <meta itemprop="name" content="y@7q">
-      <meta itemprop="description" content="心不畏死，踏屍前行">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="y@7q">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2025/04/04/Linux%E7%9B%B8%E5%85%B3%E6%93%8D%E4%BD%9C%E6%80%BB%E7%BB%93/" class="post-title-link" itemprop="url">Linux相关操作总结</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-              
-
-              <time title="创建时间：2025-04-04 11:23:13 / 修改时间：13:03:35" itemprop="dateCreated datePublished" datetime="2025-04-04T11:23:13+08:00">2025-04-04</time>
-            </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86%E6%90%AD%E5%BB%BA/" itemprop="url" rel="index"><span itemprop="name">基础知识搭建</span></a>
-                </span>
-            </span>
-
-          <br>
-            <span class="post-meta-item" title="本文字数">
-              <span class="post-meta-item-icon">
-                <i class="far fa-file-word"></i>
-              </span>
-                <span class="post-meta-item-text">本文字数：</span>
-              <span>584</span>
-            </span>
-            <span class="post-meta-item" title="阅读时长">
-              <span class="post-meta-item-icon">
-                <i class="far fa-clock"></i>
-              </span>
-                <span class="post-meta-item-text">阅读时长 &asymp;</span>
-              <span>1 分钟</span>
-            </span>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h1 id="Linux相关操作总结"><a href="#Linux相关操作总结" class="headerlink" title="Linux相关操作总结"></a>Linux相关操作总结</h1><p>我会在这里总结一些Linux操作上的一些常用但我不熟的操作，用来查阅和回忆。</p>
-<h2 id="grep全局搜索"><a href="#grep全局搜索" class="headerlink" title="grep全局搜索"></a>grep全局搜索</h2><p>可以用<code>grep -r &quot;关键字&quot;</code>来进行基于关键字的全局搜索相关行。我从<a target="_blank" rel="noopener" href="https://1cepeak.cn/posts/szzg2025-datasecurity-writeup/#%E6%95%B0%E6%8D%AE%E7%A4%BE%E5%B7%A5">2025数字中国创新大赛数字安全赛道｜数据安全产业积分争夺赛初赛Writeup - 1cePeak</a>这篇文章中学到的。同时可以和find命令结合使用提高效率，先根据文件名搜出所有文件，再进行筛选。例如：<code>find -name / &quot;*.html&quot; | grep -r &quot;张华强&quot;</code>。</p>
-<h2 id="chmod权限管理"><a href="#chmod权限管理" class="headerlink" title="chmod权限管理"></a>chmod权限管理</h2><h3 id="Linux文件权限"><a href="#Linux文件权限" class="headerlink" title="Linux文件权限"></a>Linux文件权限</h3><p><img src="https://cdn.jsdelivr.net/gh/yatq21/Pictures@master/Blog/study/ipcjszt20190119-04.jpg" alt="img"></p>
-<p>图源：<a target="_blank" rel="noopener" href="https://www.zlg.cn/ipc/article/detail/id/953.html">【Linux学习小技巧】浅析linux权限管理-广州致远电子股份有限公司</a></p>
-<p>使用<code>ls -l</code>即可查看文件的权限详情，最右边的d为<strong>directory（目录）</strong>。接下来每三个一组，分别是，文件创建者，创建者所在组，其他人员（管理员）的权限<code>r-&gt;read w-&gt;write x-&gt;execute</code>。接下来是用户名和组名。在<code>/etc/passwd</code>和<code>/etc/group</code>目录下可以看到所有用户和用户组的权限。</p>
-<h3 id="权限管理"><a href="#权限管理" class="headerlink" title="权限管理"></a>权限管理</h3><p>用<code>chmod</code>命令可以来设置这些权限</p>
-<p><img src="https://cdn.jsdelivr.net/gh/yatq21/Pictures@master/Blog/study/ipcjszt20190119-06.jpg" alt="img"></p>
-<p><code>u/g/o</code>:即user&#x2F;group&#x2F;other</p>
-<p><code>+/-</code>:加减权限</p>
-<p>另外还可以用数字来代替：</p>
-<p><img src="https://cdn.jsdelivr.net/gh/yatq21/Pictures@master/Blog/study/ipcjszt20190119-07.jpg" alt="ipcjszt20190119-07"></p>
-<p>r、w、x对应为数字4、2、1，用数字之和代表该组权限值，比如rwx可用 7 表示。</p>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://yatq.xyz/2025/04/02/IPV4%E7%9A%84%E8%AE%A4%E8%AF%86%E5%8F%8Anmap%E7%9A%84%E4%BD%BF%E7%94%A8/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/wz.jpg">
-      <meta itemprop="name" content="y@7q">
-      <meta itemprop="description" content="心不畏死，踏屍前行">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="y@7q">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2025/04/02/IPV4%E7%9A%84%E8%AE%A4%E8%AF%86%E5%8F%8Anmap%E7%9A%84%E4%BD%BF%E7%94%A8/" class="post-title-link" itemprop="url">IPV4的认识及nmap的使用</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2025-04-02 21:03:15" itemprop="dateCreated datePublished" datetime="2025-04-02T21:03:15+08:00">2025-04-02</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2025-04-03 21:22:47" itemprop="dateModified" datetime="2025-04-03T21:22:47+08:00">2025-04-03</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/" itemprop="url" rel="index"><span itemprop="name">计算机网络</span></a>
-                </span>
-            </span>
-
-          <br>
-            <span class="post-meta-item" title="本文字数">
-              <span class="post-meta-item-icon">
-                <i class="far fa-file-word"></i>
-              </span>
-                <span class="post-meta-item-text">本文字数：</span>
-              <span>614</span>
-            </span>
-            <span class="post-meta-item" title="阅读时长">
-              <span class="post-meta-item-icon">
-                <i class="far fa-clock"></i>
-              </span>
-                <span class="post-meta-item-text">阅读时长 &asymp;</span>
-              <span>1 分钟</span>
-            </span>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h1 id="IPv4的认识"><a href="#IPv4的认识" class="headerlink" title="IPv4的认识"></a>IPv4的认识</h1><h2 id="IPv4"><a href="#IPv4" class="headerlink" title="IPv4"></a>IPv4</h2><p><strong>I</strong>nternet <strong>P</strong>rotocol <strong>v</strong>ersion <strong>4</strong>，缩写：<strong>IPv4</strong>，又称<strong>互联网通信协议第四版</strong>。ipv4有四段8bit，共32bit的二进制字符组成，而我们一般见到的ip地址则一般被写作<a target="_blank" rel="noopener" href="https://zh.wikipedia.org/wiki/%E7%82%B9%E5%88%86%E5%8D%81%E8%BF%9B%E5%88%B6">点分十进制</a>，例如一个最常见的ip：<code>192.168.1.1</code>，他的二进制形式为：<code>11000000.10101000.00000001.00000001</code>。</p>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/2025/04/02/IPV4%E7%9A%84%E8%AE%A4%E8%AF%86%E5%8F%8Anmap%E7%9A%84%E4%BD%BF%E7%94%A8/#more" rel="contents">
-                阅读全文 &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
         
-      
-    </div>
 
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
 
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://yatq.xyz/2025/04/01/xss%E5%AD%A6%E4%B9%A0/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/wz.jpg">
-      <meta itemprop="name" content="y@7q">
-      <meta itemprop="description" content="心不畏死，踏屍前行">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="y@7q">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2025/04/01/xss%E5%AD%A6%E4%B9%A0/" class="post-title-link" itemprop="url">关于xss漏洞的学习</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2025-04-01 20:46:55" itemprop="dateCreated datePublished" datetime="2025-04-01T20:46:55+08:00">2025-04-01</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2025-04-11 21:43:25" itemprop="dateModified" datetime="2025-04-11T21:43:25+08:00">2025-04-11</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86%E6%90%AD%E5%BB%BA/" itemprop="url" rel="index"><span itemprop="name">基础知识搭建</span></a>
-                </span>
-            </span>
-
-          <br>
-            <span class="post-meta-item" title="本文字数">
-              <span class="post-meta-item-icon">
-                <i class="far fa-file-word"></i>
-              </span>
-                <span class="post-meta-item-text">本文字数：</span>
-              <span>12k</span>
-            </span>
-            <span class="post-meta-item" title="阅读时长">
-              <span class="post-meta-item-icon">
-                <i class="far fa-clock"></i>
-              </span>
-                <span class="post-meta-item-text">阅读时长 &asymp;</span>
-              <span>11 分钟</span>
-            </span>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h1 id="xss的认识和学习"><a href="#xss的认识和学习" class="headerlink" title="xss的认识和学习"></a><code>xss</code>的认识和学习</h1><p>[TOC]</p>
-<p><code>xss</code>平台：<a target="_blank" rel="noopener" href="https://xssaq.com/">XSS平台-XSS测试网站-仅用于安全免费测试</a>（有时候不太好用，推荐用服务器）</p>
-<p>跨站脚本（Cross-Site Scripting，XSS）是一种经常出现在 WEB 应用程序中的计算机安全漏洞，是由于 WEB 应用程序对用户的输入过滤不足而产生的。<strong>攻击者利用网站漏洞把恶意的脚本代码注入到网页中，当其他用户浏览这些网页时，就会执行其中的恶意代码，对受害用户可能采取 Cookies 资料窃取、会话劫持、钓鱼欺骗等各种攻击。</strong></p>
-<p>一般的，<code>xss</code>攻击会分为三种情况，危害程度从低到高分别是：<strong>反射型</strong>、<strong>持久型</strong>、<strong>DOM型</strong>。</p>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/2025/04/01/xss%E5%AD%A6%E4%B9%A0/#more" rel="contents">
-                阅读全文 &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
         
-      
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2025/04/12/CSRF%E5%AD%A6%E4%B9%A0/" rel="prev" title="CSRF学习">
+      <i class="fa fa-chevron-left"></i> CSRF学习
+    </a></div>
+      <div class="post-nav-item"></div>
     </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
       </footer>
+    
   </article>
   
   
   
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://yatq.xyz/2025/03/27/re%E6%AD%A3%E5%88%99%E8%A1%A8%E8%BE%BE%E5%BC%8F%E7%9A%84%E5%AD%A6%E4%B9%A0/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/wz.jpg">
-      <meta itemprop="name" content="y@7q">
-      <meta itemprop="description" content="心不畏死，踏屍前行">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="y@7q">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2025/03/27/re%E6%AD%A3%E5%88%99%E8%A1%A8%E8%BE%BE%E5%BC%8F%E7%9A%84%E5%AD%A6%E4%B9%A0/" class="post-title-link" itemprop="url">re正则表达式学习</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2025-03-27 20:18:32" itemprop="dateCreated datePublished" datetime="2025-03-27T20:18:32+08:00">2025-03-27</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2025-04-03 21:22:55" itemprop="dateModified" datetime="2025-04-03T21:22:55+08:00">2025-04-03</time>
-              </span>
-
-          <br>
-            <span class="post-meta-item" title="本文字数">
-              <span class="post-meta-item-icon">
-                <i class="far fa-file-word"></i>
-              </span>
-                <span class="post-meta-item-text">本文字数：</span>
-              <span>1.4k</span>
-            </span>
-            <span class="post-meta-item" title="阅读时长">
-              <span class="post-meta-item-icon">
-                <i class="far fa-clock"></i>
-              </span>
-                <span class="post-meta-item-text">阅读时长 &asymp;</span>
-              <span>1 分钟</span>
-            </span>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h1 id="正则表达式的初识"><a href="#正则表达式的初识" class="headerlink" title="正则表达式的初识"></a>正则表达式的初识</h1><p><em>正则表达式(Regular Expression)</em> 是一种文本模式，用于匹配和筛选特定格式的文本字符串等。</p>
-<p>为了做数据处理相关的题目，所以顺便看看学习和了解一下。</p>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/2025/03/27/re%E6%AD%A3%E5%88%99%E8%A1%A8%E8%BE%BE%E5%BC%8F%E7%9A%84%E5%AD%A6%E4%B9%A0/#more" rel="contents">
-                阅读全文 &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://yatq.xyz/2025/03/26/%E5%86%85%E5%AD%98%E5%8F%96%E8%AF%81/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/wz.jpg">
-      <meta itemprop="name" content="y@7q">
-      <meta itemprop="description" content="心不畏死，踏屍前行">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="y@7q">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2025/03/26/%E5%86%85%E5%AD%98%E5%8F%96%E8%AF%81/" class="post-title-link" itemprop="url">内存取证</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2025-03-26 20:23:43" itemprop="dateCreated datePublished" datetime="2025-03-26T20:23:43+08:00">2025-03-26</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2025-04-03 21:29:26" itemprop="dateModified" datetime="2025-04-03T21:29:26+08:00">2025-04-03</time>
-              </span>
-
-          <br>
-            <span class="post-meta-item" title="本文字数">
-              <span class="post-meta-item-icon">
-                <i class="far fa-file-word"></i>
-              </span>
-                <span class="post-meta-item-text">本文字数：</span>
-              <span>77</span>
-            </span>
-            <span class="post-meta-item" title="阅读时长">
-              <span class="post-meta-item-icon">
-                <i class="far fa-clock"></i>
-              </span>
-                <span class="post-meta-item-text">阅读时长 &asymp;</span>
-              <span>1 分钟</span>
-            </span>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <p>（待开）</p>
-<p>参考文章：</p>
-<p><a target="_blank" rel="noopener" href="https://www.qwesec.com/2024/01/volatilityInstall.html#%E5%AE%89%E8%A3%85-volatility">volatility 取证工具的安装与配置 | X1ong</a></p>
-<p><a target="_blank" rel="noopener" href="https://r0fus0d.blog.ffffffff0x.com/post/memory-forensics/#%E5%86%85%E5%AD%98%E5%88%86%E6%9E%90">内存取证(总结篇) - r0fus0d 的博客</a></p>
-<p><a target="_blank" rel="noopener" href="https://xdforensics-wiki.github.io/XDforensics-wiki/ram/">内存取证原理学习及Volatility - 篇一</a></p>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-
-  
-  <nav class="pagination">
-    <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="extend next" rel="next" href="/page/2/"><i class="fa fa-angle-right" aria-label="下一页"></i></a>
-  </nav>
 
 
 
@@ -1569,6 +660,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#SSRF-Server-Side-Request-Forgery-%E6%A6%82%E8%BF%B0"><span class="nav-number">1.</span> <span class="nav-text">SSRF(Server-Side Request Forgery)概述</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%BD%A2%E6%88%90%E5%8E%9F%E7%90%86%E5%8F%8A%E5%8D%B1%E5%AE%B3"><span class="nav-number">1.1.</span> <span class="nav-text">形成原理及危害</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%88%A9%E7%94%A8%E6%96%B9%E5%BC%8F"><span class="nav-number">1.2.</span> <span class="nav-text">利用方式</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#PHP%E4%B8%AD%E4%B8%80%E4%BA%9B%E5%85%B3%E9%94%AE%E5%87%BD%E6%95%B0"><span class="nav-number">1.2.1.</span> <span class="nav-text">PHP中一些关键函数</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BC%AA%E5%8D%8F%E8%AE%AE"><span class="nav-number">1.2.2.</span> <span class="nav-text">伪协议</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#file-%EF%BC%88%E8%AE%BF%E9%97%AE%E6%9C%AC%E5%9C%B0%E6%96%87%E4%BB%B6%EF%BC%89"><span class="nav-number">1.2.2.1.</span> <span class="nav-text">file:&#x2F;&#x2F;（访问本地文件）</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#dict-%EF%BC%88%E6%9F%A5%E8%AF%A2%E5%AD%97%E5%85%B8%E6%9C%8D%E5%8A%A1%EF%BC%89"><span class="nav-number">1.2.2.2.</span> <span class="nav-text">dict:&#x2F;&#x2F;（查询字典服务）</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#ftp-%EF%BC%88%E8%AE%BF%E9%97%AE%E8%BF%9C%E7%A8%8B%E6%96%87%E4%BB%B6%E8%B5%84%E6%BA%90%EF%BC%89"><span class="nav-number">1.2.2.3.</span> <span class="nav-text">ftp:&#x2F;&#x2F;（访问远程文件资源）</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#data-%EF%BC%88%E5%B5%8C%E5%85%A5%E6%95%B0%E6%8D%AE%EF%BC%89"><span class="nav-number">1.2.2.4.</span> <span class="nav-text">data:&#x2F;&#x2F;（嵌入数据）</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#gopher"><span class="nav-number">1.2.2.5.</span> <span class="nav-text">gopher:&#x2F;&#x2F;</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Parse-url%E5%87%BD%E6%95%B0"><span class="nav-number">1.2.3.</span> <span class="nav-text">Parse_url函数</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%B8%B8%E7%94%A8Payload"><span class="nav-number">1.2.4.</span> <span class="nav-text">常用Payload</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%A2%98%E7%9B%AE%E5%9B%9E%E9%A1%BE"><span class="nav-number">1.3.</span> <span class="nav-text">题目回顾</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#ImageCloud%E5%89%8D%E7%BD%AE"><span class="nav-number">1.3.1.</span> <span class="nav-text">ImageCloud前置</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#ImageCloud"><span class="nav-number">1.3.2.</span> <span class="nav-text">ImageCloud</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#CTFshow%E5%88%B7%E9%A2%98"><span class="nav-number">1.4.</span> <span class="nav-text">CTFshow刷题</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#web352"><span class="nav-number">1.4.1.</span> <span class="nav-text">web352</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#web353"><span class="nav-number">1.4.2.</span> <span class="nav-text">web353</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#web354-%E5%85%AC%E5%85%B1%E8%A7%A3%E6%9E%90%E5%9F%9F%E5%90%8D%E7%BB%95%E8%BF%87"><span class="nav-number">1.4.3.</span> <span class="nav-text">web354 公共解析域名绕过</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#web355-%E9%95%BF%E5%BA%A6%E9%99%90%E5%88%B61"><span class="nav-number">1.4.4.</span> <span class="nav-text">web355 长度限制1</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#web356-%E9%95%BF%E5%BA%A6%E9%99%90%E5%88%B62"><span class="nav-number">1.4.5.</span> <span class="nav-text">web356 长度限制2</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#web357-%E5%86%85%E7%BD%91IP%E8%BF%87%E6%BB%A4"><span class="nav-number">1.4.6.</span> <span class="nav-text">web357 内网IP过滤</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#filter-var-%E5%87%BD%E6%95%B0"><span class="nav-number">1.4.6.1.</span> <span class="nav-text">filter_var() 函数</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%9B%B8%E5%85%B3%E8%BF%87%E6%BB%A4%E5%99%A8"><span class="nav-number">1.4.6.2.</span> <span class="nav-text">相关过滤器</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#web358-%E7%BB%95%E8%BF%87"><span class="nav-number">1.4.7.</span> <span class="nav-text">web358 @绕过</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#web359-Gopher%E6%89%93%E6%97%A0%E5%AF%86%E7%A0%81%E7%9A%84mysql"><span class="nav-number">1.4.8.</span> <span class="nav-text">web359 Gopher打无密码的mysql</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#web360-Gopher%E5%8D%8F%E8%AE%AE%E6%89%93redis"><span class="nav-number">1.4.9.</span> <span class="nav-text">web360 Gopher协议打redis</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%88%B7%E9%A2%98%E4%B9%8B%E5%90%8E%E7%9A%84bypass%E6%80%BB%E7%BB%93"><span class="nav-number">1.5.</span> <span class="nav-text">刷题之后的bypass总结</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AD%97%E7%AC%A6%E7%BB%95%E8%BF%87"><span class="nav-number">1.5.1.</span> <span class="nav-text">字符绕过</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%85%AC%E7%BD%91%E6%8C%82%E9%A9%AC"><span class="nav-number">1.5.2.</span> <span class="nav-text">公网挂马</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#DNS%E9%87%8D%E7%BB%91%E5%AE%9A"><span class="nav-number">1.5.3.</span> <span class="nav-text">DNS重绑定</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%F0%9F%92%A1-%E5%AE%9E%E6%88%98%E5%9C%BA%E6%99%AF%E4%B8%BE%E4%B8%AA%E4%BE%8B%E5%AD%90"><span class="nav-number">1.6.</span> <span class="nav-text">💡 实战场景举个例子</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%F0%9F%A7%A0-%E8%AF%A6%E7%BB%86%E8%BF%87%E7%A8%8B"><span class="nav-number">1.7.</span> <span class="nav-text">🧠 详细过程</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Gopherus%E4%BD%BF%E7%94%A8"><span class="nav-number">1.7.1.</span> <span class="nav-text">Gopherus使用</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%85%B3%E4%BA%8EGopher%E5%8D%8F%E8%AE%AE%E4%B8%BA%E4%BB%80%E4%B9%88%E5%90%8E%E9%9D%A2%E8%A6%81%E6%9C%89%E4%B8%80%E4%B8%AA"><span class="nav-number">1.8.</span> <span class="nav-text">关于Gopher协议为什么后面要有一个_?</span></a></li></ol></li></ol></div>
       </div>
       <!--/noindex-->
 
