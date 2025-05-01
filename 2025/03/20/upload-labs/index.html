@@ -41,7 +41,7 @@
 <meta property="og:image" content="https://cdn.jsdelivr.net/gh/yatq21/Pictures@master/Blog/study/1742559457977.png">
 <meta property="og:image" content="https://cdn.jsdelivr.net/gh/yatq21/Pictures@master/Blog/study/1742560288759.png">
 <meta property="article:published_time" content="2025-03-19T20:52:34.000Z">
-<meta property="article:modified_time" content="2025-04-15T23:12:29.202Z">
+<meta property="article:modified_time" content="2025-04-18T10:04:39.053Z">
 <meta property="article:author" content="y@7q">
 <meta property="article:tag" content="刷题">
 <meta property="article:tag" content="CTF">
@@ -212,7 +212,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2025-04-16 07:12:29" itemprop="dateModified" datetime="2025-04-16T07:12:29+08:00">2025-04-16</time>
+                <time title="修改时间：2025-04-18 18:04:39" itemprop="dateModified" datetime="2025-04-18T18:04:39+08:00">2025-04-18</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -237,14 +237,14 @@
                 <i class="far fa-file-word"></i>
               </span>
                 <span class="post-meta-item-text">本文字数：</span>
-              <span>21k</span>
+              <span>22k</span>
             </span>
             <span class="post-meta-item" title="阅读时长">
               <span class="post-meta-item-icon">
                 <i class="far fa-clock"></i>
               </span>
                 <span class="post-meta-item-text">阅读时长 &asymp;</span>
-              <span>19 分钟</span>
+              <span>20 分钟</span>
             </span>
 
         </div>
@@ -301,7 +301,7 @@
 
 <figure class="highlight apache"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="attribute">AddType</span> application/x-httpd-php .jpg</span><br></pre></td></tr></table></figure>
 
-
+<figure class="highlight apache"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="attribute">AddType</span> application/x-httpd-php .jpg</span><br><span class="line"><span class="attribute">php_value</span> auto_append_fi<span class="punctuation">\</span></span><br><span class="line"><span class="punctuation"></span>le <span class="string">&quot;php://filter/convert.base64-decode/resource=1.jpg&quot;</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
 
 <p>（不知道为什么buu靶场中是可行的，但我本地环境却不行~）</p>
 </li>
@@ -329,6 +329,85 @@
 <p>.user.ini.它比.htaccess用的更广，不管是nginx&#x2F;apache&#x2F;IIS，只要是以fastcgi运行的php都可以用这个方法。</p>
 </li>
 </ol>
+<h2 id="htaccess绕过的总结"><a href="#htaccess绕过的总结" class="headerlink" title="htaccess绕过的总结"></a>htaccess绕过的总结</h2><h3 id="核心原理"><a href="#核心原理" class="headerlink" title="核心原理"></a>核心原理</h3><p><code>.htaccess</code> 是 Apache HTTP Server 的<strong>分布式配置文件</strong>，用于对当前目录及其子目录进行细粒度配置。</p>
+<p>攻击者通过上传 <code>.htaccess</code> 文件，并配合特定配置，使得非 <code>.php</code> 文件被当作 PHP 执行。</p>
+<h3 id="htaccess-编写语法精要"><a href="#htaccess-编写语法精要" class="headerlink" title=".htaccess 编写语法精要"></a><code>.htaccess</code> 编写语法精要</h3><ul>
+<li>每一条配置项必须在一行（或续行）完成</li>
+<li><code>AddType</code>：扩展名与 MIME 类型映射</li>
+<li><code>php_value</code> &#x2F; <code>php_flag</code>：配置 PHP.ini 中的项</li>
+<li><code>DirectoryIndex</code>：默认首页设置</li>
+<li><code>ErrorDocument</code>：错误页重定向</li>
+<li><code>&lt;FilesMatch&gt;</code>、<code>&lt;IfModule&gt;</code>：细粒度控制执行范围</li>
+</ul>
+<h3 id="常用的-htaccess-配置及其作用"><a href="#常用的-htaccess-配置及其作用" class="headerlink" title="常用的 .htaccess 配置及其作用"></a>常用的 <code>.htaccess</code> 配置及其作用</h3><table>
+<thead>
+<tr>
+<th>目的</th>
+<th>配置示例</th>
+<th>解释</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>将非 <code>.php</code> 文件解析为 PHP</td>
+<td><code>AddType application/x-httpd-php .jpg</code></td>
+<td>让 <code>.jpg</code> 文件被 PHP 引擎处理</td>
+</tr>
+<tr>
+<td>自动追加恶意 PHP 文件</td>
+<td><code>php_value auto_append_file &quot;shell.jpg&quot;</code></td>
+<td>所有 PHP 文件执行完后自动追加这个文件(该配置需要php的Server API )</td>
+</tr>
+<tr>
+<td>自动在脚本前插入恶意代码</td>
+<td><code>php_value auto_prepend_file &quot;php://input&quot;</code></td>
+<td>在脚本执行前自动插入指定代码</td>
+</tr>
+<tr>
+<td>修改默认首页</td>
+<td><code>DirectoryIndex shell.jpg</code></td>
+<td>将默认首页设置为恶意脚本</td>
+</tr>
+<tr>
+<td>隐藏 WebShell</td>
+<td><code>ErrorDocument 404 /shell.jpg</code></td>
+<td>将所有 404 错误跳转到 WebShell</td>
+</tr>
+</tbody></table>
+<h3 id="攻击流程建议（CTF-实战）"><a href="#攻击流程建议（CTF-实战）" class="headerlink" title="攻击流程建议（CTF&#x2F;实战）"></a>攻击流程建议（CTF&#x2F;实战）</h3><ol>
+<li><strong>上传 WebShell 为伪装扩展名</strong>（如 <code>.jpg</code>）</li>
+<li><strong>上传 <code>.htaccess</code> 文件设置 MIME 执行规则</strong></li>
+<li><strong>使用 <code>auto_prepend_file</code>&#x2F;<code>auto_append_file</code> 执行后门</strong></li>
+<li><strong>使用 <code>php://filter</code> + base64 避免文件头暴露</strong></li>
+<li><strong>访问 <code>.jpg</code> 文件，触发 PHP 执行</strong></li>
+</ol>
+<h3 id="防御建议（安全视角）"><a href="#防御建议（安全视角）" class="headerlink" title="防御建议（安全视角）"></a>防御建议（安全视角）</h3><table>
+<thead>
+<tr>
+<th>防御点</th>
+<th>建议</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>禁止上传 <code>.htaccess</code> 文件</td>
+<td>配置 <code>php.ini</code>：<code>upload_ext_filter</code></td>
+</tr>
+<tr>
+<td>关闭上传目录解析</td>
+<td>Apache 设置 <code>AllowOverride None</code></td>
+</tr>
+<tr>
+<td>限制 MIME 类型欺骗</td>
+<td>校验上传文件内容头、魔术字</td>
+</tr>
+<tr>
+<td>移除 PHP stream 封装器</td>
+<td><code>disable_functions</code>：<code>php://*, expect://*</code></td>
+</tr>
+<tr>
+<td>使用 WAF 进行语义分析</td>
+<td>不能仅基于关键字，需做语法解析</td>
+</tr>
+</tbody></table>
 <h2 id="Pass-05（黑名单3-大小写绕过）"><a href="#Pass-05（黑名单3-大小写绕过）" class="headerlink" title="Pass-05（黑名单3 大小写绕过）"></a>Pass-05（黑名单3 大小写绕过）</h2><p><code> .htaccess</code>也被ban了。。。</p>
 <figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">$is_upload</span> = <span class="literal">false</span>;</span><br><span class="line"><span class="variable">$msg</span> = <span class="literal">null</span>;</span><br><span class="line"><span class="keyword">if</span> (<span class="keyword">isset</span>(<span class="variable">$_POST</span>[<span class="string">&#x27;submit&#x27;</span>])) &#123;</span><br><span class="line">    <span class="keyword">if</span> (<span class="title function_ invoke__">file_exists</span>(UPLOAD_PATH)) &#123;</span><br><span class="line">        <span class="variable">$deny_ext</span> = <span class="keyword">array</span>(<span class="string">&quot;.php&quot;</span>,<span class="string">&quot;.php5&quot;</span>,<span class="string">&quot;.php4&quot;</span>,<span class="string">&quot;.php3&quot;</span>,<span class="string">&quot;.php2&quot;</span>,<span class="string">&quot;.html&quot;</span>,<span class="string">&quot;.htm&quot;</span>,<span class="string">&quot;.phtml&quot;</span>,<span class="string">&quot;.pht&quot;</span>,<span class="string">&quot;.pHp&quot;</span>,<span class="string">&quot;.pHp5&quot;</span>,<span class="string">&quot;.pHp4&quot;</span>,<span class="string">&quot;.pHp3&quot;</span>,<span class="string">&quot;.pHp2&quot;</span>,<span class="string">&quot;.Html&quot;</span>,<span class="string">&quot;.Htm&quot;</span>,<span class="string">&quot;.pHtml&quot;</span>,<span class="string">&quot;.jsp&quot;</span>,<span class="string">&quot;.jspa&quot;</span>,<span class="string">&quot;.jspx&quot;</span>,<span class="string">&quot;.jsw&quot;</span>,<span class="string">&quot;.jsv&quot;</span>,<span class="string">&quot;.jspf&quot;</span>,<span class="string">&quot;.jtml&quot;</span>,<span class="string">&quot;.jSp&quot;</span>,<span class="string">&quot;.jSpx&quot;</span>,<span class="string">&quot;.jSpa&quot;</span>,<span class="string">&quot;.jSw&quot;</span>,<span class="string">&quot;.jSv&quot;</span>,<span class="string">&quot;.jSpf&quot;</span>,<span class="string">&quot;.jHtml&quot;</span>,<span class="string">&quot;.asp&quot;</span>,<span class="string">&quot;.aspx&quot;</span>,<span class="string">&quot;.asa&quot;</span>,<span class="string">&quot;.asax&quot;</span>,<span class="string">&quot;.ascx&quot;</span>,<span class="string">&quot;.ashx&quot;</span>,<span class="string">&quot;.asmx&quot;</span>,<span class="string">&quot;.cer&quot;</span>,<span class="string">&quot;.aSp&quot;</span>,<span class="string">&quot;.aSpx&quot;</span>,<span class="string">&quot;.aSa&quot;</span>,<span class="string">&quot;.aSax&quot;</span>,<span class="string">&quot;.aScx&quot;</span>,<span class="string">&quot;.aShx&quot;</span>,<span class="string">&quot;.aSmx&quot;</span>,<span class="string">&quot;.cEr&quot;</span>,<span class="string">&quot;.sWf&quot;</span>,<span class="string">&quot;.swf&quot;</span>,<span class="string">&quot;.htaccess&quot;</span>);</span><br><span class="line">        <span class="variable">$file_name</span> = <span class="title function_ invoke__">trim</span>(<span class="variable">$_FILES</span>[<span class="string">&#x27;upload_file&#x27;</span>][<span class="string">&#x27;name&#x27;</span>]);</span><br><span class="line">        <span class="variable">$file_name</span> = <span class="title function_ invoke__">deldot</span>(<span class="variable">$file_name</span>);<span class="comment">//删除文件名末尾的点</span></span><br><span class="line">        <span class="variable">$file_ext</span> = <span class="title function_ invoke__">strrchr</span>(<span class="variable">$file_name</span>, <span class="string">&#x27;.&#x27;</span>);</span><br><span class="line">        <span class="variable">$file_ext</span> = <span class="title function_ invoke__">str_ireplace</span>(<span class="string">&#x27;::$DATA&#x27;</span>, <span class="string">&#x27;&#x27;</span>, <span class="variable">$file_ext</span>);<span class="comment">//去除字符串::$DATA</span></span><br><span class="line">        <span class="variable">$file_ext</span> = <span class="title function_ invoke__">trim</span>(<span class="variable">$file_ext</span>); <span class="comment">//首尾去空</span></span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> (!<span class="title function_ invoke__">in_array</span>(<span class="variable">$file_ext</span>, <span class="variable">$deny_ext</span>)) &#123;</span><br><span class="line">            <span class="variable">$temp_file</span> = <span class="variable">$_FILES</span>[<span class="string">&#x27;upload_file&#x27;</span>][<span class="string">&#x27;tmp_name&#x27;</span>];</span><br><span class="line">            <span class="variable">$img_path</span> = UPLOAD_PATH.<span class="string">&#x27;/&#x27;</span>.<span class="title function_ invoke__">date</span>(<span class="string">&quot;YmdHis&quot;</span>).<span class="title function_ invoke__">rand</span>(<span class="number">1000</span>,<span class="number">9999</span>).<span class="variable">$file_ext</span>;</span><br><span class="line">            <span class="keyword">if</span> (<span class="title function_ invoke__">move_uploaded_file</span>(<span class="variable">$temp_file</span>, <span class="variable">$img_path</span>)) &#123;</span><br><span class="line">                <span class="variable">$is_upload</span> = <span class="literal">true</span>;</span><br><span class="line">            &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                <span class="variable">$msg</span> = <span class="string">&#x27;上传出错！&#x27;</span>;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            <span class="variable">$msg</span> = <span class="string">&#x27;此文件类型不允许上传！&#x27;</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        <span class="variable">$msg</span> = UPLOAD_PATH . <span class="string">&#x27;文件夹不存在,请手工创建！&#x27;</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
 
@@ -452,8 +531,8 @@
         
     <div class="post-nav">
       <div class="post-nav-item">
-    <a href="/2025/03/18/ssti%E5%AD%A6%E4%B9%A0/" rel="prev" title="">
-      <i class="fa fa-chevron-left"></i> 
+    <a href="/2025/03/18/%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E8%AF%BB%E5%8F%96%E6%BC%8F%E6%B4%9E/" rel="prev" title="任意文件读取漏洞">
+      <i class="fa fa-chevron-left"></i> 任意文件读取漏洞
     </a></div>
       <div class="post-nav-item">
     <a href="/2025/03/20/sqli-labs%E5%88%B7%E9%A2%98/" rel="next" title="sqli-labs刷题">
@@ -517,7 +596,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#upload-labs%E9%9D%B6%E5%9C%BA%E5%88%B7%E9%A2%98%E4%B8%AA%E4%BA%BA%E6%80%BB%E7%BB%93"><span class="nav-number">1.</span> <span class="nav-text">upload-labs靶场刷题个人总结</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%96%87%E4%BB%B6%E4%B8%8A%E4%BC%A0%E5%9F%BA%E6%9C%AC%E6%80%9D%E8%B7%AF"><span class="nav-number">1.1.</span> <span class="nav-text">文件上传基本思路</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Pass-01-%EF%BC%88%E5%89%8D%E7%AB%AF%E9%AA%8C%E8%AF%81%EF%BC%89"><span class="nav-number">1.2.</span> <span class="nav-text">Pass-01 （前端验证）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Pass-02%EF%BC%88MIME%E9%AA%8C%E8%AF%81%EF%BC%89"><span class="nav-number">1.3.</span> <span class="nav-text">Pass-02（MIME验证）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Pass-03%EF%BC%88%E5%90%8E%E7%BC%80%E9%BB%91%E5%90%8D%E5%8D%95%E6%A0%A1%E9%AA%8C%E7%BB%95%E8%BF%87%EF%BC%89"><span class="nav-number">1.4.</span> <span class="nav-text">Pass-03（后缀黑名单校验绕过）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Pass-04%EF%BC%88%E9%BB%91%E5%90%8D%E5%8D%952-htaccess%EF%BC%89"><span class="nav-number">1.5.</span> <span class="nav-text">Pass-04（黑名单2  .htaccess）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Pass-05%EF%BC%88%E9%BB%91%E5%90%8D%E5%8D%953-%E5%A4%A7%E5%B0%8F%E5%86%99%E7%BB%95%E8%BF%87%EF%BC%89"><span class="nav-number">1.6.</span> <span class="nav-text">Pass-05（黑名单3 大小写绕过）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Pass-06%EF%BC%88%E9%BB%91%E5%90%8D%E5%8D%954-%E7%A9%BA%E6%A0%BC%E7%BB%95%E8%BF%87%EF%BC%89"><span class="nav-number">1.7.</span> <span class="nav-text">Pass-06（黑名单4 空格绕过）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Pass-07%EF%BC%88%E9%BB%91%E5%90%8D%E5%8D%955-%E7%82%B9%E5%8F%B7%E7%BB%95%E8%BF%87%EF%BC%89"><span class="nav-number">1.8.</span> <span class="nav-text">Pass-07（黑名单5 点号绕过）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Pass-08%EF%BC%88%E9%BB%91%E5%90%8D%E5%8D%956-DATA%E7%BB%95%E8%BF%87%EF%BC%89"><span class="nav-number">1.9.</span> <span class="nav-text">Pass-08（黑名单6 ::$DATA绕过）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Pass-09-%E9%BB%91%E5%90%8D%E5%8D%957-%E5%8D%95%E6%AC%A1%E9%AA%8C%E8%AF%81"><span class="nav-number">1.10.</span> <span class="nav-text">Pass-09(黑名单7 单次验证)</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Pass-10%EF%BC%88%E9%BB%91%E5%90%8D%E5%8D%958-%E5%8F%8C%E5%86%99%E7%BB%95%E8%BF%87%EF%BC%89"><span class="nav-number">1.11.</span> <span class="nav-text">Pass-10（黑名单8 双写绕过）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%98%B6%E6%AE%B5%E6%80%A7%E6%80%BB%E7%BB%93"><span class="nav-number">1.12.</span> <span class="nav-text">阶段性总结</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Pass-11%EF%BC%88%E7%99%BD%E5%90%8D%E5%8D%95-00%E6%88%AA%E6%96%AD-GET%EF%BC%89"><span class="nav-number">1.13.</span> <span class="nav-text">Pass-11（白名单 %00截断 GET）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Pass-12%EF%BC%88%E7%99%BD%E5%90%8D%E5%8D%95-00%E6%88%AA%E6%96%AD-POST%EF%BC%89"><span class="nav-number">1.14.</span> <span class="nav-text">Pass-12（白名单 %00截断 POST）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Pass-13%EF%BC%88%E7%99%BD%E5%90%8D%E5%8D%953-%E5%9B%BE%E7%89%87%E9%A9%AC-%E6%96%87%E4%BB%B6%E5%8C%85%E5%90%AB%EF%BC%89"><span class="nav-number">1.15.</span> <span class="nav-text">Pass-13（白名单3 图片马+文件包含）</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%88%B6%E4%BD%9C%E5%9B%BE%E7%89%87%E9%A9%AC"><span class="nav-number">1.15.1.</span> <span class="nav-text">制作图片马</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Pass-14%EF%BC%88%E7%99%BD%E5%90%8D%E5%8D%954-getimagesize-%E5%9B%BE%E7%89%87%E9%A9%AC-%E6%96%87%E4%BB%B6%E5%8C%85%E5%90%AB%EF%BC%89"><span class="nav-number">1.16.</span> <span class="nav-text">Pass-14（白名单4 getimagesize() 图片马+文件包含）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Pass-15%EF%BC%88%E7%99%BD%E5%90%8D%E5%8D%955-exif-imagetype-%E5%9B%BE%E7%89%87%E9%A9%AC-%E6%96%87%E4%BB%B6%E5%8C%85%E5%90%AB%EF%BC%89"><span class="nav-number">1.17.</span> <span class="nav-text">Pass-15（白名单5 exif_imagetype() 图片马+文件包含）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Pass-16%EF%BC%88%E7%99%BD%E5%90%8D%E5%8D%956-%E4%BA%8C%E6%AC%A1%E6%B8%B2%E6%9F%93%E7%BB%95%E8%BF%87-%E5%9B%BE%E7%89%87%E9%A9%AC-%E6%96%87%E4%BB%B6%E5%8C%85%E5%90%AB%EF%BC%89"><span class="nav-number">1.18.</span> <span class="nav-text">Pass-16（白名单6 二次渲染绕过+图片马+文件包含）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Pass-17%EF%BC%88%E6%9D%A1%E4%BB%B6%E7%AB%9E%E4%BA%89%EF%BC%89"><span class="nav-number">1.19.</span> <span class="nav-text">Pass-17（条件竞争）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Pass-18"><span class="nav-number">1.20.</span> <span class="nav-text">Pass-18</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Pass-19"><span class="nav-number">1.21.</span> <span class="nav-text">Pass-19</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Pass-20%EF%BC%88-%E6%95%B0%E7%BB%84%E7%BB%95%E8%BF%87%E9%AA%8C%E8%AF%81-%EF%BC%89"><span class="nav-number">1.22.</span> <span class="nav-text">Pass-20（ 数组绕过验证 ）</span></a></li></ol></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#upload-labs%E9%9D%B6%E5%9C%BA%E5%88%B7%E9%A2%98%E4%B8%AA%E4%BA%BA%E6%80%BB%E7%BB%93"><span class="nav-number">1.</span> <span class="nav-text">upload-labs靶场刷题个人总结</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%96%87%E4%BB%B6%E4%B8%8A%E4%BC%A0%E5%9F%BA%E6%9C%AC%E6%80%9D%E8%B7%AF"><span class="nav-number">1.1.</span> <span class="nav-text">文件上传基本思路</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Pass-01-%EF%BC%88%E5%89%8D%E7%AB%AF%E9%AA%8C%E8%AF%81%EF%BC%89"><span class="nav-number">1.2.</span> <span class="nav-text">Pass-01 （前端验证）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Pass-02%EF%BC%88MIME%E9%AA%8C%E8%AF%81%EF%BC%89"><span class="nav-number">1.3.</span> <span class="nav-text">Pass-02（MIME验证）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Pass-03%EF%BC%88%E5%90%8E%E7%BC%80%E9%BB%91%E5%90%8D%E5%8D%95%E6%A0%A1%E9%AA%8C%E7%BB%95%E8%BF%87%EF%BC%89"><span class="nav-number">1.4.</span> <span class="nav-text">Pass-03（后缀黑名单校验绕过）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Pass-04%EF%BC%88%E9%BB%91%E5%90%8D%E5%8D%952-htaccess%EF%BC%89"><span class="nav-number">1.5.</span> <span class="nav-text">Pass-04（黑名单2  .htaccess）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#htaccess%E7%BB%95%E8%BF%87%E7%9A%84%E6%80%BB%E7%BB%93"><span class="nav-number">1.6.</span> <span class="nav-text">htaccess绕过的总结</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%A0%B8%E5%BF%83%E5%8E%9F%E7%90%86"><span class="nav-number">1.6.1.</span> <span class="nav-text">核心原理</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#htaccess-%E7%BC%96%E5%86%99%E8%AF%AD%E6%B3%95%E7%B2%BE%E8%A6%81"><span class="nav-number">1.6.2.</span> <span class="nav-text">.htaccess 编写语法精要</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%B8%B8%E7%94%A8%E7%9A%84-htaccess-%E9%85%8D%E7%BD%AE%E5%8F%8A%E5%85%B6%E4%BD%9C%E7%94%A8"><span class="nav-number">1.6.3.</span> <span class="nav-text">常用的 .htaccess 配置及其作用</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%94%BB%E5%87%BB%E6%B5%81%E7%A8%8B%E5%BB%BA%E8%AE%AE%EF%BC%88CTF-%E5%AE%9E%E6%88%98%EF%BC%89"><span class="nav-number">1.6.4.</span> <span class="nav-text">攻击流程建议（CTF&#x2F;实战）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%98%B2%E5%BE%A1%E5%BB%BA%E8%AE%AE%EF%BC%88%E5%AE%89%E5%85%A8%E8%A7%86%E8%A7%92%EF%BC%89"><span class="nav-number">1.6.5.</span> <span class="nav-text">防御建议（安全视角）</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Pass-05%EF%BC%88%E9%BB%91%E5%90%8D%E5%8D%953-%E5%A4%A7%E5%B0%8F%E5%86%99%E7%BB%95%E8%BF%87%EF%BC%89"><span class="nav-number">1.7.</span> <span class="nav-text">Pass-05（黑名单3 大小写绕过）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Pass-06%EF%BC%88%E9%BB%91%E5%90%8D%E5%8D%954-%E7%A9%BA%E6%A0%BC%E7%BB%95%E8%BF%87%EF%BC%89"><span class="nav-number">1.8.</span> <span class="nav-text">Pass-06（黑名单4 空格绕过）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Pass-07%EF%BC%88%E9%BB%91%E5%90%8D%E5%8D%955-%E7%82%B9%E5%8F%B7%E7%BB%95%E8%BF%87%EF%BC%89"><span class="nav-number">1.9.</span> <span class="nav-text">Pass-07（黑名单5 点号绕过）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Pass-08%EF%BC%88%E9%BB%91%E5%90%8D%E5%8D%956-DATA%E7%BB%95%E8%BF%87%EF%BC%89"><span class="nav-number">1.10.</span> <span class="nav-text">Pass-08（黑名单6 ::$DATA绕过）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Pass-09-%E9%BB%91%E5%90%8D%E5%8D%957-%E5%8D%95%E6%AC%A1%E9%AA%8C%E8%AF%81"><span class="nav-number">1.11.</span> <span class="nav-text">Pass-09(黑名单7 单次验证)</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Pass-10%EF%BC%88%E9%BB%91%E5%90%8D%E5%8D%958-%E5%8F%8C%E5%86%99%E7%BB%95%E8%BF%87%EF%BC%89"><span class="nav-number">1.12.</span> <span class="nav-text">Pass-10（黑名单8 双写绕过）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%98%B6%E6%AE%B5%E6%80%A7%E6%80%BB%E7%BB%93"><span class="nav-number">1.13.</span> <span class="nav-text">阶段性总结</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Pass-11%EF%BC%88%E7%99%BD%E5%90%8D%E5%8D%95-00%E6%88%AA%E6%96%AD-GET%EF%BC%89"><span class="nav-number">1.14.</span> <span class="nav-text">Pass-11（白名单 %00截断 GET）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Pass-12%EF%BC%88%E7%99%BD%E5%90%8D%E5%8D%95-00%E6%88%AA%E6%96%AD-POST%EF%BC%89"><span class="nav-number">1.15.</span> <span class="nav-text">Pass-12（白名单 %00截断 POST）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Pass-13%EF%BC%88%E7%99%BD%E5%90%8D%E5%8D%953-%E5%9B%BE%E7%89%87%E9%A9%AC-%E6%96%87%E4%BB%B6%E5%8C%85%E5%90%AB%EF%BC%89"><span class="nav-number">1.16.</span> <span class="nav-text">Pass-13（白名单3 图片马+文件包含）</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%88%B6%E4%BD%9C%E5%9B%BE%E7%89%87%E9%A9%AC"><span class="nav-number">1.16.1.</span> <span class="nav-text">制作图片马</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Pass-14%EF%BC%88%E7%99%BD%E5%90%8D%E5%8D%954-getimagesize-%E5%9B%BE%E7%89%87%E9%A9%AC-%E6%96%87%E4%BB%B6%E5%8C%85%E5%90%AB%EF%BC%89"><span class="nav-number">1.17.</span> <span class="nav-text">Pass-14（白名单4 getimagesize() 图片马+文件包含）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Pass-15%EF%BC%88%E7%99%BD%E5%90%8D%E5%8D%955-exif-imagetype-%E5%9B%BE%E7%89%87%E9%A9%AC-%E6%96%87%E4%BB%B6%E5%8C%85%E5%90%AB%EF%BC%89"><span class="nav-number">1.18.</span> <span class="nav-text">Pass-15（白名单5 exif_imagetype() 图片马+文件包含）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Pass-16%EF%BC%88%E7%99%BD%E5%90%8D%E5%8D%956-%E4%BA%8C%E6%AC%A1%E6%B8%B2%E6%9F%93%E7%BB%95%E8%BF%87-%E5%9B%BE%E7%89%87%E9%A9%AC-%E6%96%87%E4%BB%B6%E5%8C%85%E5%90%AB%EF%BC%89"><span class="nav-number">1.19.</span> <span class="nav-text">Pass-16（白名单6 二次渲染绕过+图片马+文件包含）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Pass-17%EF%BC%88%E6%9D%A1%E4%BB%B6%E7%AB%9E%E4%BA%89%EF%BC%89"><span class="nav-number">1.20.</span> <span class="nav-text">Pass-17（条件竞争）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Pass-18"><span class="nav-number">1.21.</span> <span class="nav-text">Pass-18</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Pass-19"><span class="nav-number">1.22.</span> <span class="nav-text">Pass-19</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Pass-20%EF%BC%88-%E6%95%B0%E7%BB%84%E7%BB%95%E8%BF%87%E9%AA%8C%E8%AF%81-%EF%BC%89"><span class="nav-number">1.23.</span> <span class="nav-text">Pass-20（ 数组绕过验证 ）</span></a></li></ol></li></ol></div>
       </div>
       <!--/noindex-->
 
@@ -533,7 +612,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">19</span>
+          <span class="site-state-item-count">21</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -546,7 +625,7 @@
       <div class="site-state-item site-state-tags">
             <a href="/tags/">
           
-        <span class="site-state-item-count">23</span>
+        <span class="site-state-item-count">24</span>
         <span class="site-state-item-name">标签</span></a>
       </div>
   </nav>
@@ -593,12 +672,12 @@
     <span class="post-meta-item-icon">
       <i class="fa fa-chart-area"></i>
     </span>
-    <span title="站点总字数">80k</span>
+    <span title="站点总字数">97k</span>
     <span class="post-meta-divider">|</span>
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
-    <span title="站点阅读时长">1:13</span>
+    <span title="站点阅读时长">1:28</span>
 </div>
   <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://pisces.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Pisces</a> 强力驱动
   </div>
