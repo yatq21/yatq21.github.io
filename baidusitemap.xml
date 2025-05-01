@@ -1,6 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
+    <loc>http://yatq.xyz/2025/05/02/CS50-Flask/</loc>
+    <lastmod>2025-05-01</lastmod>
+  </url>
+  <url>
     <loc>http://yatq.xyz/2025/05/02/ACTF/</loc>
     <lastmod>2025-05-01</lastmod>
   </url>
