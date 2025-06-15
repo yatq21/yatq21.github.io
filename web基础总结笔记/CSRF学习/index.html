@@ -1,0 +1,584 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 7.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/%E9%B8%A132.svg">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/%E9%B8%A116.svg">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"yatq.xyz","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"right","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="[TOC] CSRF概述Cross-site request forgery 简称为“CSRF”，中文名为跨站请求伪造。攻击者精心构造一个请求来诱导受害者点击，假如此时受害者刚好打开了相关网站，则有可能会导致执行了相关恶意操作。 攻击场景（某购物网站） 攻击者A尝试修改受害者B的账户邮箱地址，他发现该网站在修改邮箱时候发送的请求类似于http:&#x2F;&#x2F;xxx.com&#x2F;edit.php?email&#x3D;12">
+<meta property="og:type" content="article">
+<meta property="og:title" content="CSRF学习">
+<meta property="og:url" content="http://yatq.xyz/web%E5%9F%BA%E7%A1%80%E6%80%BB%E7%BB%93%E7%AC%94%E8%AE%B0/CSRF%E5%AD%A6%E4%B9%A0/index.html">
+<meta property="og:site_name" content="y@7q">
+<meta property="og:description" content="[TOC] CSRF概述Cross-site request forgery 简称为“CSRF”，中文名为跨站请求伪造。攻击者精心构造一个请求来诱导受害者点击，假如此时受害者刚好打开了相关网站，则有可能会导致执行了相关恶意操作。 攻击场景（某购物网站） 攻击者A尝试修改受害者B的账户邮箱地址，他发现该网站在修改邮箱时候发送的请求类似于http:&#x2F;&#x2F;xxx.com&#x2F;edit.php?email&#x3D;12">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/yatq21/Pictures@master/Blog/study/image-20250413210824877.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/yatq21/Pictures@master/Blog/study/image-20250414210324500.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/yatq21/Pictures@master/Blog/study/image-20250414210545681.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/yatq21/Pictures@master/Blog/study/image-20250414210914121.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/yatq21/Pictures@master/Blog/study/image-20250414213540245.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/yatq21/Pictures@master/Blog/study/image-20250414213447382.png">
+<meta property="article:published_time" content="2025-04-12T13:59:26.000Z">
+<meta property="article:modified_time" content="2025-04-15T23:11:49.908Z">
+<meta property="article:author" content="y@7q">
+<meta property="article:tag" content="CTF">
+<meta property="article:tag" content="刷题">
+<meta property="article:tag" content="CSRF">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://cdn.jsdelivr.net/gh/yatq21/Pictures@master/Blog/study/image-20250413210824877.png">
+
+<link rel="canonical" href="http://yatq.xyz/web%E5%9F%BA%E7%A1%80%E6%80%BB%E7%BB%93%E7%AC%94%E8%AE%B0/CSRF%E5%AD%A6%E4%B9%A0/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>CSRF学习 | y@7q</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">y@7q</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://yatq.xyz/web%E5%9F%BA%E7%A1%80%E6%80%BB%E7%BB%93%E7%AC%94%E8%AE%B0/CSRF%E5%AD%A6%E4%B9%A0/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/wz.jpg">
+      <meta itemprop="name" content="y@7q">
+      <meta itemprop="description" content="心不畏死，踏屍前行">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="y@7q">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          CSRF学习
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2025-04-12 21:59:26" itemprop="dateCreated datePublished" datetime="2025-04-12T21:59:26+08:00">2025-04-12</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2025-04-16 07:11:49" itemprop="dateModified" datetime="2025-04-16T07:11:49+08:00">2025-04-16</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86%E6%90%AD%E5%BB%BA/" itemprop="url" rel="index"><span itemprop="name">基础知识搭建</span></a>
+                </span>
+            </span>
+
+          
+            <span class="post-meta-item" title="阅读次数" id="busuanzi_container_page_pv" style="display: none;">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span id="busuanzi_value_page_pv"></span>
+            </span><br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>1.2k</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>1 分钟</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p>[TOC]</p>
+<h1 id="CSRF概述"><a href="#CSRF概述" class="headerlink" title="CSRF概述"></a>CSRF概述</h1><p>Cross-site request forgery 简称为“CSRF”，中文名为跨站请求伪造。攻击者精心构造一个请求来诱导受害者点击，假如此时受害者刚好打开了相关网站，则有可能会导致执行了相关恶意操作。</p>
+<p><strong>攻击场景（某购物网站）</strong></p>
+<p>攻击者A尝试修改受害者B的账户邮箱地址，他发现该网站在修改邮箱时候发送的请求类似于<code>http://xxx.com/edit.php?email=123@123.com&amp;Change=Change</code>，通过加以包装和诱导B进行点击，这便可能会使得B的邮箱被修改从而达到了A的目的。</p>
+<p><strong>CSRF攻击需要条件</strong></p>
+<ul>
+<li><p>目标网站没有防CSRF的处理，导致了请求容易被伪造</p>
+<blockquote>
+<p>判断一个网站是否有CSRF漏洞，就要看他的增删改操作是否容易被伪造。</p>
+</blockquote>
+</li>
+<li><p>受害者再点击恶意链接时，必须是在同一台设备处于已登录的状态</p>
+</li>
+</ul>
+<p><strong>CSRF与XSS的区别</strong></p>
+<p>XSS攻击中，攻击者确确实实拿到了被害者的身份验证信息，即<strong>直接盗取了用户的权限</strong>。而CSRF攻击过程中，攻击者<strong>实际上并未切实拿到被害者权限</strong>，而是而是被害者自己“主动”发送的，颇有一种借刀杀人的感觉。</p>
+<h2 id="CSRF攻击过程示例"><a href="#CSRF攻击过程示例" class="headerlink" title="CSRF攻击过程示例"></a>CSRF攻击过程示例</h2><p>这里以Pikachu靶场的三道题目进行演示：</p>
+<h3 id="CSRF-GET"><a href="#CSRF-GET" class="headerlink" title="CSRF(GET)"></a>CSRF(GET)</h3><p>随便登陆一个用户账号，修改信息时抓包查看，</p>
+<figure class="highlight dts"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">GET <span class="keyword">/vul/</span>csrf<span class="keyword">/csrfget/</span>csrf_get_edit.php?<span class="attr">sex</span><span class="operator">=</span>boy<span class="variable">&amp;phonenum</span>=<span class="number">15988767673</span><span class="variable">&amp;add</span>=hacker<span class="variable">&amp;email</span>=kobe%<span class="number">40</span>pikachu.com<span class="variable">&amp;submit</span>=submit</span><br></pre></td></tr></table></figure>
+
+<p>发现并没有token之类的认证手段。将这段URL适当修改，然后登录另一个账户，点击点击刚刚构造好的URL来模拟该用户被攻击，发现该用户的信息被成功修改成了我们想要的情况。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/yatq21/Pictures@master/Blog/study/image-20250413210824877.png" alt="image-20250413210824877"></p>
+<h3 id="CSRF-POST"><a href="#CSRF-POST" class="headerlink" title="CSRF(POST)"></a>CSRF(POST)</h3><p>发现修改信息被放在了POST请求体中，那么就无法像GET型一样直接构造恶意URL了。</p>
+<p>但我们可以自己建一个网站，修改相关参数发送请求抓包后自己写一个html页面，诱导受害者进行点击等操作从而发送了恶意的POST请求修改了数据。</p>
+<p>而BP中就有相关功能可以根据请求包直接生成可用的CSRF PoC:</p>
+<p><img src="https://cdn.jsdelivr.net/gh/yatq21/Pictures@master/Blog/study/image-20250414210324500.png" alt="image-20250414210324500"></p>
+<p>生成之后点击测试一下：</p>
+<p><img src="https://cdn.jsdelivr.net/gh/yatq21/Pictures@master/Blog/study/image-20250414210545681.png" alt="image-20250414210545681"></p>
+<p>点击提交按钮后发现信息被成功修改。</p>
+<h3 id="CSRF-Token"><a href="#CSRF-Token" class="headerlink" title="CSRF Token"></a>CSRF Token</h3><p>抓包发现有token验证：</p>
+<p><img src="https://cdn.jsdelivr.net/gh/yatq21/Pictures@master/Blog/study/image-20250414210914121.png" alt="image-20250414210914121"></p>
+<p>查看源码即可发现，token发现Tokenmeici发送请求后会被和Session中的Token值进行比较，相同才会修改成功</p>
+<p><img src="https://cdn.jsdelivr.net/gh/yatq21/Pictures@master/Blog/study/image-20250414213540245.png" alt="image-20250414213540245"></p>
+<p>，并且在修改之后还会重新生成一个新的值放在html的隐藏标签中。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/yatq21/Pictures@master/Blog/study/image-20250414213447382.png" alt="image-20250414213447382"></p>
+<p>只要生成的Token足够随机，就会在一定程度上防止了CSRF攻击。</p>
+<h2 id="防御措施"><a href="#防御措施" class="headerlink" title="防御措施"></a>防御措施</h2><ol>
+<li><p>每次设置随机Token</p>
+</li>
+<li><p>二次验证</p>
+<p>例如：修改账号密码，需要判断旧密码。</p>
+</li>
+<li><p>Referer监测</p>
+<p>检测跳转的站点是否符合规范。</p>
+</li>
+</ol>
+<p>这三种措施若同时使用基本可以杜绝CSRF攻击。</p>
+<p>参考文章：</p>
+<p><a target="_blank" rel="noopener" href="https://www.cnblogs.com/Mchacha/p/18184186">CSRF(Pikachu靶场练习) - machacha - 博客园</a></p>
+<p><a target="_blank" rel="noopener" href="https://www.cnblogs.com/dogecheng/p/11583412.html">Pikachu漏洞练习平台实验——CSRF（三） - 那少年和狗 - 博客园</a></p>
+
+    </div>
+
+    
+    
+    
+        
+
+<div>
+<ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>本文作者： </strong>y@7q
+  </li>
+  <li class="post-copyright-link">
+    <strong>本文链接：</strong>
+    <a href="http://yatq.xyz/web%E5%9F%BA%E7%A1%80%E6%80%BB%E7%BB%93%E7%AC%94%E8%AE%B0/CSRF%E5%AD%A6%E4%B9%A0/" title="CSRF学习">http://yatq.xyz/web基础总结笔记/CSRF学习/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
+
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/CTF/" rel="tag"># CTF</a>
+              <a href="/tags/%E5%88%B7%E9%A2%98/" rel="tag"># 刷题</a>
+              <a href="/tags/CSRF/" rel="tag"># CSRF</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/web%E5%9F%BA%E7%A1%80%E6%80%BB%E7%BB%93%E7%AC%94%E8%AE%B0/XML%20XPath%E6%B3%A8%E5%85%A5%E4%BB%A5%E5%8F%8AXXE/" rel="prev" title="XML XPath注入以及XXE">
+      <i class="fa fa-chevron-left"></i> XML XPath注入以及XXE
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/web%E5%9F%BA%E7%A1%80%E6%80%BB%E7%BB%93%E7%AC%94%E8%AE%B0/SSRF%E5%AD%A6%E4%B9%A0/" rel="next" title="SSRF学习">
+      SSRF学习 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#CSRF%E6%A6%82%E8%BF%B0"><span class="nav-number">1.</span> <span class="nav-text">CSRF概述</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#CSRF%E6%94%BB%E5%87%BB%E8%BF%87%E7%A8%8B%E7%A4%BA%E4%BE%8B"><span class="nav-number">1.1.</span> <span class="nav-text">CSRF攻击过程示例</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#CSRF-GET"><span class="nav-number">1.1.1.</span> <span class="nav-text">CSRF(GET)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#CSRF-POST"><span class="nav-number">1.1.2.</span> <span class="nav-text">CSRF(POST)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#CSRF-Token"><span class="nav-number">1.1.3.</span> <span class="nav-text">CSRF Token</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%98%B2%E5%BE%A1%E6%8E%AA%E6%96%BD"><span class="nav-number">1.2.</span> <span class="nav-text">防御措施</span></a></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="y@7q"
+      src="/images/wz.jpg">
+  <p class="site-author-name" itemprop="name">y@7q</p>
+  <div class="site-description" itemprop="description">心不畏死，踏屍前行</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">24</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">6</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">25</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/yatq21" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;yatq21" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:yatqqwer@gmail.com" title="E-Mail → mailto:yatqqwer@gmail.com" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+  </div>
+  <div class="cc-license motion-element" itemprop="license">
+    <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" class="cc-opacity" rel="noopener" target="_blank"><img src="/images/cc-by-nc-sa.svg" alt="Creative Commons"></a>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2025</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">y@7q</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-area"></i>
+    </span>
+    <span title="站点总字数">113k</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+    <span title="站点阅读时长">1:43</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://pisces.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Pisces</a> 强力驱动
+  </div>
+
+
+<span id="timeDate">载入天数...</span>
+<span id="times">载入时分秒...</span>
+<script>
+    var now = new Date();
+    function createtime() {
+        var grt= new Date("04/03/2025 10:00:00"); //修改为你的网站开始运行的时间
+        now.setTime(now.getTime()+250);
+        days = (now - grt ) / 1000 / 60 / 60 / 24; dnum = Math.floor(days);
+        hours = (now - grt ) / 1000 / 60 / 60 - (24 * dnum); hnum = Math.floor(hours);
+        if(String(hnum).length ==1 ){hnum = "0" + hnum;} minutes = (now - grt ) / 1000 /60 - (24 * 60 * dnum) - (60 * hnum);
+        mnum = Math.floor(minutes); if(String(mnum).length ==1 ){mnum = "0" + mnum;}
+        seconds = (now - grt ) / 1000 - (24 * 60 * 60 * dnum) - (60 * 60 * hnum) - (60 * mnum);
+        snum = Math.round(seconds); if(String(snum).length ==1 ){snum = "0" + snum;}
+        document.getElementById("timeDate").innerHTML = "本站已安全运行 "+dnum+" 天 ";
+        document.getElementById("times").innerHTML = hnum + " 小时 " + mnum + " 分 " + snum + " 秒.";
+    }
+setInterval("createtime()",250);
+</script>
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <span class="post-meta-item" id="busuanzi_container_site_uv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="总访客量">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="总访问量">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  
+  <script color='0,0,255' opacity='0.5' zIndex='-1' count='99' src="/lib/canvas-nest/canvas-nest.min.js"></script>
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>
