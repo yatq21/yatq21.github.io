@@ -20,16 +20,16 @@
     var CONFIG = {"hostname":"yatq.xyz","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"right","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
   </script>
 
-  <meta name="description" content="CS50 FlaskFlask是一个python的后端微型框架，用来方便快捷的生成前端界面。而目前我需要学习FaskAPI,由于和Flask类似，所以我打算先来回顾一遍这一课。 最基础的一集12345678from flask import Flaskapp &#x3D; Flask(__name__)@app.route(&quot;&#x2F;&quot;)def index():	return &quot;He">
+  <meta name="description" content="CS50 FlaskFlask是一个python的后端微型框架，用来方便快捷的生成前端界面。而目前我需要学习FaskAPI,由于和Flask类似，所以我打算先来回顾一遍这一课。">
 <meta property="og:type" content="article">
 <meta property="og:title" content="CS50_Flask">
 <meta property="og:url" content="http://yatq.xyz/CScourse/CS50-Flask/index.html">
 <meta property="og:site_name" content="y@7q">
-<meta property="og:description" content="CS50 FlaskFlask是一个python的后端微型框架，用来方便快捷的生成前端界面。而目前我需要学习FaskAPI,由于和Flask类似，所以我打算先来回顾一遍这一课。 最基础的一集12345678from flask import Flaskapp &#x3D; Flask(__name__)@app.route(&quot;&#x2F;&quot;)def index():	return &quot;He">
+<meta property="og:description" content="CS50 FlaskFlask是一个python的后端微型框架，用来方便快捷的生成前端界面。而目前我需要学习FaskAPI,由于和Flask类似，所以我打算先来回顾一遍这一课。">
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="https://cdn.jsdelivr.net/gh/yatq21/Pictures@master/Blog/study/image-20250502031119239.png">
 <meta property="article:published_time" content="2025-05-01T18:33:06.000Z">
-<meta property="article:modified_time" content="2025-05-02T03:48:26.862Z">
+<meta property="article:modified_time" content="2025-06-25T14:03:05.477Z">
 <meta property="article:author" content="y@7q">
 <meta property="article:tag" content="CS50">
 <meta property="article:tag" content="Flask">
@@ -191,10 +191,16 @@
                 <i class="far fa-calendar"></i>
               </span>
               <span class="post-meta-item-text">发表于</span>
-              
 
-              <time title="创建时间：2025-05-02 02:33:06 / 修改时间：11:48:26" itemprop="dateCreated datePublished" datetime="2025-05-02T02:33:06+08:00">2025-05-02</time>
+              <time title="创建时间：2025-05-02 02:33:06" itemprop="dateCreated datePublished" datetime="2025-05-02T02:33:06+08:00">2025-05-02</time>
             </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2025-06-25 22:03:05" itemprop="dateModified" datetime="2025-06-25T22:03:05+08:00">2025-06-25</time>
+              </span>
 
           
             <span class="post-meta-item" title="阅读次数" id="busuanzi_container_page_pv" style="display: none;">
@@ -229,6 +235,8 @@
 
       
         <h1 id="CS50-Flask"><a href="#CS50-Flask" class="headerlink" title="CS50 Flask"></a>CS50 Flask</h1><p>Flask是一个python的后端微型框架，用来方便快捷的生成前端界面。而目前我需要学习FaskAPI,由于和Flask类似，所以我打算先来回顾一遍这一课。</p>
+<span id="more"></span>
+
 <h2 id="最基础的一集"><a href="#最基础的一集" class="headerlink" title="最基础的一集"></a>最基础的一集</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> flask <span class="keyword">import</span> Flask</span><br><span class="line"></span><br><span class="line">app = Flask(__name__)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="meta">@app.route(<span class="params"><span class="string">&quot;/&quot;</span></span>)</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">index</span>():</span><br><span class="line">	<span class="keyword">return</span> <span class="string">&quot;Hello, world!&quot;</span></span><br></pre></td></tr></table></figure>
 
 
@@ -410,20 +418,20 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">24</span>
+          <span class="site-state-item-count">26</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
       <div class="site-state-item site-state-categories">
             <a href="/categories/">
           
-        <span class="site-state-item-count">6</span>
+        <span class="site-state-item-count">7</span>
         <span class="site-state-item-name">分类</span></a>
       </div>
       <div class="site-state-item site-state-tags">
             <a href="/tags/">
           
-        <span class="site-state-item-count">25</span>
+        <span class="site-state-item-count">27</span>
         <span class="site-state-item-name">标签</span></a>
       </div>
   </nav>
@@ -470,12 +478,12 @@
     <span class="post-meta-item-icon">
       <i class="fa fa-chart-area"></i>
     </span>
-    <span title="站点总字数">113k</span>
+    <span title="站点总字数">122k</span>
     <span class="post-meta-divider">|</span>
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
-    <span title="站点阅读时长">1:43</span>
+    <span title="站点阅读时长">1:51</span>
 </div>
   <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://pisces.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Pisces</a> 强力驱动
   </div>
