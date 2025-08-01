@@ -1,6 +1,82 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
+    <loc>http://yatq.xyz/web%E5%9F%BA%E7%A1%80%E6%80%BB%E7%BB%93%E7%AC%94%E8%AE%B0/upload-labs/</loc>
+    <lastmod>2025-08-01</lastmod>
+  </url>
+  <url>
+    <loc>http://yatq.xyz/web%E5%9F%BA%E7%A1%80%E6%80%BB%E7%BB%93%E7%AC%94%E8%AE%B0/%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/</loc>
+    <lastmod>2025-07-31</lastmod>
+  </url>
+  <url>
+    <loc>http://yatq.xyz/%E6%9D%82%E8%B0%88/2025-07-29/</loc>
+    <lastmod>2025-07-29</lastmod>
+  </url>
+  <url>
+    <loc>http://yatq.xyz/web%E5%9F%BA%E7%A1%80%E6%80%BB%E7%BB%93%E7%AC%94%E8%AE%B0/sqli-labs%E5%88%B7%E9%A2%98/</loc>
+    <lastmod>2025-07-26</lastmod>
+  </url>
+  <url>
+    <loc>http://yatq.xyz/web%E5%9F%BA%E7%A1%80%E6%80%BB%E7%BB%93%E7%AC%94%E8%AE%B0/xss%E5%AD%A6%E4%B9%A0/</loc>
+    <lastmod>2025-07-20</lastmod>
+  </url>
+  <url>
+    <loc>http://yatq.xyz/CTF%E8%B5%9B%E4%BA%8B%E5%A4%8D%E7%9B%98/DownUnderCTF%20web/</loc>
+    <lastmod>2025-07-20</lastmod>
+  </url>
+  <url>
+    <loc>http://yatq.xyz/CTF%E8%B5%9B%E4%BA%8B%E5%A4%8D%E7%9B%98/ACTF/</loc>
+    <lastmod>2025-07-20</lastmod>
+  </url>
+  <url>
+    <loc>http://yatq.xyz/CScourse/CS61B%20Essentials/</loc>
+    <lastmod>2025-07-17</lastmod>
+  </url>
+  <url>
+    <loc>http://yatq.xyz/%E6%9D%82%E8%B0%88/2025-07-17/</loc>
+    <lastmod>2025-07-17</lastmod>
+  </url>
+  <url>
+    <loc>http://yatq.xyz/%E6%9D%82%E8%B0%88/Blog%E6%90%AD%E5%BB%BA%E4%B9%8B%E8%B7%AF/</loc>
+    <lastmod>2025-07-17</lastmod>
+  </url>
+  <url>
+    <loc>http://yatq.xyz/Math/%E7%BA%BF%E6%80%A7%E4%BB%A3%E6%95%B0%E7%9A%84%E6%9C%AC%E8%B4%A8%EF%BC%883B1B%EF%BC%89%E5%90%AC%E8%AF%BE%E7%AC%94%E8%AE%B0/</loc>
+    <lastmod>2025-07-17</lastmod>
+  </url>
+  <url>
+    <loc>http://yatq.xyz/%E7%89%A9%E7%90%86/%E5%85%89%E5%AD%A6%E5%A4%8D%E4%B9%A0/</loc>
+    <lastmod>2025-07-07</lastmod>
+  </url>
+  <url>
+    <loc>http://yatq.xyz/%E6%9D%82%E8%B0%88/111/</loc>
+    <lastmod>2025-07-04</lastmod>
+  </url>
+  <url>
+    <loc>http://yatq.xyz/web%E5%9F%BA%E7%A1%80%E6%80%BB%E7%BB%93%E7%AC%94%E8%AE%B0/SSTI/</loc>
+    <lastmod>2025-06-29</lastmod>
+  </url>
+  <url>
+    <loc>http://yatq.xyz/web%E5%9F%BA%E7%A1%80%E6%80%BB%E7%BB%93%E7%AC%94%E8%AE%B0/%E6%9A%91%E5%81%87%E5%A4%87%E8%AF%BE/</loc>
+    <lastmod>2025-06-29</lastmod>
+  </url>
+  <url>
+    <loc>http://yatq.xyz/web%E5%9F%BA%E7%A1%80%E6%80%BB%E7%BB%93%E7%AC%94%E8%AE%B0/%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E8%AF%BB%E5%8F%96%E6%BC%8F%E6%B4%9E/</loc>
+    <lastmod>2025-06-29</lastmod>
+  </url>
+  <url>
+    <loc>http://yatq.xyz/%E6%9D%82%E8%B0%88/2025-06-29/</loc>
+    <lastmod>2025-06-29</lastmod>
+  </url>
+  <url>
+    <loc>http://yatq.xyz/%E7%89%A9%E7%90%86/%E5%85%89%E5%AD%A6%E7%AC%94%E8%AE%B01_%E5%87%A0%E4%BD%95%E5%85%89%E5%AD%A6%E6%88%90%E5%83%8F/</loc>
+    <lastmod>2025-06-29</lastmod>
+  </url>
+  <url>
+    <loc>http://yatq.xyz/%E6%9D%82%E8%B0%88/%E5%85%B3%E4%BA%8E%E6%88%91%E7%94%A8gemini%E7%9A%84%E4%B8%80%E4%BA%9B%E5%BF%83%E5%BE%97%E4%BD%93%E4%BC%9A/</loc>
+    <lastmod>2025-06-27</lastmod>
+  </url>
+  <url>
     <loc>http://yatq.xyz/%E6%9D%82%E8%B0%88/re%E6%AD%A3%E5%88%99%E8%A1%A8%E8%BE%BE%E5%BC%8F%E7%9A%84%E5%AD%A6%E4%B9%A0/</loc>
     <lastmod>2025-06-25</lastmod>
   </url>
@@ -29,36 +105,8 @@
     <lastmod>2025-06-25</lastmod>
   </url>
   <url>
-    <loc>http://yatq.xyz/%E6%9D%82%E8%B0%88/%E5%85%B3%E4%BA%8E%E6%88%91%E7%94%A8gemini%E7%9A%84%E4%B8%80%E4%BA%9B%E5%BF%83%E5%BE%97%E4%BD%93%E4%BC%9A/</loc>
-    <lastmod>2025-06-25</lastmod>
-  </url>
-  <url>
     <loc>http://yatq.xyz/web%E5%9F%BA%E7%A1%80%E6%80%BB%E7%BB%93%E7%AC%94%E8%AE%B0/RCE/</loc>
     <lastmod>2025-06-06</lastmod>
-  </url>
-  <url>
-    <loc>http://yatq.xyz/%E7%89%A9%E7%90%86/%E5%85%89%E5%AD%A6%E7%AC%94%E8%AE%B01_%E5%87%A0%E4%BD%95%E5%85%89%E5%AD%A6%E6%88%90%E5%83%8F/</loc>
-    <lastmod>2025-05-20</lastmod>
-  </url>
-  <url>
-    <loc>http://yatq.xyz/web%E5%9F%BA%E7%A1%80%E6%80%BB%E7%BB%93%E7%AC%94%E8%AE%B0/SSTI/</loc>
-    <lastmod>2025-05-11</lastmod>
-  </url>
-  <url>
-    <loc>http://yatq.xyz/web%E5%9F%BA%E7%A1%80%E6%80%BB%E7%BB%93%E7%AC%94%E8%AE%B0/upload-labs/</loc>
-    <lastmod>2025-05-11</lastmod>
-  </url>
-  <url>
-    <loc>http://yatq.xyz/web%E5%9F%BA%E7%A1%80%E6%80%BB%E7%BB%93%E7%AC%94%E8%AE%B0/%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/</loc>
-    <lastmod>2025-05-11</lastmod>
-  </url>
-  <url>
-    <loc>http://yatq.xyz/web%E5%9F%BA%E7%A1%80%E6%80%BB%E7%BB%93%E7%AC%94%E8%AE%B0/sqli-labs%E5%88%B7%E9%A2%98/</loc>
-    <lastmod>2025-05-04</lastmod>
-  </url>
-  <url>
-    <loc>http://yatq.xyz/CTF%E8%B5%9B%E4%BA%8B%E5%A4%8D%E7%9B%98/ACTF/</loc>
-    <lastmod>2025-05-01</lastmod>
   </url>
   <url>
     <loc>http://yatq.xyz/CTF%E8%B5%9B%E4%BA%8B%E5%A4%8D%E7%9B%98/polarctf%E5%A4%8D%E7%8E%B0/</loc>
@@ -77,18 +125,6 @@
     <lastmod>2025-04-15</lastmod>
   </url>
   <url>
-    <loc>http://yatq.xyz/web%E5%9F%BA%E7%A1%80%E6%80%BB%E7%BB%93%E7%AC%94%E8%AE%B0/xss%E5%AD%A6%E4%B9%A0/</loc>
-    <lastmod>2025-04-11</lastmod>
-  </url>
-  <url>
-    <loc>http://yatq.xyz/web%E5%9F%BA%E7%A1%80%E6%80%BB%E7%BB%93%E7%AC%94%E8%AE%B0/%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E8%AF%BB%E5%8F%96%E6%BC%8F%E6%B4%9E/</loc>
-    <lastmod>2025-04-06</lastmod>
-  </url>
-  <url>
-    <loc>http://yatq.xyz/Math/%E7%BA%BF%E6%80%A7%E4%BB%A3%E6%95%B0%E7%9A%84%E6%9C%AC%E8%B4%A8%EF%BC%883B1B%EF%BC%89%E5%90%AC%E8%AF%BE%E7%AC%94%E8%AE%B0/</loc>
-    <lastmod>2025-04-03</lastmod>
-  </url>
-  <url>
     <loc>http://yatq.xyz/CTF%E8%B5%9B%E4%BA%8B%E5%A4%8D%E7%9B%98/HCTF%E4%B8%AA%E4%BA%BAwp/</loc>
     <lastmod>2025-04-03</lastmod>
   </url>
@@ -99,9 +135,5 @@
   <url>
     <loc>http://yatq.xyz/%E6%9D%82%E8%B0%88/%E6%9C%AC%E5%9C%B0%E6%A8%A1%E5%9E%8B%E6%90%AD%E5%BB%BA/</loc>
     <lastmod>2025-03-17</lastmod>
-  </url>
-  <url>
-    <loc>http://yatq.xyz/%E6%9D%82%E8%B0%88/Blog%E6%90%AD%E5%BB%BA%E4%B9%8B%E8%B7%AF/</loc>
-    <lastmod>2025-02-13</lastmod>
   </url>
 </urlset> 
