@@ -335,13 +335,6 @@
 
   
   <url>
-    <loc>http://yatq.xyz/tags/CTF%E5%A4%8D%E7%8E%B0/</loc>
-    <lastmod>2025-08-07</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.2</priority>
-  </url>
-  
-  <url>
     <loc>http://yatq.xyz/tags/CS50/</loc>
     <lastmod>2025-08-07</lastmod>
     <changefreq>weekly</changefreq>
@@ -356,28 +349,7 @@
   </url>
   
   <url>
-    <loc>http://yatq.xyz/tags/%E5%88%B7%E9%A2%98/</loc>
-    <lastmod>2025-08-07</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.2</priority>
-  </url>
-  
-  <url>
-    <loc>http://yatq.xyz/tags/%E7%BA%BF%E6%80%A7%E4%BB%A3%E6%95%B0/</loc>
-    <lastmod>2025-08-07</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.2</priority>
-  </url>
-  
-  <url>
-    <loc>http://yatq.xyz/tags/3B1B/</loc>
-    <lastmod>2025-08-07</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.2</priority>
-  </url>
-  
-  <url>
-    <loc>http://yatq.xyz/tags/CTF/</loc>
+    <loc>http://yatq.xyz/tags/CTF%E5%A4%8D%E7%8E%B0/</loc>
     <lastmod>2025-08-07</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
@@ -398,6 +370,20 @@
   </url>
   
   <url>
+    <loc>http://yatq.xyz/tags/CTF/</loc>
+    <lastmod>2025-08-07</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>http://yatq.xyz/tags/%E5%88%B7%E9%A2%98/</loc>
+    <lastmod>2025-08-07</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
     <loc>http://yatq.xyz/tags/CSRF/</loc>
     <lastmod>2025-08-07</lastmod>
     <changefreq>weekly</changefreq>
@@ -406,6 +392,13 @@
   
   <url>
     <loc>http://yatq.xyz/tags/SSRF/</loc>
+    <lastmod>2025-08-07</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>http://yatq.xyz/tags/xxe/</loc>
     <lastmod>2025-08-07</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
@@ -433,7 +426,7 @@
   </url>
   
   <url>
-    <loc>http://yatq.xyz/tags/xxe/</loc>
+    <loc>http://yatq.xyz/tags/%E6%96%87%E4%BB%B6%E4%B8%8A%E4%BC%A0/</loc>
     <lastmod>2025-08-07</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
@@ -455,13 +448,6 @@
   
   <url>
     <loc>http://yatq.xyz/tags/Python%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96/</loc>
-    <lastmod>2025-08-07</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.2</priority>
-  </url>
-  
-  <url>
-    <loc>http://yatq.xyz/tags/%E6%96%87%E4%BB%B6%E4%B8%8A%E4%BC%A0/</loc>
     <lastmod>2025-08-07</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
@@ -503,20 +489,6 @@
   </url>
   
   <url>
-    <loc>http://yatq.xyz/tags/js/</loc>
-    <lastmod>2025-08-07</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.2</priority>
-  </url>
-  
-  <url>
-    <loc>http://yatq.xyz/tags/%E5%89%8D%E7%AB%AF/</loc>
-    <lastmod>2025-08-07</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.2</priority>
-  </url>
-  
-  <url>
     <loc>http://yatq.xyz/tags/Linux/</loc>
     <lastmod>2025-08-07</lastmod>
     <changefreq>weekly</changefreq>
@@ -531,6 +503,34 @@
   </url>
   
   <url>
+    <loc>http://yatq.xyz/tags/js/</loc>
+    <lastmod>2025-08-07</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>http://yatq.xyz/tags/%E5%89%8D%E7%AB%AF/</loc>
+    <lastmod>2025-08-07</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>http://yatq.xyz/tags/%E7%BA%BF%E6%80%A7%E4%BB%A3%E6%95%B0/</loc>
+    <lastmod>2025-08-07</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>http://yatq.xyz/tags/3B1B/</loc>
+    <lastmod>2025-08-07</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
     <loc>http://yatq.xyz/tags/%E6%AD%A3%E5%88%99%E8%A1%A8%E8%BE%BE%E5%BC%8F/</loc>
     <lastmod>2025-08-07</lastmod>
     <changefreq>weekly</changefreq>
@@ -539,13 +539,6 @@
   
   <url>
     <loc>http://yatq.xyz/tags/gemini/</loc>
-    <lastmod>2025-08-07</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.2</priority>
-  </url>
-  
-  <url>
-    <loc>http://yatq.xyz/tags/%E6%9C%AC%E5%9C%B0%E6%A8%A1%E5%9E%8B/</loc>
     <lastmod>2025-08-07</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
@@ -572,24 +565,24 @@
     <priority>0.2</priority>
   </url>
   
+  <url>
+    <loc>http://yatq.xyz/tags/%E6%9C%AC%E5%9C%B0%E6%A8%A1%E5%9E%8B/</loc>
+    <lastmod>2025-08-07</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
 
   
   <url>
-    <loc>http://yatq.xyz/categories/CTF%E6%80%BB%E7%BB%93/</loc>
-    <lastmod>2025-08-07</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.2</priority>
-  </url>
-  
-  <url>
-    <loc>http://yatq.xyz/categories/math/</loc>
-    <lastmod>2025-08-07</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.2</priority>
-  </url>
-  
-  <url>
     <loc>http://yatq.xyz/categories/CS%E5%9F%BA%E7%A1%80-ABC/</loc>
+    <lastmod>2025-08-07</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>http://yatq.xyz/categories/CTF%E6%80%BB%E7%BB%93/</loc>
     <lastmod>2025-08-07</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
@@ -611,6 +604,13 @@
   
   <url>
     <loc>http://yatq.xyz/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/</loc>
+    <lastmod>2025-08-07</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>http://yatq.xyz/categories/math/</loc>
     <lastmod>2025-08-07</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
