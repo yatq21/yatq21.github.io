@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html>
+    <head>
+    <meta charset="utf-8">
+    <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" name="viewport" />
+    <link rel="alternate icon" type="image/png" href="/img/favicon.png">
+    <title>y@7q | </title>
+    
+<link rel="stylesheet" href="/css/reset.css">
+
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    
+<link rel="stylesheet" href="/css/markdown.css">
+
+    
+<link rel="stylesheet" href="/css/fonts.css">
+
+<meta name="generator" content="Hexo 7.3.0"></head>
+    <body>
+        <div class="paper">
+            <div class="paper-main">
+                
+                    <div class="post-header">
+    <a class="logo" href="/">y@7q</a>
+    <a class="go-home" href="/">
+        <svg width="8" height="14" viewBox="0 0 8 14">
+            <path d="M7 1L1 7l6 6" stroke="#000" stroke-width="2" fill="none" fill-rule="evenodd" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+    </a>
+</div>
+                
+                <div class="post-main">
+
+    
+    
+        <div class="post-main-title">
+            re正则表达式学习
+        </div>
+        <div class="post-meta">
+            2025-03-27
+        </div>
+        <div class="post-md">
+            <h1 id="正则表达式的初识"><a href="#正则表达式的初识" class="headerlink" title="正则表达式的初识"></a>正则表达式的初识</h1><p><em>正则表达式(Regular Expression)</em> 是一种文本模式，用于匹配和筛选特定格式的文本字符串等。</p>
+<p>为了做数据处理相关的题目，所以顺便看看学习和了解一下。</p>
+<span id="more"></span>
+
+<h3 id="量词"><a href="#量词" class="headerlink" title="量词"></a>量词</h3><p>在<a target="_blank" rel="noopener" href="https://www.runoob.com/regexp/regexp-tutorial.html">正则表达式 – 教程 | 菜鸟教程</a>上举了一个例子让我对正则有了一种熟悉的感觉：</p>
+<blockquote>
+<p> 例如，您很可能使用 <strong>?</strong> 和 ***** 通配符来查找硬盘上的文件。**?** 通配符匹配文件名中的 0 个或 1 个字符，而 ***** 通配符匹配零个或多个字符。 </p>
+</blockquote>
+<p>确实，在某些关键字被waf的情况下，常常会用<code>find ~ -name &quot;fla*&quot;</code>，&#96;&#96;find ~ -name “f???”<code>之类的通配符来绕过，这和正则中的符号有些类似。于是目前便自然而然的知道了这两个符号的用法。而剩下的一个量词</code>+<code>则是匹配前面的模式一次或多次，可以理解为**必须有**。也可以</code> {n,m} &#96;来实现确切的次数范围。</p>
+<p><img src="/re%E6%AD%A3%E5%88%99%E8%A1%A8%E8%BE%BE%E5%BC%8F%E7%9A%84%E5%AD%A6%E4%B9%A0/regexp-cn.png" alt="img"></p>
+<p>这是菜鸟教程中的一个例子，表示匹配前面的字符集3到15次，<code>^</code>和<code>$</code>分别表示匹配字符串的首尾。</p>
+<h3 id="边界匹配"><a href="#边界匹配" class="headerlink" title="边界匹配"></a>边界匹配</h3><ul>
+<li><code>^</code>：匹配字符串的开头。（在字符集中表示反选）</li>
+<li><code>$</code>：匹配字符串的结尾。</li>
+<li><code>\b</code>：匹配单词边界。</li>
+<li><code>\B</code>：匹配非单词边界。</li>
+</ul>
+<h3 id="元字符"><a href="#元字符" class="headerlink" title="元字符"></a>元字符</h3><p><code>\w</code>:  匹配字母、数字、下划线。等价于 <strong>[A-Za-z0-9_]</strong></p>
+<p><code>\d</code>:  匹配任意一个阿拉伯数字（0 到 9）。等价于 <strong>[0-9]</strong> </p>
+<p><code>\s</code>: 匹配所有空白符，包括换行。</p>
+<p><code>\S</code>: 非空白符，不包括换行。</p>
+<h3 id="贪婪与非贪婪模式"><a href="#贪婪与非贪婪模式" class="headerlink" title="贪婪与非贪婪模式"></a>贪婪与非贪婪模式</h3><blockquote>
+<p> 通过在 *<strong><strong>、</strong>+</strong> 或 <strong>?</strong> 限定符之后放置 **?**，该表达式从”贪婪”表达式转换为”非贪婪”表达式或者最小匹配。 </p>
+</blockquote>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">h1</span>&gt;</span>RUNOOB-菜鸟教程<span class="tag">&lt;/<span class="name">h1</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>如果是用<code>/&lt;.*&gt;/</code>来匹配则会匹配上面的所有字符。而要想只匹配h1标签头，则可以在<strong>*</strong> 限定符之后放置 **?**，<code>/&lt;.*?&gt;/</code>这样即可。</p>
+<h1 id="Python3中的正则表达式"><a href="#Python3中的正则表达式" class="headerlink" title="Python3中的正则表达式"></a>Python3中的正则表达式</h1><p>在python中常常用<code>re</code>模块来处理正则。</p>
+<h3 id="匹配"><a href="#匹配" class="headerlink" title="匹配"></a>匹配</h3><h4 id="re-match函数"><a href="#re-match函数" class="headerlink" title="re.match函数"></a><code>re.match</code>函数</h4><p> <code>re.match</code> 尝试从字符串的起始位置匹配一个模式，如果不是起始位置匹配成功的话，match() 就返回 None。 </p>
+<p><strong>函数语法</strong>：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">re.<span class="keyword">match</span>(pattern, string, flags=<span class="number">0</span>)</span><br></pre></td></tr></table></figure>
+
+<p><strong>函数参数说明</strong>：</p>
+<table>
+<thead>
+<tr>
+<th align="left">参数</th>
+<th align="left">描述</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left">pattern</td>
+<td align="left">匹配的正则表达式</td>
+</tr>
+<tr>
+<td align="left">string</td>
+<td align="left">要匹配的字符串。</td>
+</tr>
+<tr>
+<td align="left">flags</td>
+<td align="left">标志位，用于控制正则表达式的匹配方式，如：是否区分大小写，多行匹配等等。参见：<a target="_blank" rel="noopener" href="https://www.runoob.com/python3/python3-reg-expressions.html#flags">正则表达式修饰符 - 可选标志</a></td>
+</tr>
+</tbody></table>
+<h4 id="re-search方法"><a href="#re-search方法" class="headerlink" title="re.search方法"></a><code>re.search</code>方法</h4><p> <code>re.search</code> 扫描整个字符串并返回第一个成功的匹配。 </p>
+<h3 id="捕获"><a href="#捕获" class="headerlink" title="捕获"></a>捕获</h3><p>在pattern中用圆括号括起来的部分是可以被捕获字串，我们可以使用 <strong>group(num)</strong> 或 <strong>groups()</strong> 匹配对象函数来获取匹配表达式。</p>
+<table>
+<thead>
+<tr>
+<th align="left">匹配对象方法</th>
+<th align="left">描述</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left">group(num&#x3D;0)</td>
+<td align="left">匹配的整个表达式的字符串，group() 可以一次输入多个组号，在这种情况下它将返回一个包含那些组所对应值的元组。</td>
+</tr>
+<tr>
+<td align="left">groups()</td>
+<td align="left">返回一个包含所有小组字符串的元组，从 1 到 所含的小组号。</td>
+</tr>
+</tbody></table>
+<h4 id="re-findall方法"><a href="#re-findall方法" class="headerlink" title="re.findall方法"></a><code>re.findall</code>方法</h4><p>在字符串中找到正则表达式所匹配的所有子串，并返回一个列表，如果有多个匹配模式，则返回元组列表，如果没有找到匹配的，则返回空列表。</p>
+<p><strong>注意：</strong> <code>match</code> 和 <code>search</code> 是匹配一次， <code>findall</code> 匹配所有。经常会有只用search导致匹配的不够。</p>
+<p>暂时先看这么多，后面再用继续看即可。</p>
+<p><code>re.finall(&#39;\&quot;msg\&quot;:\&quot;(.*?)\&quot;&#39;, )</code></p>
+<p>参考资料：</p>
+<p><a target="_blank" rel="noopener" href="https://www.runoob.com/regexp/regexp-tutorial.html">正则表达式 – 教程 | 菜鸟教程</a></p>
+<p><a target="_blank" rel="noopener" href="https://www.runoob.com/python3/python3-reg-expressions.html">Python3 正则表达式 | 菜鸟教程</a></p>
+
+        </div>
+
+    
+
+</div>
+                <div class="footer">
+    <span>Copyright © 2022 y@7q</span>
+    <span>Theme Designed By <a target="_blank" href="https://zheli.design/one-paper">這李設計</a></span>
+</div>
+
+
+<link rel="stylesheet" href="/css/a11y-dark.min.css">
+
+
+<script src="/js/highlight.min.js"></script>
+
+
+<script src="/js/highlightjs-line-numbers.js"></script>
+
+
+<script>
+    hljs.initHighlightingOnLoad();
+    hljs.initLineNumbersOnLoad();
+</script>
+
+            </div>
+        </div>
+    </body>
+</html>

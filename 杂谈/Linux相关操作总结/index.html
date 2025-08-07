@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html>
+    <head>
+    <meta charset="utf-8">
+    <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" name="viewport" />
+    <link rel="alternate icon" type="image/png" href="/img/favicon.png">
+    <title>y@7q | </title>
+    
+<link rel="stylesheet" href="/css/reset.css">
+
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    
+<link rel="stylesheet" href="/css/markdown.css">
+
+    
+<link rel="stylesheet" href="/css/fonts.css">
+
+<meta name="generator" content="Hexo 7.3.0"></head>
+    <body>
+        <div class="paper">
+            <div class="paper-main">
+                
+                    <div class="post-header">
+    <a class="logo" href="/">y@7q</a>
+    <a class="go-home" href="/">
+        <svg width="8" height="14" viewBox="0 0 8 14">
+            <path d="M7 1L1 7l6 6" stroke="#000" stroke-width="2" fill="none" fill-rule="evenodd" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+    </a>
+</div>
+                
+                <div class="post-main">
+
+    
+    
+        <div class="post-main-title">
+            Linux相关操作总结
+        </div>
+        <div class="post-meta">
+            2025-04-04
+        </div>
+        <div class="post-md">
+            <h1 id="Linux相关操作总结"><a href="#Linux相关操作总结" class="headerlink" title="Linux相关操作总结"></a>Linux相关操作总结</h1><p>我会在这里总结一些Linux操作上的一些常用但我不熟的操作，用来查阅和回忆。</p>
+<span id="more"></span>
+
+<h2 id="grep全局搜索"><a href="#grep全局搜索" class="headerlink" title="grep全局搜索"></a>grep全局搜索</h2><p>可以用<code>grep -r &quot;关键字&quot;</code>来进行基于关键字的全局搜索相关行。我从<a target="_blank" rel="noopener" href="https://1cepeak.cn/posts/szzg2025-datasecurity-writeup/#%E6%95%B0%E6%8D%AE%E7%A4%BE%E5%B7%A5">2025数字中国创新大赛数字安全赛道｜数据安全产业积分争夺赛初赛Writeup - 1cePeak</a>这篇文章中学到的。同时可以和find命令结合使用提高效率，先根据文件名搜出所有文件，再进行筛选。例如：<code>find -name / &quot;*.html&quot; | grep -r &quot;张华强&quot;</code>。</p>
+<h2 id="chmod权限管理"><a href="#chmod权限管理" class="headerlink" title="chmod权限管理"></a>chmod权限管理</h2><h3 id="Linux文件权限"><a href="#Linux文件权限" class="headerlink" title="Linux文件权限"></a>Linux文件权限</h3><p><img src="https://cdn.jsdelivr.net/gh/yatq21/Pictures@master/Blog/study/ipcjszt20190119-04.jpg" alt="img"></p>
+<p>图源：<a target="_blank" rel="noopener" href="https://www.zlg.cn/ipc/article/detail/id/953.html">【Linux学习小技巧】浅析linux权限管理-广州致远电子股份有限公司</a></p>
+<p>使用<code>ls -l</code>即可查看文件的权限详情，最右边的d为<strong>directory（目录）</strong>。接下来每三个一组，分别是，文件创建者，创建者所在组，其他人员（管理员）的权限<code>r-&gt;read w-&gt;write x-&gt;execute</code>。接下来是用户名和组名。在<code>/etc/passwd</code>和<code>/etc/group</code>目录下可以看到所有用户和用户组的权限。</p>
+<h3 id="权限管理"><a href="#权限管理" class="headerlink" title="权限管理"></a>权限管理</h3><p>用<code>chmod</code>命令可以来设置这些权限</p>
+<p><img src="https://cdn.jsdelivr.net/gh/yatq21/Pictures@master/Blog/study/ipcjszt20190119-06.jpg" alt="img"></p>
+<p><code>u/g/o</code>:即user&#x2F;group&#x2F;other</p>
+<p><code>+/-</code>:加减权限</p>
+<p>另外还可以用数字来代替：</p>
+<p><img src="https://cdn.jsdelivr.net/gh/yatq21/Pictures@master/Blog/study/ipcjszt20190119-07.jpg" alt="ipcjszt20190119-07"></p>
+<p>r、w、x对应为数字4、2、1，用数字之和代表该组权限值，比如rwx可用 7 表示。</p>
+
+        </div>
+
+    
+
+</div>
+                <div class="footer">
+    <span>Copyright © 2022 y@7q</span>
+    <span>Theme Designed By <a target="_blank" href="https://zheli.design/one-paper">這李設計</a></span>
+</div>
+
+
+<link rel="stylesheet" href="/css/a11y-dark.min.css">
+
+
+<script src="/js/highlight.min.js"></script>
+
+
+<script src="/js/highlightjs-line-numbers.js"></script>
+
+
+<script>
+    hljs.initHighlightingOnLoad();
+    hljs.initLineNumbersOnLoad();
+</script>
+
+            </div>
+        </div>
+    </body>
+</html>

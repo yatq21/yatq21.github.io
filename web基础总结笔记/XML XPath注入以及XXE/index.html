@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html>
+    <head>
+    <meta charset="utf-8">
+    <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" name="viewport" />
+    <link rel="alternate icon" type="image/png" href="/img/favicon.png">
+    <title>y@7q | </title>
+    
+<link rel="stylesheet" href="/css/reset.css">
+
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    
+<link rel="stylesheet" href="/css/markdown.css">
+
+    
+<link rel="stylesheet" href="/css/fonts.css">
+
+<meta name="generator" content="Hexo 7.3.0"></head>
+    <body>
+        <div class="paper">
+            <div class="paper-main">
+                
+                    <div class="post-header">
+    <a class="logo" href="/">y@7q</a>
+    <a class="go-home" href="/">
+        <svg width="8" height="14" viewBox="0 0 8 14">
+            <path d="M7 1L1 7l6 6" stroke="#000" stroke-width="2" fill="none" fill-rule="evenodd" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+    </a>
+</div>
+                
+                <div class="post-main">
+
+    
+    
+        <div class="post-main-title">
+            XML XPath注入以及XXE
+        </div>
+        <div class="post-meta">
+            2025-04-11
+        </div>
+        <div class="post-md">
+            <h1 id="XML、XPath注入以及XXE"><a href="#XML、XPath注入以及XXE" class="headerlink" title="XML、XPath注入以及XXE"></a>XML、XPath注入以及XXE</h1><h2 id="什么是XML"><a href="#什么是XML" class="headerlink" title="什么是XML"></a>什么是XML</h2><p><a target="_blank" rel="noopener" href="https://xz.aliyun.com/news/6483">从XML相关一步一步到XXE漏洞-先知社区</a></p>
+<p>XXE(XML External Entity Injection)全称为XML外部实体注入。想要了解XXE首先得了解XML。</p>
+<span id="more"></span>
+<h3 id="XML与HTML的区别"><a href="#XML与HTML的区别" class="headerlink" title="XML与HTML的区别"></a>XML与HTML的区别</h3><ul>
+<li><p>XML被设计为传输和存储数据，其焦点是数据的内容。</p>
+</li>
+<li><p>HTML被设计用来显示数据，其焦点是数据的外观。</p>
+</li>
+</ul>
+<h3 id="实体引用"><a href="#实体引用" class="headerlink" title="实体引用"></a>实体引用</h3><p>和HTML一样，XML也具有实体引用，类似于转义特殊符号。XML 中有 5 个预定义的实体引用：</p>
+<table>
+<thead>
+<tr>
+<th>&amp;lt;</th>
+<th>&lt;</th>
+<th>小于</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>&amp;gt;</td>
+<td>&gt;</td>
+<td>大于</td>
+</tr>
+<tr>
+<td>&amp;amp;</td>
+<td>&amp;</td>
+<td>和号</td>
+</tr>
+<tr>
+<td>&amp;apos;</td>
+<td>‘</td>
+<td>省略号</td>
+</tr>
+<tr>
+<td>&amp;quot;</td>
+<td>“</td>
+<td>引号</td>
+</tr>
+</tbody></table>
+<p><a target="_blank" rel="noopener" href="http://www.dnslog.cn/">DNSLog Platform</a></p>
+<p><a target="_blank" rel="noopener" href="https://www.cnblogs.com/mysticbinary/p/12668547.html">XXE漏洞原理、检测与修复 - Mysticbinary - 博客园</a></p>
+
+        </div>
+
+    
+
+</div>
+                <div class="footer">
+    <span>Copyright © 2022 y@7q</span>
+    <span>Theme Designed By <a target="_blank" href="https://zheli.design/one-paper">這李設計</a></span>
+</div>
+
+
+<link rel="stylesheet" href="/css/a11y-dark.min.css">
+
+
+<script src="/js/highlight.min.js"></script>
+
+
+<script src="/js/highlightjs-line-numbers.js"></script>
+
+
+<script>
+    hljs.initHighlightingOnLoad();
+    hljs.initLineNumbersOnLoad();
+</script>
+
+            </div>
+        </div>
+    </body>
+</html>

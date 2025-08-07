@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html>
+    <head>
+    <meta charset="utf-8">
+    <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" name="viewport" />
+    <link rel="alternate icon" type="image/png" href="/img/favicon.png">
+    <title>y@7q | </title>
+    
+<link rel="stylesheet" href="/css/reset.css">
+
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    
+<link rel="stylesheet" href="/css/markdown.css">
+
+    
+<link rel="stylesheet" href="/css/fonts.css">
+
+<meta name="generator" content="Hexo 7.3.0"></head>
+    <body>
+        <div class="paper">
+            <div class="paper-main">
+                
+                    <div class="post-header">
+    <a class="logo" href="/">y@7q</a>
+    <a class="go-home" href="/">
+        <svg width="8" height="14" viewBox="0 0 8 14">
+            <path d="M7 1L1 7l6 6" stroke="#000" stroke-width="2" fill="none" fill-rule="evenodd" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+    </a>
+</div>
+                
+                <div class="post-main">
+
+    
+    
+        <div class="post-main-title">
+            javascript快速入门学习笔记
+        </div>
+        <div class="post-meta">
+            2025-04-06
+        </div>
+        <div class="post-md">
+            <h1 id="javascript快速入门"><a href="#javascript快速入门" class="headerlink" title="javascript快速入门"></a>javascript快速入门</h1><p>[TOC]</p>
+<h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>最近在看xss的DOM型，需要了解一些js基础，所以想快速过一遍语法部分。于是在B站上找了一门速成课来初步的过一遍，链接在文章末尾。下面正式开始。</p>
+<span id="more"></span>
+
+<h2 id="less-0-简单语句"><a href="#less-0-简单语句" class="headerlink" title="less-0(简单语句)"></a>less-0(简单语句)</h2><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 输出语句</span></span><br><span class="line">&gt; <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&quot;Hello World!&quot;</span>);</span><br><span class="line"><span class="comment">// Hello World!</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 数学运算</span></span><br><span class="line">&gt; <span class="number">2</span> + <span class="number">2</span></span><br><span class="line"><span class="comment">// 4</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 弹窗</span></span><br><span class="line">&gt; <span class="title function_">alert</span>(<span class="string">&quot;yo&quot;</span>);</span><br></pre></td></tr></table></figure>
+
+<h2 id="less-1-html中的js"><a href="#less-1-html中的js" class="headerlink" title="less-1(html中的js)"></a>less-1(html中的js)</h2><p>新建一个html文件，<code>!</code>+<code>Tab键</code>即可生成默认html模板。通常在body标签末尾添加script标签并书写js代码，不然会先运行js再加载内容导致页面缓慢。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/yatq21/Pictures@master/Blog/study/image-20250406135027673.png" alt="image-20250406135027673"></p>
+<p>如上图，在其中输入我们之前的输出语句，然后用live Server插件映射在本机端口之后用浏览器打开，摁下F12即可在控制台中看见结果。（<strong>如果你没有显示，可能是没有开启VScode中的自动保存，需要Ctrl+S即可，或者直接开启设置中的自动保存 一劳永逸</strong>）</p>
+<h2 id="less-2-关注点分离"><a href="#less-2-关注点分离" class="headerlink" title="less-2(关注点分离)"></a>less-2(关注点分离)</h2><p>当前我们的代码量少，所以可以直接把js代码插入html中，但之后代码量 多了之后就显得泰国臃肿了。一个好的做法是把html和js分离，一个只负责内容，另一个只负责行为。</p>
+<p>在相同文件夹中新建index.js文件，</p>
+<p><img src="https://cdn.jsdelivr.net/gh/yatq21/Pictures@master/Blog/study/image-20250406140909265.png" alt="image-20250406140909265"></p>
+<p>将原来的script标签中的内容迁移过来，并在script标签中假如src属性指明要包含的js文件，可以达到相同的显示效果。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/yatq21/Pictures@master/Blog/study/image-20250406142506885.png" alt="image-20250406142506885"></p>
+<h2 id="less-3-用Node运行js"><a href="#less-3-用Node运行js" class="headerlink" title="less-3(用Node运行js)"></a>less-3(用Node运行js)</h2><h3 id="Node是什么？"><a href="#Node是什么？" class="headerlink" title="Node是什么？"></a>Node是什么？</h3><p>原来的js代码是在浏览器中通过js引擎运行，而Node则是把Chrome中的V8引擎和一个C++引擎结合起来的，因此你也可以在Node中运行js代码。所以说：Node是一个包含了Chrome的V8引擎的C++程序。</p>
+<p>打开终端，输入<code>node index.js</code>，可以看到成功执行了代码。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/yatq21/Pictures@master/Blog/study/image-20250406145543310.png" alt="image-20250406145543310"></p>
+<h2 id="less-4-变量与常量"><a href="#less-4-变量与常量" class="headerlink" title="less-4(变量与常量)"></a>less-4(变量与常量)</h2><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// var, let, const var已被淘汰</span></span><br></pre></td></tr></table></figure>
+
+<p>其中let为变量，可以被修改，const不能被修改。其中const必须声明的同时赋值，否则会报错。</p>
+<h2 id="less-5-原生数据类型"><a href="#less-5-原生数据类型" class="headerlink" title="less-5(原生数据类型)"></a>less-5(原生数据类型)</h2><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// string Number Boolean null undefined</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// String</span></span><br><span class="line"><span class="keyword">const</span> username = <span class="string">&quot;John&quot;</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">// Number</span></span><br><span class="line"><span class="keyword">const</span> age = <span class="number">30</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 浮点型照样属于Number</span></span><br><span class="line"><span class="keyword">const</span> rate = <span class="number">4.5</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">// Boolean</span></span><br><span class="line"><span class="keyword">const</span> isCool = <span class="literal">true</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">// null</span></span><br><span class="line"><span class="keyword">const</span> x = <span class="literal">null</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">// undefined</span></span><br><span class="line"><span class="keyword">const</span> y = <span class="literal">undefined</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 同样是undefined</span></span><br><span class="line"><span class="keyword">let</span> z;</span><br><span class="line"></span><br><span class="line"><span class="comment">//如果你需要查看某个数据的类型，可以用typeof对此你可以一一尝试上面的变量</span></span><br><span class="line"></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="keyword">typeof</span> a);</span><br><span class="line"><span class="comment">// Number</span></span><br></pre></td></tr></table></figure>
+
+<p>你可能会发现，在检验x变量的类型时它并没有返回预期的null，而是object</p>
+<p><img src="https://cdn.jsdelivr.net/gh/yatq21/Pictures@master/Blog/study/image-20250406152958661.png" alt="image-20250406152958661"></p>
+<p>但是事实上他就是null，这是一个历史遗留1问题，我们在此不再细究，如果感兴趣可自行查阅。</p>
+<h2 id="less-6-模板字符串"><a href="#less-6-模板字符串" class="headerlink" title="less-6(模板字符串)"></a>less-6(模板字符串)</h2><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> username = <span class="string">&quot;John&quot;</span>;</span><br><span class="line"><span class="keyword">const</span> age = <span class="number">9</span>;</span><br><span class="line"><span class="comment">//我们使用反引号代替引号，把需要替换的量用$&#123;&#125;括起来即可。</span></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">`My name is <span class="subst">$&#123;username&#125;</span> and i&#x27;m <span class="subst">$&#123;age&#125;</span>.`</span>);</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://cdn.jsdelivr.net/gh/yatq21/Pictures@master/Blog/study/image-20250406153944827.png" alt="image-20250406153944827"></p>
+<p>python中的格式化字符串和这个非常相像。</p>
+<h2 id="less-7-字符串的内置属性、方法"><a href="#less-7-字符串的内置属性、方法" class="headerlink" title="less-7(字符串的内置属性、方法)"></a>less-7(字符串的内置属性、方法)</h2><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> hw = <span class="string">&quot;hello world&quot;</span>;</span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(hw.<span class="property">length</span>); <span class="comment">// 长度</span></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(hw.<span class="title function_">toUpperCase</span>()); <span class="comment">// 大写</span></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(hw.<span class="title function_">toLowerCase</span>()); <span class="comment">// 小写</span></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(hw.<span class="title function_">substring</span>(<span class="number">0</span>, <span class="number">5</span>)); <span class="comment">// 子字符串</span></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(hw.<span class="title function_">split</span>(<span class="string">&#x27;&#x27;</span>)); <span class="comment">//split方法和python中一样，给的参数为分割标记</span></span><br></pre></td></tr></table></figure>
+
+<p><img src="https://cdn.jsdelivr.net/gh/yatq21/Pictures@master/Blog/study/image-20250406154806123.png" alt="image-20250406154806123"></p>
+<h2 id="less-8-数组"><a href="#less-8-数组" class="headerlink" title="less-8(数组)"></a>less-8(数组)</h2><p>此部分和py基本没什么区别，只记录不同的：</p>
+<p>*push()*方法：往末尾添加元素</p>
+<p>*unshift()*方法：往前面添加元素</p>
+<p>*pop()*方法：删除末尾一个元素</p>
+<p>*Array.isArray()*方法：判断是否是数组</p>
+<p><em>indexOf()</em>:得到特定元素索引（从1开始）</p>
+<h2 id="less-9-对象"><a href="#less-9-对象" class="headerlink" title="less-9(对象)"></a>less-9(对象)</h2><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> person = &#123;</span><br><span class="line">    <span class="attr">firstName</span>: <span class="string">&quot;John&quot;</span>,</span><br><span class="line">    <span class="attr">lastName</span>:<span class="string">&quot;Doe&quot;</span>,</span><br><span class="line">    <span class="attr">age</span>: <span class="number">30</span>,</span><br><span class="line">    <span class="attr">hobbies</span>: [<span class="string">&quot;music&quot;</span>, <span class="string">&quot;movies&quot;</span>, <span class="string">&quot;sports&quot;</span>],</span><br><span class="line">    <span class="attr">address</span>: &#123;</span><br><span class="line">    <span class="attr">street</span>: <span class="string">&quot;50 main st&quot;</span>,</span><br><span class="line">    <span class="attr">city</span>: <span class="string">&quot;Boston&quot;</span>,</span><br><span class="line">    <span class="attr">state</span>: <span class="string">&quot;MA&quot;</span>,</span><br><span class="line">    &#125;,</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(person.<span class="property">address</span>.<span class="property">street</span>);</span><br></pre></td></tr></table></figure>
+
+
+
+<p><img src="https://cdn.jsdelivr.net/gh/yatq21/Pictures@master/Blog/study/image-20250406161230905.png" alt="image-20250406161230905"></p>
+<p>这里的对象不像py中的对象，更像py中的字典（</p>
+<p><img src="https://cdn.jsdelivr.net/gh/yatq21/Pictures@master/Blog/study/image-20250406161712362.png" alt="image-20250406161712362"></p>
+<p>如上图，js中的对象属性chouqv很是容易只需要根据结构在左边写出属性名，右边只需要对象名称即可。</p>
+<p>甚至还能更深入：</p>
+<p><img src="https://cdn.jsdelivr.net/gh/yatq21/Pictures@master/Blog/study/image-20250406161935370.png" alt="image-20250406161935370"></p>
+<p>也可以直接添加新属性，直接写<code>对象名.属性名 = xxx</code>即可。</p>
+<h2 id="less-10-对象数组和json"><a href="#less-10-对象数组和json" class="headerlink" title="less-10(对象数组和json)"></a>less-10(对象数组和json)</h2><h3 id="对象数组"><a href="#对象数组" class="headerlink" title="对象数组"></a>对象数组</h3><p>可以理解为数组里面有多个对象。如下图：</p>
+<p><img src="https://cdn.jsdelivr.net/gh/yatq21/Pictures@master/Blog/study/image-20250406163942855.png" alt="image-20250406163942855"></p>
+<h3 id="JSON"><a href="#JSON" class="headerlink" title="JSON"></a>JSON</h3><p><strong>JSON</strong>是一种数据格式，和对象数组十分类似。那如何把对象数组转变为JSON呢？</p>
+<p>我们使用<code>JSON.stringify()</code>把要转换的对象数组当作参数传入即可：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> todos = [</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="attr">id</span>: <span class="number">1</span>,</span><br><span class="line">        <span class="attr">text</span>: <span class="string">&quot;Take out trash&quot;</span>,</span><br><span class="line">        <span class="attr">isCompleted</span>: <span class="literal">true</span></span><br><span class="line">    &#125;,</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="attr">id</span>: <span class="number">2</span>,</span><br><span class="line">        <span class="attr">text</span>: <span class="string">&quot;Meeting with boss&quot;</span>,</span><br><span class="line">        <span class="attr">isCompleted</span>: <span class="literal">true</span></span><br><span class="line">    &#125;,</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="attr">id</span>: <span class="number">3</span>,</span><br><span class="line">        <span class="attr">text</span>: <span class="string">&quot;Dentist appt&quot;</span>,</span><br><span class="line">        <span class="attr">isCompleted</span>: <span class="literal">false</span></span><br><span class="line">    &#125;</span><br><span class="line">];</span><br><span class="line"></span><br><span class="line">todoJSON = <span class="title class_">JSON</span>.<span class="title function_">stringify</span>(todos);</span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(todoJSON);</span><br></pre></td></tr></table></figure>
+
+
+
+<p><img src="https://cdn.jsdelivr.net/gh/yatq21/Pictures@master/Blog/study/image-20250406165243261.png" alt="image-20250406165243261"></p>
+<p>可以看出和对象数组的唯一区别是每个key值dou多了一个引号，除此之外无任何变化。</p>
+<h2 id="less-11-if语句"><a href="#less-11-if语句" class="headerlink" title="less-11(if语句)"></a>less-11(if语句)</h2><p>和php一样都有强相等和弱相等。&#x3D;&#x3D; 表示值相同，类型可以不同， &#x3D;&#x3D;&#x3D;表示值和类型都相同。基本语法如下：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> x = <span class="number">10</span>;</span><br><span class="line"><span class="keyword">if</span> (x === <span class="number">10</span>)&#123;</span><br><span class="line">    <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&quot;x is 10&quot;</span>);</span><br><span class="line">&#125;<span class="keyword">else</span> <span class="keyword">if</span> (x &gt; <span class="number">10</span>)&#123;</span><br><span class="line">	<span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&quot;x is greater than 10&quot;</span>);</span><br><span class="line">&#125;<span class="keyword">else</span> &#123;</span><br><span class="line">	<span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&quot;x is less than 10&quot;</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="less-12-三目运算符"><a href="#less-12-三目运算符" class="headerlink" title="less-12(三目运算符)"></a>less-12(三目运算符)</h2><p>和C无区别，这里贴一下图看一下即可：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(person.<span class="property">address</span>.<span class="property">street</span>);</span><br><span class="line"><span class="keyword">const</span> color = <span class="number">1</span> ? <span class="string">&quot;red&quot;</span> : <span class="string">&quot;blue&quot;</span>;</span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(color)</span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="keyword">typeof</span> color)</span><br></pre></td></tr></table></figure>
+
+
+
+<p><img src="https://cdn.jsdelivr.net/gh/yatq21/Pictures@master/Blog/study/image-20250406170718419.png" alt="image-20250406170718419"></p>
+<p>color为string类型。</p>
+<h2 id="less-13-switch语句"><a href="#less-13-switch语句" class="headerlink" title="less-13(switch语句)"></a>less-13(switch语句)</h2><p>可以理解为单值匹配的if语句，</p>
+<p><img src="https://cdn.jsdelivr.net/gh/yatq21/Pictures@master/Blog/study/image-20250406172840622.png" alt="image-20250406172840622"></p>
+<h2 id="less-13-for-loop-and-while-loop"><a href="#less-13-for-loop-and-while-loop" class="headerlink" title="less-13(for loop and while loop)"></a>less-13(for loop and while loop)</h2><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// for loop </span></span><br><span class="line"><span class="keyword">for</span> (<span class="keyword">let</span> i = <span class="number">0</span>; i &lt;= <span class="number">5</span>;  i++) &#123;</span><br><span class="line">    <span class="variable language_">console</span>.<span class="title function_">log</span>(i);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">//for loop(python version)(误</span></span><br><span class="line">is = [<span class="number">0</span>, <span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>, <span class="number">5</span>]</span><br><span class="line"><span class="keyword">for</span> (<span class="keyword">let</span> i <span class="keyword">of</span> is) &#123;</span><br><span class="line">    <span class="variable language_">console</span>.<span class="title function_">log</span>(i);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">//while loop</span></span><br><span class="line"><span class="keyword">let</span> i = <span class="number">0</span>;</span><br><span class="line"><span class="keyword">while</span> (i &lt;= <span class="number">5</span>) &#123;</span><br><span class="line">    <span class="variable language_">console</span>.<span class="title function_">log</span>(i);</span><br><span class="line">    i++;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>和C中的语法是一致的。</p>
+<h2 id="结语"><a href="#结语" class="headerlink" title="结语"></a>结语</h2><p>结束！用了一个下午，约4个小时的时间完成了对js语法的初步学习，算是正在对前端入门吧。</p>
+<p><strong>参考资料</strong>：</p>
+<p><a target="_blank" rel="noopener" href="https://www.bilibili.com/video/BV15L4y1a7or?spm_id_from=333.788.videopod.episodes&vd_source=b2effd0e83eadb128c29a86f4543ee15">四十分钟JavaScript快速入门 | 无废话且清晰流畅 | 手敲键盘 | WEB前端必备程序语言~_哔哩哔哩_bilibili</a></p>
+
+        </div>
+
+    
+
+</div>
+                <div class="footer">
+    <span>Copyright © 2022 y@7q</span>
+    <span>Theme Designed By <a target="_blank" href="https://zheli.design/one-paper">這李設計</a></span>
+</div>
+
+
+<link rel="stylesheet" href="/css/a11y-dark.min.css">
+
+
+<script src="/js/highlight.min.js"></script>
+
+
+<script src="/js/highlightjs-line-numbers.js"></script>
+
+
+<script>
+    hljs.initHighlightingOnLoad();
+    hljs.initLineNumbersOnLoad();
+</script>
+
+            </div>
+        </div>
+    </body>
+</html>

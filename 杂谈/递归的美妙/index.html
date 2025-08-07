@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html>
+    <head>
+    <meta charset="utf-8">
+    <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" name="viewport" />
+    <link rel="alternate icon" type="image/png" href="/img/favicon.png">
+    <title>y@7q | </title>
+    
+<link rel="stylesheet" href="/css/reset.css">
+
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    
+<link rel="stylesheet" href="/css/markdown.css">
+
+    
+<link rel="stylesheet" href="/css/fonts.css">
+
+<meta name="generator" content="Hexo 7.3.0"></head>
+    <body>
+        <div class="paper">
+            <div class="paper-main">
+                
+                    <div class="post-header">
+    <a class="logo" href="/">y@7q</a>
+    <a class="go-home" href="/">
+        <svg width="8" height="14" viewBox="0 0 8 14">
+            <path d="M7 1L1 7l6 6" stroke="#000" stroke-width="2" fill="none" fill-rule="evenodd" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+    </a>
+</div>
+                
+                <div class="post-main">
+
+    
+    
+        <div class="post-main-title">
+            递归的美妙
+        </div>
+        <div class="post-meta">
+            2025-06-25
+        </div>
+        <div class="post-md">
+            <blockquote>
+<p><em>递归 —- 相信相信的力量</em></p>
+</blockquote>
+<span id="more"></span>
+
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">duplicate_link</span>(<span class="params">s, val</span>):</span><br><span class="line">    <span class="string">&quot;&quot;&quot;Mutates s so that each element equal to val is followed by another val.</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">    &gt;&gt;&gt; x = Link(5, Link(4, Link(5)))</span></span><br><span class="line"><span class="string">    &gt;&gt;&gt; duplicate_link(x, 5)</span></span><br><span class="line"><span class="string">    &gt;&gt;&gt; x</span></span><br><span class="line"><span class="string">    Link(5, Link(5, Link(4, Link(5, Link(5)))))</span></span><br><span class="line"><span class="string">    &gt;&gt;&gt; y = Link(2, Link(4, Link(6, Link(8))))</span></span><br><span class="line"><span class="string">    &gt;&gt;&gt; duplicate_link(y, 10)</span></span><br><span class="line"><span class="string">    &gt;&gt;&gt; y</span></span><br><span class="line"><span class="string">    Link(2, Link(4, Link(6, Link(8))))</span></span><br><span class="line"><span class="string">    &gt;&gt;&gt; z = Link(1, Link(2, (Link(2, Link(3)))))</span></span><br><span class="line"><span class="string">    &gt;&gt;&gt; duplicate_link(z, 2) # ensures that back to back links with val are both duplicated</span></span><br><span class="line"><span class="string">    &gt;&gt;&gt; z</span></span><br><span class="line"><span class="string">    Link(1, Link(2, Link(2, Link(2, Link(2, Link(3))))))</span></span><br><span class="line"><span class="string">    &quot;&quot;&quot;</span></span><br><span class="line">    <span class="string">&quot;*** YOUR CODE HERE ***&quot;</span></span><br><span class="line">    <span class="keyword">if</span> s <span class="keyword">is</span> Link.empty:</span><br><span class="line">        <span class="keyword">return</span> s</span><br><span class="line">    <span class="keyword">if</span> s.first == val:</span><br><span class="line">        new_s = Link(val)</span><br><span class="line">        duplicate_link(s.rest, val)</span><br><span class="line">        new_s.rest, s.rest = s.rest, new_s</span><br><span class="line">    <span class="keyword">else</span>:</span><br><span class="line">        duplicate_link(s.rest, val)</span><br><span class="line">    <span class="keyword">return</span> <span class="literal">None</span></span><br></pre></td></tr></table></figure>
+
+<p><strong>核心重点</strong>：</p>
+<p>相信<code>duplicate_link(s.rest, val)</code>能够完全处理好后面的节点。</p>
+
+        </div>
+
+    
+
+</div>
+                <div class="footer">
+    <span>Copyright © 2022 y@7q</span>
+    <span>Theme Designed By <a target="_blank" href="https://zheli.design/one-paper">這李設計</a></span>
+</div>
+
+
+<link rel="stylesheet" href="/css/a11y-dark.min.css">
+
+
+<script src="/js/highlight.min.js"></script>
+
+
+<script src="/js/highlightjs-line-numbers.js"></script>
+
+
+<script>
+    hljs.initHighlightingOnLoad();
+    hljs.initLineNumbersOnLoad();
+</script>
+
+            </div>
+        </div>
+    </body>
+</html>

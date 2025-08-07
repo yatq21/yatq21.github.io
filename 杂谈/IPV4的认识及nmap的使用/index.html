@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html>
+    <head>
+    <meta charset="utf-8">
+    <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" name="viewport" />
+    <link rel="alternate icon" type="image/png" href="/img/favicon.png">
+    <title>y@7q | </title>
+    
+<link rel="stylesheet" href="/css/reset.css">
+
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    
+<link rel="stylesheet" href="/css/markdown.css">
+
+    
+<link rel="stylesheet" href="/css/fonts.css">
+
+<meta name="generator" content="Hexo 7.3.0"></head>
+    <body>
+        <div class="paper">
+            <div class="paper-main">
+                
+                    <div class="post-header">
+    <a class="logo" href="/">y@7q</a>
+    <a class="go-home" href="/">
+        <svg width="8" height="14" viewBox="0 0 8 14">
+            <path d="M7 1L1 7l6 6" stroke="#000" stroke-width="2" fill="none" fill-rule="evenodd" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+    </a>
+</div>
+                
+                <div class="post-main">
+
+    
+    
+        <div class="post-main-title">
+            IPV4的认识及nmap的使用
+        </div>
+        <div class="post-meta">
+            2025-04-02
+        </div>
+        <div class="post-md">
+            <h1 id="IPv4的认识"><a href="#IPv4的认识" class="headerlink" title="IPv4的认识"></a>IPv4的认识</h1><h2 id="IPv4"><a href="#IPv4" class="headerlink" title="IPv4"></a>IPv4</h2><p><strong>I</strong>nternet <strong>P</strong>rotocol <strong>v</strong>ersion <strong>4</strong>，缩写：<strong>IPv4</strong>，又称<strong>互联网通信协议第四版</strong>。ipv4有四段8bit，共32bit的二进制字符组成，而我们一般见到的ip地址则一般被写作<a target="_blank" rel="noopener" href="https://zh.wikipedia.org/wiki/%E7%82%B9%E5%88%86%E5%8D%81%E8%BF%9B%E5%88%B6">点分十进制</a>，例如一个最常见的ip：<code>192.168.1.1</code>，他的二进制形式为：<code>11000000.10101000.00000001.00000001</code>。</p>
+<span id="more"></span>
+
+<h2 id="八位二进制与十进制的转化规律"><a href="#八位二进制与十进制的转化规律" class="headerlink" title="八位二进制与十进制的转化规律"></a>八位二进制与十进制的转化规律</h2><p><img src="https://cdn.jsdelivr.net/gh/yatq21/Pictures@master/Blog/study/image-20250402212113381.png" alt="image-20250402212113381"></p>
+<p>根据图片显示，2的n次方所对应的二进制数位置均恰好为1，而<code>128+64+32+16+8+4+2+1</code>恰好等于<code>255</code>。拿上面的IP中168举例，他就对应：<code>128+0+32+0+8+0+0+0</code>将对应的位置改为1，即可得到对应的二进制形式：<code>10101000</code>。</p>
+<h2 id="网络号与主机号"><a href="#网络号与主机号" class="headerlink" title="网络号与主机号"></a>网络号与主机号</h2><p><img src="https://saucer-man.com/usr/uploads/sina/5cc5cfbd8cbb6.jpg" alt="ip address"></p>
+<p>通常用前面几位称为网络号，后面的为主机号，而根据位数的占比又可以分为A,B,C几大类。目前大量使用的是A、B、C三类地址。</p>
+<h2 id="子网掩码"><a href="#子网掩码" class="headerlink" title="子网掩码"></a>子网掩码</h2><p>那么如何指定网络号和主机号的分界呢？这里就要说到子网掩码了，</p>
+<p><img src="https://cdn.jsdelivr.net/gh/yatq21/Pictures@master/Blog/study/image-20250402220346114.png" alt="image-20250402220346114"></p>
+<p>先把这些十进制的IP地址转换为二进制 ，我们将不变的位置记作1表示锁定，剩下的用0填补，再转换为十进制，于是就得到了一串划分网络号和主机号的数字，我们称作<strong>子网掩码</strong>。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/yatq21/Pictures@master/Blog/study/image-20250402220813428.png" alt="image-20250402220813428"></p>
+<p>但这还是有点麻烦，于是有了更为简单的表达形式，称为“CIDR表示法”。**我们用<code>/</code>加上前面1的个数，例如<code>/16</code>表示前面16bit为网络码。</p>
+<p>参考资料：</p>
+<p><a target="_blank" rel="noopener" href="https://zh.wikipedia.org/wiki/IPv4">IPv4 - 维基百科，自由的百科全书</a></p>
+<p><a target="_blank" rel="noopener" href="https://www.bilibili.com/video/BV1xu411f7UW/?spm_id_from=333.1007.top_right_bar_window_history.content.click&vd_source=b2effd0e83eadb128c29a86f4543ee15">IPv4地址和子网掩码_哔哩哔哩_bilibili</a></p>
+
+        </div>
+
+    
+
+</div>
+                <div class="footer">
+    <span>Copyright © 2022 y@7q</span>
+    <span>Theme Designed By <a target="_blank" href="https://zheli.design/one-paper">這李設計</a></span>
+</div>
+
+
+<link rel="stylesheet" href="/css/a11y-dark.min.css">
+
+
+<script src="/js/highlight.min.js"></script>
+
+
+<script src="/js/highlightjs-line-numbers.js"></script>
+
+
+<script>
+    hljs.initHighlightingOnLoad();
+    hljs.initLineNumbersOnLoad();
+</script>
+
+            </div>
+        </div>
+    </body>
+</html>

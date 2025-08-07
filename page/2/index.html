@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html>
+    <head>
+    <meta charset="utf-8">
+    <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" name="viewport" />
+    <link rel="alternate icon" type="image/png" href="/img/favicon.png">
+    <title>y@7q | </title>
+    
+<link rel="stylesheet" href="/css/reset.css">
+
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    
+<link rel="stylesheet" href="/css/markdown.css">
+
+    
+<link rel="stylesheet" href="/css/fonts.css">
+
+<meta name="generator" content="Hexo 7.3.0"></head>
+    <body>
+        <div class="paper">
+            <div class="paper-main">
+                
+                    <div class="header">
+    <a class="logo" href="/">y@7q</a>
+    <ul class="nav">
+        
+        <li><a href="/">首页</a></li>
+        
+        <li><a href="/archives">归档</a></li>
+        
+        <li><a href="/about">关于</a></li>
+        
+    </ul>
+</div>
+                
+                <div class="post-list">
+    
+    <div class="post">
+        <a class="post-title" href="/CScourse/CS50-Flask/">CS50_Flask</a>
+        <div class="post-except">
+            CS50 FlaskFlask是一个python的后端微型框架，用来方便快捷的生成前端界面。而目前我需要学习FaskAPI,由于和Flask类似，所以我打算先来回顾一遍这一课。
+
+
+最基础的一集12345678from flask import Flaskapp = Flask(__name__)@app.route(&quot;/&quot;)def index():	return &quot;Hello, world!&quot;
+
+
+
+下面是对这段代码的逐行精讲：
+fr
+            <a class="read-more" href="/CScourse/CS50-Flask/"> ... </a>
+        </div>
+        <div class="post-date">2025.05.02</div>
+    </div>
+    
+    <div class="post">
+        <a class="post-title" href="/CTF%E8%B5%9B%E4%BA%8B%E5%A4%8D%E7%9B%98/ACTF/">ACTF个人wp</a>
+        <div class="post-except">
+            
+ACTF uploadadmin不能直接爆破好像，全都是500报错。先随便注册一个账号登进去
+上传文件界面会发现看不到只有一个img标签，且是data数据，base64加密的图片数据。
+
+尝试直接在file_path参数后面拼接路径读取文件，../../etc/passwd有回显。
+把显示出来的数据拿去解密下载下来即可得到数据：
+，尝试读取/proc/self/environ看看有没有直接的flag（,发现灭有 /proc/self/cmdline中显示当前有进程：pyth
+            <a class="read-more" href="/CTF%E8%B5%9B%E4%BA%8B%E5%A4%8D%E7%9B%98/ACTF/"> ... </a>
+        </div>
+        <div class="post-date">2025.05.02</div>
+    </div>
+    
+    <div class="post">
+        <a class="post-title" href="/web%E5%9F%BA%E7%A1%80%E6%80%BB%E7%BB%93%E7%AC%94%E8%AE%B0/SSTI/">SSTI学习</a>
+        <div class="post-except">
+            SSTI模板引擎SSTI 就是服务器端模板注入（Server-Side Template Injection）
+
+Web开发中,模板引擎是为了使得用户界面和业务逻辑处理分离所产生。而SSTI的成因则是因为服务端没有对用户的输入做很好的处理而产生。
+我们最常见到的模板语言便是jinja2，它是Flask框架一部分。它能够用于替换变量，将动态数据渲染到静态 HTML 页面。格式如下：
+1234567变量：&#123;&#123;username&#125;&#125;控制语句：&
+            <a class="read-more" href="/web%E5%9F%BA%E7%A1%80%E6%80%BB%E7%BB%93%E7%AC%94%E8%AE%B0/SSTI/"> ... </a>
+        </div>
+        <div class="post-date">2025.04.20</div>
+    </div>
+    
+    <div class="post">
+        <a class="post-title" href="/web%E5%9F%BA%E7%A1%80%E6%80%BB%E7%BB%93%E7%AC%94%E8%AE%B0/RCE/">RCE</a>
+        <div class="post-except">
+            RCERCE基础豆知识**RCE(Remote code execution 代码执行&amp;命令执行)**，分为命令执行和代码执行。
+123代码执行：eval(&quot;include(&#x27;flag.php&#x27;);echo &#x27;This will get the flag by eval PHP code: &#x27;.\$flag;&quot;);命令执行：system(&quot;echo &#x27;This will get the f
+            <a class="read-more" href="/web%E5%9F%BA%E7%A1%80%E6%80%BB%E7%BB%93%E7%AC%94%E8%AE%B0/RCE/"> ... </a>
+        </div>
+        <div class="post-date">2025.04.19</div>
+    </div>
+    
+    <div class="post">
+        <a class="post-title" href="/web%E5%9F%BA%E7%A1%80%E6%80%BB%E7%BB%93%E7%AC%94%E8%AE%B0/SSRF%E5%AD%A6%E4%B9%A0/">SSRF学习</a>
+        <div class="post-except">
+            SSRF(Server-Side Request Forgery)概述[TOC]
+SSRF(Server-Side Request Forgery:服务器端请求伪造),字面意思来理解就是：攻击者通过一些手段来达到伪装了一个由服务端对服务器所在内网发起的恶意请求。
+也因此，一般情况下，SSRF攻击的目标是从外网无法访问的内部系统。
+
+形成原理及危害大多是因为服务端提供了可以从其他服务器获取数据的功能，但没有加以过滤和限制，导致了攻击者可以轻易的任意读取文件，进行内网渗透，对内网
+            <a class="read-more" href="/web%E5%9F%BA%E7%A1%80%E6%80%BB%E7%BB%93%E7%AC%94%E8%AE%B0/SSRF%E5%AD%A6%E4%B9%A0/"> ... </a>
+        </div>
+        <div class="post-date">2025.04.15</div>
+    </div>
+    
+    <div class="post">
+        <a class="post-title" href="/web%E5%9F%BA%E7%A1%80%E6%80%BB%E7%BB%93%E7%AC%94%E8%AE%B0/CSRF%E5%AD%A6%E4%B9%A0/">CSRF学习</a>
+        <div class="post-except">
+            [TOC]
+CSRF概述Cross-site request forgery 简称为“CSRF”，中文名为跨站请求伪造。攻击者精心构造一个请求来诱导受害者点击，假如此时受害者刚好打开了相关网站，则有可能会导致执行了相关恶意操作。
+
+攻击场景（某购物网站）
+攻击者A尝试修改受害者B的账户邮箱地址，他发现该网站在修改邮箱时候发送的请求类似于http://xxx.com/edit.php?email=123@123.com&amp;Change=Change，通过加以包装和诱导B进
+            <a class="read-more" href="/web%E5%9F%BA%E7%A1%80%E6%80%BB%E7%BB%93%E7%AC%94%E8%AE%B0/CSRF%E5%AD%A6%E4%B9%A0/"> ... </a>
+        </div>
+        <div class="post-date">2025.04.12</div>
+    </div>
+    
+    <div class="post">
+        <a class="post-title" href="/web%E5%9F%BA%E7%A1%80%E6%80%BB%E7%BB%93%E7%AC%94%E8%AE%B0/XML%20XPath%E6%B3%A8%E5%85%A5%E4%BB%A5%E5%8F%8AXXE/">XML XPath注入以及XXE</a>
+        <div class="post-except">
+            XML、XPath注入以及XXE什么是XML从XML相关一步一步到XXE漏洞-先知社区
+XXE(XML External Entity Injection)全称为XML外部实体注入。想要了解XXE首先得了解XML。
+
+XML与HTML的区别
+XML被设计为传输和存储数据，其焦点是数据的内容。
+
+HTML被设计用来显示数据，其焦点是数据的外观。
+
+
+实体引用和HTML一样，XML也具有实体引用，类似于转义特殊符号。XML 中有 5 个预定义的实体引用：
+
+
+
+&amp;lt;
+
+            <a class="read-more" href="/web%E5%9F%BA%E7%A1%80%E6%80%BB%E7%BB%93%E7%AC%94%E8%AE%B0/XML%20XPath%E6%B3%A8%E5%85%A5%E4%BB%A5%E5%8F%8AXXE/"> ... </a>
+        </div>
+        <div class="post-date">2025.04.11</div>
+    </div>
+    
+    <div class="post">
+        <a class="post-title" href="/%E6%9D%82%E8%B0%88/javascript%E5%BF%AB%E9%80%9F%E5%85%A5%E9%97%A8%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/">javascript快速入门学习笔记</a>
+        <div class="post-except">
+            javascript快速入门[TOC]
+前言最近在看xss的DOM型，需要了解一些js基础，所以想快速过一遍语法部分。于是在B站上找了一门速成课来初步的过一遍，链接在文章末尾。下面正式开始。
+
+
+less-0(简单语句)12345678910// 输出语句&gt; console.log(&quot;Hello World!&quot;);// Hello World!// 数学运算&gt; 2 + 2// 4// 弹窗&gt; alert(&quot;yo&quot;);
+
+            <a class="read-more" href="/%E6%9D%82%E8%B0%88/javascript%E5%BF%AB%E9%80%9F%E5%85%A5%E9%97%A8%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/"> ... </a>
+        </div>
+        <div class="post-date">2025.04.06</div>
+    </div>
+    
+    <div class="post">
+        <a class="post-title" href="/%E6%9D%82%E8%B0%88/%E8%B6%A3%E4%BA%8B1/">趣事1</a>
+        <div class="post-except">
+            
+
+
+在进行61A的Ants project中的一个问题时，困扰了很久，最后在没有AI的帮助下，print大法之后（我是debug大神），终于意识到问题所在了！
+
+
+在这判断了一只蜜蜂之后就返回值了，没考虑后面的，哈哈哈。
+
+解决了自己win11右键菜单启动慢半拍的问题。解决方法：单独去掉了winrar的右键菜单 ：）
+
+
+            <a class="read-more" href="/%E6%9D%82%E8%B0%88/%E8%B6%A3%E4%BA%8B1/"> ... </a>
+        </div>
+        <div class="post-date">2025.04.05</div>
+    </div>
+    
+    <div class="post">
+        <a class="post-title" href="/%E6%9D%82%E8%B0%88/Linux%E7%9B%B8%E5%85%B3%E6%93%8D%E4%BD%9C%E6%80%BB%E7%BB%93/">Linux相关操作总结</a>
+        <div class="post-except">
+            Linux相关操作总结我会在这里总结一些Linux操作上的一些常用但我不熟的操作，用来查阅和回忆。
+
+
+grep全局搜索可以用grep -r &quot;关键字&quot;来进行基于关键字的全局搜索相关行。我从2025数字中国创新大赛数字安全赛道｜数据安全产业积分争夺赛初赛Writeup - 1cePeak这篇文章中学到的。同时可以和find命令结合使用提高效率，先根据文件名搜出所有文件，再进行筛选。例如：find -name / &quot;*.html&quot; | g
+            <a class="read-more" href="/%E6%9D%82%E8%B0%88/Linux%E7%9B%B8%E5%85%B3%E6%93%8D%E4%BD%9C%E6%80%BB%E7%BB%93/"> ... </a>
+        </div>
+        <div class="post-date">2025.04.04</div>
+    </div>
+    
+</div>
+
+<div class="paginator">
+    <a class="extend prev" rel="prev" href="/">上一页</a><a class="page-number" href="/">1</a><span class="page-number current">2</span><a class="page-number" href="/page/3/">3</a><a class="page-number" href="/page/4/">4</a><a class="extend next" rel="next" href="/page/3/">下一页</a>
+</div>
+
+                <div class="footer">
+    <span>Copyright © 2022 y@7q</span>
+    <span>Theme Designed By <a target="_blank" href="https://zheli.design/one-paper">這李設計</a></span>
+</div>
+
+
+<link rel="stylesheet" href="/css/a11y-dark.min.css">
+
+
+<script src="/js/highlight.min.js"></script>
+
+
+<script src="/js/highlightjs-line-numbers.js"></script>
+
+
+<script>
+    hljs.initHighlightingOnLoad();
+    hljs.initLineNumbersOnLoad();
+</script>
+
+            </div>
+        </div>
+    </body>
+</html>

