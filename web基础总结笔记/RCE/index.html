@@ -1,48 +1,161 @@
 <!DOCTYPE html>
-<html>
-    <head>
+<html lang=zh>
+<head>
+    <!-- so meta -->
     <meta charset="utf-8">
-    <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" name="viewport" />
-    <link rel="alternate icon" type="image/png" href="/img/favicon.png">
-    <title>y@7q | </title>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
+    <meta name="description" content="RCERCE基础豆知识**RCE(Remote code execution 代码执行&amp;命令执行)**，分为命令执行和代码执行。 123代码执行：eval(&quot;include(&#x27;flag.php&#x27;);echo &#x27;This will get the flag by eval PHP code: &#x27;.\$flag;&quot;);命令执行：sys">
+<meta property="og:type" content="article">
+<meta property="og:title" content="RCE">
+<meta property="og:url" content="http://yatq.xyz/web%E5%9F%BA%E7%A1%80%E6%80%BB%E7%BB%93%E7%AC%94%E8%AE%B0/RCE/index.html">
+<meta property="og:site_name" content="y@7q">
+<meta property="og:description" content="RCERCE基础豆知识**RCE(Remote code execution 代码执行&amp;命令执行)**，分为命令执行和代码执行。 123代码执行：eval(&quot;include(&#x27;flag.php&#x27;);echo &#x27;This will get the flag by eval PHP code: &#x27;.\$flag;&quot;);命令执行：sys">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2025-04-19T07:29:05.000Z">
+<meta property="article:modified_time" content="2025-08-01T03:43:51.505Z">
+<meta property="article:author" content="y@7q">
+<meta name="twitter:card" content="summary">
     
-<link rel="stylesheet" href="/css/reset.css">
+    
+      
+        
+          <link rel="shortcut icon" href="/images/favicon.ico">
+        
+      
+      
+        
+          <link rel="icon" type="image/png" href="/images/favicon-192x192.png" sizes="192x192">
+        
+      
+      
+        
+          <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+        
+      
+    
+    <!-- title -->
+    <title>RCE</title>
+    <!-- async scripts -->
+    <!-- Google Analytics -->
 
+
+    <!-- Umami Analytics -->
+
+
+    <!-- styles -->
     
 <link rel="stylesheet" href="/css/style.css">
 
+    <!-- persian styles -->
     
-<link rel="stylesheet" href="/css/markdown.css">
-
+    <!-- rss -->
     
-<link rel="stylesheet" href="/css/fonts.css">
-
+    
+	<!-- mathjax -->
+	
 <meta name="generator" content="Hexo 7.3.0"></head>
-    <body>
-        <div class="paper">
-            <div class="paper-main">
-                
-                    <div class="post-header">
-    <a class="logo" href="/">y@7q</a>
-    <a class="go-home" href="/">
-        <svg width="8" height="14" viewBox="0 0 8 14">
-            <path d="M7 1L1 7l6 6" stroke="#000" stroke-width="2" fill="none" fill-rule="evenodd" stroke-linecap="round" stroke-linejoin="round"/>
-        </svg>
-    </a>
+
+<body class="max-width mx-auto px3 ltr">
+    
+      <div id="header-post">
+  <a id="menu-icon" href="#" aria-label="目录"><i class="fa-solid fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#" aria-label="目录"><i class="fa-solid fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" aria-label="顶部" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fa-solid fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+        <!--
+       --><li><a href="/">首页</a></li><!--
+     --><!--
+       --><li><a href="/about/">关于</a></li><!--
+     --><!--
+       --><li><a href="/archives/">归档</a></li><!--
+     --><!--
+       --><li><a target="_blank" rel="noopener" href="http://github.com/probberechts">项目</a></li><!--
+     -->
+      </ul>
+    </span>
+    <br/>
+    <span id="actions">
+      <ul>
+        
+        <li><a class="icon" aria-label="上一篇" href="/web%E5%9F%BA%E7%A1%80%E6%80%BB%E7%BB%93%E7%AC%94%E8%AE%B0/SSTI/"><i class="fa-solid fa-chevron-left" aria-hidden="true" onmouseover="$('#i-prev').toggle();" onmouseout="$('#i-prev').toggle();"></i></a></li>
+        
+        
+        <li><a class="icon" aria-label="下一篇" href="/web%E5%9F%BA%E7%A1%80%E6%80%BB%E7%BB%93%E7%AC%94%E8%AE%B0/SSRF%E5%AD%A6%E4%B9%A0/"><i class="fa-solid fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
+        
+        <li><a class="icon" aria-label="返回顶部" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa-solid fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
+        <li><a class="icon" aria-label="分享文章" href="#"><i class="fa-solid fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">上一篇</span>
+      <span id="i-next" class="info" style="display:none;">下一篇</span>
+      <span id="i-top" class="info" style="display:none;">返回顶部</span>
+      <span id="i-share" class="info" style="display:none;">分享文章</span>
+    </span>
+    <br/>
+    <div id="share" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=http://yatq.xyz/web%E5%9F%BA%E7%A1%80%E6%80%BB%E7%BB%93%E7%AC%94%E8%AE%B0/RCE/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=http://yatq.xyz/web%E5%9F%BA%E7%A1%80%E6%80%BB%E7%BB%93%E7%AC%94%E8%AE%B0/RCE/&text=RCE"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=http://yatq.xyz/web%E5%9F%BA%E7%A1%80%E6%80%BB%E7%BB%93%E7%AC%94%E8%AE%B0/RCE/&title=RCE"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=http://yatq.xyz/web%E5%9F%BA%E7%A1%80%E6%80%BB%E7%BB%93%E7%AC%94%E8%AE%B0/RCE/&is_video=false&description=RCE"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=RCE&body=Check out this article: http://yatq.xyz/web%E5%9F%BA%E7%A1%80%E6%80%BB%E7%BB%93%E7%AC%94%E8%AE%B0/RCE/"><i class="fa-solid fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=http://yatq.xyz/web%E5%9F%BA%E7%A1%80%E6%80%BB%E7%BB%93%E7%AC%94%E8%AE%B0/RCE/&title=RCE"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=http://yatq.xyz/web%E5%9F%BA%E7%A1%80%E6%80%BB%E7%BB%93%E7%AC%94%E8%AE%B0/RCE/&title=RCE"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=http://yatq.xyz/web%E5%9F%BA%E7%A1%80%E6%80%BB%E7%BB%93%E7%AC%94%E8%AE%B0/RCE/&title=RCE"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=http://yatq.xyz/web%E5%9F%BA%E7%A1%80%E6%80%BB%E7%BB%93%E7%AC%94%E8%AE%B0/RCE/&title=RCE"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=http://yatq.xyz/web%E5%9F%BA%E7%A1%80%E6%80%BB%E7%BB%93%E7%AC%94%E8%AE%B0/RCE/&name=RCE&description=&lt;h1 id=&#34;RCE&#34;&gt;&lt;a href=&#34;#RCE&#34; class=&#34;headerlink&#34; title=&#34;RCE&#34;&gt;&lt;/a&gt;RCE&lt;/h1&gt;&lt;h2 id=&#34;RCE基础豆知识&#34;&gt;&lt;a href=&#34;#RCE基础豆知识&#34; class=&#34;headerlink&#34; title=&#34;RCE基础豆知识&#34;&gt;&lt;/a&gt;RCE基础豆知识&lt;/h2&gt;&lt;p&gt;**RCE(Remote code execution 代码执行&amp;amp;命令执行)**，分为命令执行和代码执行。&lt;/p&gt;
+&lt;figure class=&#34;highlight php&#34;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&#34;gutter&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;2&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;3&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&#34;code&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;代码执行：&lt;span class=&#34;keyword&#34;&gt;eval&lt;/span&gt;(&lt;span class=&#34;string&#34;&gt;&amp;quot;include(&amp;#x27;flag.php&amp;#x27;);echo &amp;#x27;This will get the flag by eval PHP code: &amp;#x27;.\$flag;&amp;quot;&lt;/span&gt;);&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;命令执行：&lt;span class=&#34;title function_ invoke__&#34;&gt;system&lt;/span&gt;(&lt;span class=&#34;string&#34;&gt;&amp;quot;echo &amp;#x27;This will get the flag by Linux bash command - cat /flag: &amp;#x27;;cat /flag&amp;quot;&lt;/span&gt;);&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;"><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=http://yatq.xyz/web%E5%9F%BA%E7%A1%80%E6%80%BB%E7%BB%93%E7%AC%94%E8%AE%B0/RCE/&t=RCE"><i class="fab fa-hacker-news " aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+    
+    
+      <div id="toc">
+        <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#RCE"><span class="toc-number">1.</span> <span class="toc-text">RCE</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#RCE%E5%9F%BA%E7%A1%80%E8%B1%86%E7%9F%A5%E8%AF%86"><span class="toc-number">1.1.</span> <span class="toc-text">RCE基础豆知识</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#PHP%E4%BB%A3%E7%A0%81%E6%89%A7%E8%A1%8C%E5%87%BD%E6%95%B0"><span class="toc-number">1.1.1.</span> <span class="toc-text">PHP代码执行函数</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%BB%95%E8%BF%87%E6%8A%80%E5%B7%A7"><span class="toc-number">1.1.2.</span> <span class="toc-text">绕过技巧</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%8F%82%E6%95%B0%E9%80%83%E9%80%B8"><span class="toc-number">1.1.2.1.</span> <span class="toc-text">参数逃逸</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E7%A9%BA%E6%A0%BC%E7%BB%95%E8%BF%87"><span class="toc-number">1.1.2.2.</span> <span class="toc-text">空格绕过</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E9%80%9A%E9%85%8D%E7%AC%A6%E7%BB%95%E8%BF%87"><span class="toc-number">1.1.2.3.</span> <span class="toc-text">通配符绕过</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E7%AE%A1%E9%81%93%E7%AC%A6%E7%BB%95%E8%BF%87"><span class="toc-number">1.1.2.4.</span> <span class="toc-text">管道符绕过</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%8F%98%E9%87%8F%E6%8B%BC%E6%8E%A5%E7%BB%95%E8%BF%87"><span class="toc-number">1.1.2.5.</span> <span class="toc-text">变量拼接绕过</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#cat%E7%9A%84%E4%BB%A3%E6%9B%BF"><span class="toc-number">1.1.2.6.</span> <span class="toc-text">cat的代替</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Base64%E7%BC%96%E7%A0%81%E7%BB%95%E8%BF%87"><span class="toc-number">1.1.2.7.</span> <span class="toc-text">Base64编码绕过</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#linux%E7%89%B9%E6%AE%8A%E5%8F%98%E9%87%8F%E7%BB%95%E8%BF%87"><span class="toc-number">1.1.2.8.</span> <span class="toc-text">linux特殊变量绕过</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#PATH"><span class="toc-number">1.1.2.9.</span> <span class="toc-text">$PATH</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#RCE-labs%E6%89%93%E9%9D%B6"><span class="toc-number">1.2.</span> <span class="toc-text">RCE-labs打靶</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#RCE-labs-level4-SHELL-%E8%BF%90%E7%AE%97%E7%AC%A6"><span class="toc-number">1.2.1.</span> <span class="toc-text">RCE-labs-level4 SHELL 运算符</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#RCE-labs-level5-%E7%BB%88%E7%AB%AF%E7%89%B9%E6%80%A7-%E7%A9%BA%E5%AD%97%E7%AC%A6%E5%BF%BD%E7%95%A5%E5%92%8C%E9%80%9A%E9%85%8D%E7%AC%A6"><span class="toc-number">1.2.2.</span> <span class="toc-text">RCE-labs-level5 终端特性_空字符忽略和通配符</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#RCE-labs-level6"><span class="toc-number">1.2.3.</span> <span class="toc-text">RCE-labs-level6</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#RCE-labs-level7-%E7%A9%BA%E6%A0%BC%E7%BB%95%E8%BF%87"><span class="toc-number">1.2.4.</span> <span class="toc-text">RCE-labs-level7 空格绕过</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#RCE-labs-level8-%E9%94%99%E8%AF%AF%E9%87%8D%E5%AE%9A%E5%90%91"><span class="toc-number">1.2.5.</span> <span class="toc-text">RCE-labs-level8 错误重定向</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#RCE-labs-level9-%E6%97%A0%E5%AD%97%E6%AF%8D-%EF%BC%88%E5%85%AB%E8%BF%9B%E5%88%B6%EF%BC%89"><span class="toc-number">1.2.6.</span> <span class="toc-text">RCE-labs-level9 无字母 （八进制）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#RCE-labs-level10"><span class="toc-number">1.2.7.</span> <span class="toc-text">RCE-labs-level10</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#RCE-labs-level11"><span class="toc-number">1.2.8.</span> <span class="toc-text">RCE-labs-level11</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#RCE-labs-level12"><span class="toc-number">1.2.9.</span> <span class="toc-text">RCE-labs-level12</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#RCE-labs-level13"><span class="toc-number">1.2.10.</span> <span class="toc-text">RCE-labs-level13</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#RCE-labs-level14"><span class="toc-number">1.2.11.</span> <span class="toc-text">RCE-labs-level14</span></a></li></ol></li></ol></li></ol>
+      </div>
+    
+  </span>
 </div>
-                
-                <div class="post-main">
 
     
+    <div class="content index py4 ">
+        
+        <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
     
-        <div class="post-main-title">
-            RCE
-        </div>
-        <div class="post-meta">
-            2025-04-19
-        </div>
-        <div class="post-md">
-            <h1 id="RCE"><a href="#RCE" class="headerlink" title="RCE"></a>RCE</h1><h2 id="RCE基础豆知识"><a href="#RCE基础豆知识" class="headerlink" title="RCE基础豆知识"></a>RCE基础豆知识</h2><p>**RCE(Remote code execution 代码执行&amp;命令执行)**，分为命令执行和代码执行。</p>
+    <h1 class="posttitle p-name" itemprop="name headline">
+        RCE
+    </h1>
+
+
+
+    <div class="meta">
+      <span class="author p-author h-card" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span class="p-name" itemprop="name">y@7q</span>
+      </span>
+      
+    <div class="postdate">
+      
+        <time datetime="2025-04-19T07:29:05.000Z" class="dt-published" itemprop="datePublished">2025-04-19</time>
+        
+      
+    </div>
+
+
+      
+
+      
+
+    </div>
+  </header>
+  
+
+  <div class="content e-content" itemprop="articleBody">
+    <h1 id="RCE"><a href="#RCE" class="headerlink" title="RCE"></a>RCE</h1><h2 id="RCE基础豆知识"><a href="#RCE基础豆知识" class="headerlink" title="RCE基础豆知识"></a>RCE基础豆知识</h2><p>**RCE(Remote code execution 代码执行&amp;命令执行)**，分为命令执行和代码执行。</p>
 <figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">代码执行：<span class="keyword">eval</span>(<span class="string">&quot;include(&#x27;flag.php&#x27;);echo &#x27;This will get the flag by eval PHP code: &#x27;.\$flag;&quot;</span>);</span><br><span class="line"></span><br><span class="line">命令执行：<span class="title function_ invoke__">system</span>(<span class="string">&quot;echo &#x27;This will get the flag by Linux bash command - cat /flag: &#x27;;cat /flag&quot;</span>);</span><br></pre></td></tr></table></figure>
 
 <span id="more"></span>
@@ -397,32 +510,144 @@
 <h3 id="RCE-labs-level11"><a href="#RCE-labs-level11" class="headerlink" title="RCE-labs-level11"></a>RCE-labs-level11</h3><h3 id="RCE-labs-level12"><a href="#RCE-labs-level12" class="headerlink" title="RCE-labs-level12"></a>RCE-labs-level12</h3><h3 id="RCE-labs-level13"><a href="#RCE-labs-level13" class="headerlink" title="RCE-labs-level13"></a>RCE-labs-level13</h3><h3 id="RCE-labs-level14"><a href="#RCE-labs-level14" class="headerlink" title="RCE-labs-level14"></a>RCE-labs-level14</h3><p>参考文章：<br><a target="_blank" rel="noopener" href="https://www.cnblogs.com/Y0uhe/p/15369989.html">CTF中常见RCE命令执行绕过技巧 - LinkPoc - 博客园</a></p>
 <p><a target="_blank" rel="noopener" href="https://www.freebuf.com/articles/web/393156.html">CTF中的RCE - FreeBuf网络安全行业门户</a></p>
 
-        </div>
+  </div>
+</article>
+
+
+
+        
+          <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+        
+          <li><a href="/">首页</a></li>
+        
+          <li><a href="/about/">关于</a></li>
+        
+          <li><a href="/archives/">归档</a></li>
+        
+          <li><a target="_blank" rel="noopener" href="http://github.com/probberechts">项目</a></li>
+        
+      </ul>
+    </div>
 
     
+    
+      <div id="toc-footer" style="display: none">
+        <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#RCE"><span class="toc-number">1.</span> <span class="toc-text">RCE</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#RCE%E5%9F%BA%E7%A1%80%E8%B1%86%E7%9F%A5%E8%AF%86"><span class="toc-number">1.1.</span> <span class="toc-text">RCE基础豆知识</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#PHP%E4%BB%A3%E7%A0%81%E6%89%A7%E8%A1%8C%E5%87%BD%E6%95%B0"><span class="toc-number">1.1.1.</span> <span class="toc-text">PHP代码执行函数</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%BB%95%E8%BF%87%E6%8A%80%E5%B7%A7"><span class="toc-number">1.1.2.</span> <span class="toc-text">绕过技巧</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%8F%82%E6%95%B0%E9%80%83%E9%80%B8"><span class="toc-number">1.1.2.1.</span> <span class="toc-text">参数逃逸</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E7%A9%BA%E6%A0%BC%E7%BB%95%E8%BF%87"><span class="toc-number">1.1.2.2.</span> <span class="toc-text">空格绕过</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E9%80%9A%E9%85%8D%E7%AC%A6%E7%BB%95%E8%BF%87"><span class="toc-number">1.1.2.3.</span> <span class="toc-text">通配符绕过</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E7%AE%A1%E9%81%93%E7%AC%A6%E7%BB%95%E8%BF%87"><span class="toc-number">1.1.2.4.</span> <span class="toc-text">管道符绕过</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%8F%98%E9%87%8F%E6%8B%BC%E6%8E%A5%E7%BB%95%E8%BF%87"><span class="toc-number">1.1.2.5.</span> <span class="toc-text">变量拼接绕过</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#cat%E7%9A%84%E4%BB%A3%E6%9B%BF"><span class="toc-number">1.1.2.6.</span> <span class="toc-text">cat的代替</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Base64%E7%BC%96%E7%A0%81%E7%BB%95%E8%BF%87"><span class="toc-number">1.1.2.7.</span> <span class="toc-text">Base64编码绕过</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#linux%E7%89%B9%E6%AE%8A%E5%8F%98%E9%87%8F%E7%BB%95%E8%BF%87"><span class="toc-number">1.1.2.8.</span> <span class="toc-text">linux特殊变量绕过</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#PATH"><span class="toc-number">1.1.2.9.</span> <span class="toc-text">$PATH</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#RCE-labs%E6%89%93%E9%9D%B6"><span class="toc-number">1.2.</span> <span class="toc-text">RCE-labs打靶</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#RCE-labs-level4-SHELL-%E8%BF%90%E7%AE%97%E7%AC%A6"><span class="toc-number">1.2.1.</span> <span class="toc-text">RCE-labs-level4 SHELL 运算符</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#RCE-labs-level5-%E7%BB%88%E7%AB%AF%E7%89%B9%E6%80%A7-%E7%A9%BA%E5%AD%97%E7%AC%A6%E5%BF%BD%E7%95%A5%E5%92%8C%E9%80%9A%E9%85%8D%E7%AC%A6"><span class="toc-number">1.2.2.</span> <span class="toc-text">RCE-labs-level5 终端特性_空字符忽略和通配符</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#RCE-labs-level6"><span class="toc-number">1.2.3.</span> <span class="toc-text">RCE-labs-level6</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#RCE-labs-level7-%E7%A9%BA%E6%A0%BC%E7%BB%95%E8%BF%87"><span class="toc-number">1.2.4.</span> <span class="toc-text">RCE-labs-level7 空格绕过</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#RCE-labs-level8-%E9%94%99%E8%AF%AF%E9%87%8D%E5%AE%9A%E5%90%91"><span class="toc-number">1.2.5.</span> <span class="toc-text">RCE-labs-level8 错误重定向</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#RCE-labs-level9-%E6%97%A0%E5%AD%97%E6%AF%8D-%EF%BC%88%E5%85%AB%E8%BF%9B%E5%88%B6%EF%BC%89"><span class="toc-number">1.2.6.</span> <span class="toc-text">RCE-labs-level9 无字母 （八进制）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#RCE-labs-level10"><span class="toc-number">1.2.7.</span> <span class="toc-text">RCE-labs-level10</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#RCE-labs-level11"><span class="toc-number">1.2.8.</span> <span class="toc-text">RCE-labs-level11</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#RCE-labs-level12"><span class="toc-number">1.2.9.</span> <span class="toc-text">RCE-labs-level12</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#RCE-labs-level13"><span class="toc-number">1.2.10.</span> <span class="toc-text">RCE-labs-level13</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#RCE-labs-level14"><span class="toc-number">1.2.11.</span> <span class="toc-text">RCE-labs-level14</span></a></li></ol></li></ol></li></ol>
+      </div>
+    
 
+    <div id="share-footer" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=http://yatq.xyz/web%E5%9F%BA%E7%A1%80%E6%80%BB%E7%BB%93%E7%AC%94%E8%AE%B0/RCE/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=http://yatq.xyz/web%E5%9F%BA%E7%A1%80%E6%80%BB%E7%BB%93%E7%AC%94%E8%AE%B0/RCE/&text=RCE"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=http://yatq.xyz/web%E5%9F%BA%E7%A1%80%E6%80%BB%E7%BB%93%E7%AC%94%E8%AE%B0/RCE/&title=RCE"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=http://yatq.xyz/web%E5%9F%BA%E7%A1%80%E6%80%BB%E7%BB%93%E7%AC%94%E8%AE%B0/RCE/&is_video=false&description=RCE"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=RCE&body=Check out this article: http://yatq.xyz/web%E5%9F%BA%E7%A1%80%E6%80%BB%E7%BB%93%E7%AC%94%E8%AE%B0/RCE/"><i class="fa-solid fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=http://yatq.xyz/web%E5%9F%BA%E7%A1%80%E6%80%BB%E7%BB%93%E7%AC%94%E8%AE%B0/RCE/&title=RCE"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=http://yatq.xyz/web%E5%9F%BA%E7%A1%80%E6%80%BB%E7%BB%93%E7%AC%94%E8%AE%B0/RCE/&title=RCE"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=http://yatq.xyz/web%E5%9F%BA%E7%A1%80%E6%80%BB%E7%BB%93%E7%AC%94%E8%AE%B0/RCE/&title=RCE"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=http://yatq.xyz/web%E5%9F%BA%E7%A1%80%E6%80%BB%E7%BB%93%E7%AC%94%E8%AE%B0/RCE/&title=RCE"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=http://yatq.xyz/web%E5%9F%BA%E7%A1%80%E6%80%BB%E7%BB%93%E7%AC%94%E8%AE%B0/RCE/&name=RCE&description=&lt;h1 id=&#34;RCE&#34;&gt;&lt;a href=&#34;#RCE&#34; class=&#34;headerlink&#34; title=&#34;RCE&#34;&gt;&lt;/a&gt;RCE&lt;/h1&gt;&lt;h2 id=&#34;RCE基础豆知识&#34;&gt;&lt;a href=&#34;#RCE基础豆知识&#34; class=&#34;headerlink&#34; title=&#34;RCE基础豆知识&#34;&gt;&lt;/a&gt;RCE基础豆知识&lt;/h2&gt;&lt;p&gt;**RCE(Remote code execution 代码执行&amp;amp;命令执行)**，分为命令执行和代码执行。&lt;/p&gt;
+&lt;figure class=&#34;highlight php&#34;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&#34;gutter&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;2&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;3&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&#34;code&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;代码执行：&lt;span class=&#34;keyword&#34;&gt;eval&lt;/span&gt;(&lt;span class=&#34;string&#34;&gt;&amp;quot;include(&amp;#x27;flag.php&amp;#x27;);echo &amp;#x27;This will get the flag by eval PHP code: &amp;#x27;.\$flag;&amp;quot;&lt;/span&gt;);&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;命令执行：&lt;span class=&#34;title function_ invoke__&#34;&gt;system&lt;/span&gt;(&lt;span class=&#34;string&#34;&gt;&amp;quot;echo &amp;#x27;This will get the flag by Linux bash command - cat /flag: &amp;#x27;;cat /flag&amp;quot;&lt;/span&gt;);&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;"><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=http://yatq.xyz/web%E5%9F%BA%E7%A1%80%E6%80%BB%E7%BB%93%E7%AC%94%E8%AE%B0/RCE/&t=RCE"><i class="fab fa-hacker-news fa-lg" aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+
+    <div id="actions-footer">
+        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fa-solid fa-bars fa-lg" aria-hidden="true"></i> 菜单</a>
+        
+          <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fa-solid fa-list fa-lg" aria-hidden="true"></i> 目录</a>
+        
+        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fa-solid fa-share-alt fa-lg" aria-hidden="true"></i> 分享</a>
+        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa-solid fa-chevron-up fa-lg" aria-hidden="true"></i> 返回顶部</a>
+    </div>
+
+  </div>
 </div>
-                <div class="footer">
-    <span>Copyright © 2022 y@7q</span>
-    <span>Theme Designed By <a target="_blank" href="https://zheli.design/one-paper">這李設計</a></span>
-</div>
+
+        
+        <footer id="footer">
+  <div class="footer-left">
+    Copyright &copy;
+    
+    
+    2016-2025
+    y@7q
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+        <!--
+       --><li><a href="/">首页</a></li><!--
+     --><!--
+       --><li><a href="/about/">关于</a></li><!--
+     --><!--
+       --><li><a href="/archives/">归档</a></li><!--
+     --><!--
+       --><li><a target="_blank" rel="noopener" href="http://github.com/probberechts">项目</a></li><!--
+     -->
+      </ul>
+    </nav>
+  </div>
+</footer>
+
+    </div>
+    <!-- styles -->
 
 
-<link rel="stylesheet" href="/css/a11y-dark.min.css">
+
+  <link rel="preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" crossorigin="anonymous" onload="this.onload=null;this.rel='stylesheet'"/>
 
 
-<script src="/js/highlight.min.js"></script>
+    <!-- jquery -->
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js" crossorigin="anonymous"></script>
 
 
-<script src="/js/highlightjs-line-numbers.js"></script>
 
 
-<script>
-    hljs.initHighlightingOnLoad();
-    hljs.initLineNumbersOnLoad();
-</script>
+<!-- clipboard -->
 
-            </div>
-        </div>
-    </body>
+  
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.7/clipboard.min.js" crossorigin="anonymous"></script>
+  
+  <script type="text/javascript">
+  $(function() {
+    // copy-btn HTML
+    var btn = "<span class=\"btn-copy tooltipped tooltipped-sw\" aria-label=\"复制到粘贴板！\">";
+    btn += '<i class="fa-regular fa-clone"></i>';
+    btn += '</span>';
+    // mount it!
+    $(".highlight table").before(btn);
+    var clip = new ClipboardJS('.btn-copy', {
+      text: function(trigger) {
+        return Array.from(trigger.nextElementSibling.querySelectorAll('.code')).reduce((str,it)=>str+it.innerText+'\n','')
+      }
+    });
+    clip.on('success', function(e) {
+      e.trigger.setAttribute('aria-label', "复制成功！");
+      e.clearSelection();
+    })
+  })
+  </script>
+
+
+<script src="/js/main.js"></script>
+
+<!-- search -->
+
+<!-- Baidu Analytics -->
+
+<!-- Cloudflare Analytics -->
+
+<!-- Disqus Comments -->
+
+<!-- utterances Comments -->
+
+</body>
 </html>

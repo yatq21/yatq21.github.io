@@ -1,48 +1,190 @@
 <!DOCTYPE html>
-<html>
-    <head>
+<html lang=zh>
+<head>
+    <!-- so meta -->
     <meta charset="utf-8">
-    <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" name="viewport" />
-    <link rel="alternate icon" type="image/png" href="/img/favicon.png">
-    <title>y@7q | </title>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
+    <meta name="description" content="[TOC] upload-labs靶场刷题个人总结文件上传基本思路一般是网站有相关的文件上传的地方，例如传图片文本之类，我们会尝试在这里绕过各种waf最终达到上传一个后门来达到连接服务器的目的。 这里我自己在写完这些之后画了一个思维导图让自己做题思路更加清晰一些：">
+<meta property="og:type" content="article">
+<meta property="og:title" content="upload-labs">
+<meta property="og:url" content="http://yatq.xyz/web%E5%9F%BA%E7%A1%80%E6%80%BB%E7%BB%93%E7%AC%94%E8%AE%B0/upload-labs/index.html">
+<meta property="og:site_name" content="y@7q">
+<meta property="og:description" content="[TOC] upload-labs靶场刷题个人总结文件上传基本思路一般是网站有相关的文件上传的地方，例如传图片文本之类，我们会尝试在这里绕过各种waf最终达到上传一个后门来达到连接服务器的目的。 这里我自己在写完这些之后画了一个思维导图让自己做题思路更加清晰一些：">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://raw.githubusercontent.com/yatq21/Pictures/main/Blog/study/sql%E6%B3%A8%E5%85%A5%E6%80%9D%E8%B7%AF%E6%80%BB%E7%BB%93.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/yatq21/Pictures@master/Blog/study/1742418402456.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/yatq21/Pictures@master/Blog/study/1742418681907.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/yatq21/Pictures@master/Blog/study/1742423650622.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/yatq21/Pictures@master/Blog/study/1742450506015.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/yatq21/Pictures@master/Blog/study/1742450894513.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/yatq21/Pictures@master/Blog/study/1742454174380.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/yatq21/Pictures@master/Blog/study/1742484942641.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/yatq21/Pictures@master/Blog/study/%E5%B1%8F%E5%B9%95%E6%88%AA%E5%9B%BE%202025-03-21%20001322.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/yatq21/Pictures@master/Blog/study/1742488238764.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/yatq21/Pictures@master/Blog/study/1742540942957.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/yatq21/Pictures@master/Blog/study/1742557680325.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/yatq21/Pictures@master/Blog/study/1742559457977.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/yatq21/Pictures@master/Blog/study/1742560288759.png">
+<meta property="article:published_time" content="2025-03-19T20:52:34.000Z">
+<meta property="article:modified_time" content="2025-08-06T09:04:35.006Z">
+<meta property="article:author" content="y@7q">
+<meta property="article:tag" content="刷题">
+<meta property="article:tag" content="CTF">
+<meta property="article:tag" content="文件上传">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://raw.githubusercontent.com/yatq21/Pictures/main/Blog/study/sql%E6%B3%A8%E5%85%A5%E6%80%9D%E8%B7%AF%E6%80%BB%E7%BB%93.png">
     
-<link rel="stylesheet" href="/css/reset.css">
+    
+      
+        
+          <link rel="shortcut icon" href="/images/favicon.ico">
+        
+      
+      
+        
+          <link rel="icon" type="image/png" href="/images/favicon-192x192.png" sizes="192x192">
+        
+      
+      
+        
+          <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+        
+      
+    
+    <!-- title -->
+    <title>upload-labs</title>
+    <!-- async scripts -->
+    <!-- Google Analytics -->
 
+
+    <!-- Umami Analytics -->
+
+
+    <!-- styles -->
     
 <link rel="stylesheet" href="/css/style.css">
 
+    <!-- persian styles -->
     
-<link rel="stylesheet" href="/css/markdown.css">
-
+    <!-- rss -->
     
-<link rel="stylesheet" href="/css/fonts.css">
-
+    
+	<!-- mathjax -->
+	
 <meta name="generator" content="Hexo 7.3.0"></head>
-    <body>
-        <div class="paper">
-            <div class="paper-main">
-                
-                    <div class="post-header">
-    <a class="logo" href="/">y@7q</a>
-    <a class="go-home" href="/">
-        <svg width="8" height="14" viewBox="0 0 8 14">
-            <path d="M7 1L1 7l6 6" stroke="#000" stroke-width="2" fill="none" fill-rule="evenodd" stroke-linecap="round" stroke-linejoin="round"/>
-        </svg>
-    </a>
+
+<body class="max-width mx-auto px3 ltr">
+    
+      <div id="header-post">
+  <a id="menu-icon" href="#" aria-label="目录"><i class="fa-solid fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#" aria-label="目录"><i class="fa-solid fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" aria-label="顶部" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fa-solid fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+        <!--
+       --><li><a href="/">首页</a></li><!--
+     --><!--
+       --><li><a href="/about/">关于</a></li><!--
+     --><!--
+       --><li><a href="/archives/">归档</a></li><!--
+     --><!--
+       --><li><a target="_blank" rel="noopener" href="http://github.com/probberechts">项目</a></li><!--
+     -->
+      </ul>
+    </span>
+    <br/>
+    <span id="actions">
+      <ul>
+        
+        <li><a class="icon" aria-label="上一篇" href="/web%E5%9F%BA%E7%A1%80%E6%80%BB%E7%BB%93%E7%AC%94%E8%AE%B0/sqli-labs%E5%88%B7%E9%A2%98/"><i class="fa-solid fa-chevron-left" aria-hidden="true" onmouseover="$('#i-prev').toggle();" onmouseout="$('#i-prev').toggle();"></i></a></li>
+        
+        
+        <li><a class="icon" aria-label="下一篇" href="/web%E5%9F%BA%E7%A1%80%E6%80%BB%E7%BB%93%E7%AC%94%E8%AE%B0/%E6%96%87%E4%BB%B6%E5%8C%85%E5%90%AB%E6%BC%8F%E6%B4%9E/"><i class="fa-solid fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
+        
+        <li><a class="icon" aria-label="返回顶部" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa-solid fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
+        <li><a class="icon" aria-label="分享文章" href="#"><i class="fa-solid fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">上一篇</span>
+      <span id="i-next" class="info" style="display:none;">下一篇</span>
+      <span id="i-top" class="info" style="display:none;">返回顶部</span>
+      <span id="i-share" class="info" style="display:none;">分享文章</span>
+    </span>
+    <br/>
+    <div id="share" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=http://yatq.xyz/web%E5%9F%BA%E7%A1%80%E6%80%BB%E7%BB%93%E7%AC%94%E8%AE%B0/upload-labs/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=http://yatq.xyz/web%E5%9F%BA%E7%A1%80%E6%80%BB%E7%BB%93%E7%AC%94%E8%AE%B0/upload-labs/&text=upload-labs"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=http://yatq.xyz/web%E5%9F%BA%E7%A1%80%E6%80%BB%E7%BB%93%E7%AC%94%E8%AE%B0/upload-labs/&title=upload-labs"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=http://yatq.xyz/web%E5%9F%BA%E7%A1%80%E6%80%BB%E7%BB%93%E7%AC%94%E8%AE%B0/upload-labs/&is_video=false&description=upload-labs"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=upload-labs&body=Check out this article: http://yatq.xyz/web%E5%9F%BA%E7%A1%80%E6%80%BB%E7%BB%93%E7%AC%94%E8%AE%B0/upload-labs/"><i class="fa-solid fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=http://yatq.xyz/web%E5%9F%BA%E7%A1%80%E6%80%BB%E7%BB%93%E7%AC%94%E8%AE%B0/upload-labs/&title=upload-labs"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=http://yatq.xyz/web%E5%9F%BA%E7%A1%80%E6%80%BB%E7%BB%93%E7%AC%94%E8%AE%B0/upload-labs/&title=upload-labs"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=http://yatq.xyz/web%E5%9F%BA%E7%A1%80%E6%80%BB%E7%BB%93%E7%AC%94%E8%AE%B0/upload-labs/&title=upload-labs"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=http://yatq.xyz/web%E5%9F%BA%E7%A1%80%E6%80%BB%E7%BB%93%E7%AC%94%E8%AE%B0/upload-labs/&title=upload-labs"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=http://yatq.xyz/web%E5%9F%BA%E7%A1%80%E6%80%BB%E7%BB%93%E7%AC%94%E8%AE%B0/upload-labs/&name=upload-labs&description=&lt;p&gt;[TOC]&lt;/p&gt;
+&lt;h1 id=&#34;upload-labs靶场刷题个人总结&#34;&gt;&lt;a href=&#34;#upload-labs靶场刷题个人总结&#34; class=&#34;headerlink&#34; title=&#34;upload-labs靶场刷题个人总结&#34;&gt;&lt;/a&gt;upload-labs靶场刷题个人总结&lt;/h1&gt;&lt;h2 id=&#34;文件上传基本思路&#34;&gt;&lt;a href=&#34;#文件上传基本思路&#34; class=&#34;headerlink&#34; title=&#34;文件上传基本思路&#34;&gt;&lt;/a&gt;文件上传基本思路&lt;/h2&gt;&lt;p&gt;一般是网站有相关的文件上传的地方，例如传图片文本之类，我们会尝试在这里绕过各种waf最终达到上传一个后门来达到连接服务器的目的。&lt;/p&gt;
+&lt;p&gt;这里我自己在写完这些之后画了一个思维导图让自己做题思路更加清晰一些：&lt;br&gt;&lt;img src=&#34;https://raw.githubusercontent.com/yatq21/Pictures/main/Blog/study/sql%E6%B3%A8%E5%85%A5%E6%80%9D%E8%B7%AF%E6%80%BB%E7%BB%93.png&#34; alt=&#34;sql注入思路总结&#34;&gt;&lt;/p&gt;"><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=http://yatq.xyz/web%E5%9F%BA%E7%A1%80%E6%80%BB%E7%BB%93%E7%AC%94%E8%AE%B0/upload-labs/&t=upload-labs"><i class="fab fa-hacker-news " aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+    
+    
+      <div id="toc">
+        <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#upload-labs%E9%9D%B6%E5%9C%BA%E5%88%B7%E9%A2%98%E4%B8%AA%E4%BA%BA%E6%80%BB%E7%BB%93"><span class="toc-number">1.</span> <span class="toc-text">upload-labs靶场刷题个人总结</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%96%87%E4%BB%B6%E4%B8%8A%E4%BC%A0%E5%9F%BA%E6%9C%AC%E6%80%9D%E8%B7%AF"><span class="toc-number">1.1.</span> <span class="toc-text">文件上传基本思路</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Pass-01-%EF%BC%88%E5%89%8D%E7%AB%AF%E9%AA%8C%E8%AF%81%EF%BC%89"><span class="toc-number">1.2.</span> <span class="toc-text">Pass-01 （前端验证）</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Pass-02%EF%BC%88MIME%E9%AA%8C%E8%AF%81%EF%BC%89"><span class="toc-number">1.3.</span> <span class="toc-text">Pass-02（MIME验证）</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Pass-03%EF%BC%88%E5%90%8E%E7%BC%80%E9%BB%91%E5%90%8D%E5%8D%95%E6%A0%A1%E9%AA%8C%E7%BB%95%E8%BF%87%EF%BC%89"><span class="toc-number">1.4.</span> <span class="toc-text">Pass-03（后缀黑名单校验绕过）</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Pass-04%EF%BC%88%E9%BB%91%E5%90%8D%E5%8D%952-htaccess%EF%BC%89"><span class="toc-number">1.5.</span> <span class="toc-text">Pass-04（黑名单2  .htaccess）</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#htaccess%E7%BB%95%E8%BF%87%E7%9A%84%E6%80%BB%E7%BB%93"><span class="toc-number">1.6.</span> <span class="toc-text">htaccess绕过的总结</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%A0%B8%E5%BF%83%E5%8E%9F%E7%90%86"><span class="toc-number">1.6.1.</span> <span class="toc-text">核心原理</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#htaccess-%E7%BC%96%E5%86%99%E8%AF%AD%E6%B3%95%E7%B2%BE%E8%A6%81"><span class="toc-number">1.6.2.</span> <span class="toc-text">.htaccess 编写语法精要</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%B8%B8%E7%94%A8%E7%9A%84-htaccess-%E9%85%8D%E7%BD%AE%E5%8F%8A%E5%85%B6%E4%BD%9C%E7%94%A8"><span class="toc-number">1.6.3.</span> <span class="toc-text">常用的 .htaccess 配置及其作用</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%94%BB%E5%87%BB%E6%B5%81%E7%A8%8B%E5%BB%BA%E8%AE%AE%EF%BC%88CTF-%E5%AE%9E%E6%88%98%EF%BC%89"><span class="toc-number">1.6.4.</span> <span class="toc-text">攻击流程建议（CTF&#x2F;实战）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%98%B2%E5%BE%A1%E5%BB%BA%E8%AE%AE%EF%BC%88%E5%AE%89%E5%85%A8%E8%A7%86%E8%A7%92%EF%BC%89"><span class="toc-number">1.6.5.</span> <span class="toc-text">防御建议（安全视角）</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Pass-05%EF%BC%88%E9%BB%91%E5%90%8D%E5%8D%953-%E5%A4%A7%E5%B0%8F%E5%86%99%E7%BB%95%E8%BF%87%EF%BC%89"><span class="toc-number">1.7.</span> <span class="toc-text">Pass-05（黑名单3 大小写绕过）</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Pass-06%EF%BC%88%E9%BB%91%E5%90%8D%E5%8D%954-%E7%A9%BA%E6%A0%BC%E7%BB%95%E8%BF%87%EF%BC%89"><span class="toc-number">1.8.</span> <span class="toc-text">Pass-06（黑名单4 空格绕过）</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Pass-07%EF%BC%88%E9%BB%91%E5%90%8D%E5%8D%955-%E7%82%B9%E5%8F%B7%E7%BB%95%E8%BF%87%EF%BC%89"><span class="toc-number">1.9.</span> <span class="toc-text">Pass-07（黑名单5 点号绕过）</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Pass-08%EF%BC%88%E9%BB%91%E5%90%8D%E5%8D%956-DATA%E7%BB%95%E8%BF%87%EF%BC%89"><span class="toc-number">1.10.</span> <span class="toc-text">Pass-08（黑名单6 ::$DATA绕过）</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Pass-09-%E9%BB%91%E5%90%8D%E5%8D%957-%E5%8D%95%E6%AC%A1%E9%AA%8C%E8%AF%81"><span class="toc-number">1.11.</span> <span class="toc-text">Pass-09(黑名单7 单次验证)</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Pass-10%EF%BC%88%E9%BB%91%E5%90%8D%E5%8D%958-%E5%8F%8C%E5%86%99%E7%BB%95%E8%BF%87%EF%BC%89"><span class="toc-number">1.12.</span> <span class="toc-text">Pass-10（黑名单8 双写绕过）</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%98%B6%E6%AE%B5%E6%80%A7%E6%80%BB%E7%BB%93"><span class="toc-number">1.13.</span> <span class="toc-text">阶段性总结</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Pass-11%EF%BC%88%E7%99%BD%E5%90%8D%E5%8D%95-00%E6%88%AA%E6%96%AD-GET%EF%BC%89"><span class="toc-number">1.14.</span> <span class="toc-text">Pass-11（白名单 %00截断 GET）</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Pass-12%EF%BC%88%E7%99%BD%E5%90%8D%E5%8D%95-00%E6%88%AA%E6%96%AD-POST%EF%BC%89"><span class="toc-number">1.15.</span> <span class="toc-text">Pass-12（白名单 %00截断 POST）</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Pass-13%EF%BC%88%E7%99%BD%E5%90%8D%E5%8D%953-%E5%9B%BE%E7%89%87%E9%A9%AC-%E6%96%87%E4%BB%B6%E5%8C%85%E5%90%AB%EF%BC%89"><span class="toc-number">1.16.</span> <span class="toc-text">Pass-13（白名单3 图片马+文件包含）</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%88%B6%E4%BD%9C%E5%9B%BE%E7%89%87%E9%A9%AC"><span class="toc-number">1.16.1.</span> <span class="toc-text">制作图片马</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Pass-14%EF%BC%88%E7%99%BD%E5%90%8D%E5%8D%954-getimagesize-%E5%9B%BE%E7%89%87%E9%A9%AC-%E6%96%87%E4%BB%B6%E5%8C%85%E5%90%AB%EF%BC%89"><span class="toc-number">1.17.</span> <span class="toc-text">Pass-14（白名单4 getimagesize() 图片马+文件包含）</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Pass-15%EF%BC%88%E7%99%BD%E5%90%8D%E5%8D%955-exif-imagetype-%E5%9B%BE%E7%89%87%E9%A9%AC-%E6%96%87%E4%BB%B6%E5%8C%85%E5%90%AB%EF%BC%89"><span class="toc-number">1.18.</span> <span class="toc-text">Pass-15（白名单5 exif_imagetype() 图片马+文件包含）</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Pass-16%EF%BC%88%E7%99%BD%E5%90%8D%E5%8D%956-%E4%BA%8C%E6%AC%A1%E6%B8%B2%E6%9F%93%E7%BB%95%E8%BF%87-%E5%9B%BE%E7%89%87%E9%A9%AC-%E6%96%87%E4%BB%B6%E5%8C%85%E5%90%AB%EF%BC%89"><span class="toc-number">1.19.</span> <span class="toc-text">Pass-16（白名单6 二次渲染绕过+图片马+文件包含）</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Pass-17%EF%BC%88%E6%9D%A1%E4%BB%B6%E7%AB%9E%E4%BA%89%EF%BC%89"><span class="toc-number">1.20.</span> <span class="toc-text">Pass-17（条件竞争）</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Pass-18-apache%E5%A4%9A%E5%90%8E%E7%BC%80-%E6%9D%A1%E4%BB%B6%E7%AB%9E%E4%BA%89"><span class="toc-number">1.21.</span> <span class="toc-text">Pass-18(apache多后缀+条件竞争)</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Pass-19%EF%BC%88%E5%90%8E%E7%BC%80%E7%BB%95%E8%BF%87-%E5%A4%9A%E7%A7%8D%E6%96%B9%E5%BC%8F%EF%BC%89"><span class="toc-number">1.22.</span> <span class="toc-text">Pass-19（后缀绕过 多种方式）</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Pass-20%EF%BC%88-%E6%95%B0%E7%BB%84%E7%BB%95%E8%BF%87%E9%AA%8C%E8%AF%81-%EF%BC%89"><span class="toc-number">1.23.</span> <span class="toc-text">Pass-20（ 数组绕过验证 ）</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%80%E4%BA%9B%E7%BB%95%E8%BF%87%E6%80%9D%E8%B7%AF%E7%9A%84%E8%A1%A5%E5%85%85"><span class="toc-number">1.24.</span> <span class="toc-text">一些绕过思路的补充</span></a></li></ol></li></ol>
+      </div>
+    
+  </span>
 </div>
-                
-                <div class="post-main">
 
     
+    <div class="content index py4 ">
+        
+        <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
     
-        <div class="post-main-title">
-            upload-labs
-        </div>
-        <div class="post-meta">
-            2025-03-20
-        </div>
-        <div class="post-md">
-            <p>[TOC]</p>
+    <h1 class="posttitle p-name" itemprop="name headline">
+        upload-labs
+    </h1>
+
+
+
+    <div class="meta">
+      <span class="author p-author h-card" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span class="p-name" itemprop="name">y@7q</span>
+      </span>
+      
+    <div class="postdate">
+      
+        <time datetime="2025-03-19T20:52:34.000Z" class="dt-published" itemprop="datePublished">2025-03-20</time>
+        
+      
+    </div>
+
+
+      
+    <div class="article-category">
+        <i class="fa-solid fa-archive"></i>
+        <a class="category-link" href="/categories/%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86%E6%90%AD%E5%BB%BA/">基础知识搭建</a>
+    </div>
+
+
+      
+    <div class="article-tag">
+        <i class="fa-solid fa-tag"></i>
+        <a class="p-category" href="/tags/CTF/" rel="tag">CTF</a>, <a class="p-category" href="/tags/%E5%88%B7%E9%A2%98/" rel="tag">刷题</a>, <a class="p-category" href="/tags/%E6%96%87%E4%BB%B6%E4%B8%8A%E4%BC%A0/" rel="tag">文件上传</a>
+    </div>
+
+
+    </div>
+  </header>
+  
+
+  <div class="content e-content" itemprop="articleBody">
+    <p>[TOC]</p>
 <h1 id="upload-labs靶场刷题个人总结"><a href="#upload-labs靶场刷题个人总结" class="headerlink" title="upload-labs靶场刷题个人总结"></a>upload-labs靶场刷题个人总结</h1><h2 id="文件上传基本思路"><a href="#文件上传基本思路" class="headerlink" title="文件上传基本思路"></a>文件上传基本思路</h2><p>一般是网站有相关的文件上传的地方，例如传图片文本之类，我们会尝试在这里绕过各种waf最终达到上传一个后门来达到连接服务器的目的。</p>
 <p>这里我自己在写完这些之后画了一个思维导图让自己做题思路更加清晰一些：<br><img src="https://raw.githubusercontent.com/yatq21/Pictures/main/Blog/study/sql%E6%B3%A8%E5%85%A5%E6%80%9D%E8%B7%AF%E6%80%BB%E7%BB%93.png" alt="sql注入思路总结"></p>
 <span id="more"></span>
@@ -300,32 +442,145 @@
 <p><a target="_blank" rel="noopener" href="https://www.c6sec.com/index.php/archives/402/">upload-labs WP - 硝基苯摸鱼记录</a></p>
 <p><a target="_blank" rel="noopener" href="https://blog.csdn.net/En_ter/article/details/141598053">phpstudy安装php5.2.17显示下载失败_php5.2.17下载不了 phpstudy-CSDN博客</a></p>
 
-        </div>
+  </div>
+</article>
+
+
+
+        
+          <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+        
+          <li><a href="/">首页</a></li>
+        
+          <li><a href="/about/">关于</a></li>
+        
+          <li><a href="/archives/">归档</a></li>
+        
+          <li><a target="_blank" rel="noopener" href="http://github.com/probberechts">项目</a></li>
+        
+      </ul>
+    </div>
 
     
+    
+      <div id="toc-footer" style="display: none">
+        <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#upload-labs%E9%9D%B6%E5%9C%BA%E5%88%B7%E9%A2%98%E4%B8%AA%E4%BA%BA%E6%80%BB%E7%BB%93"><span class="toc-number">1.</span> <span class="toc-text">upload-labs靶场刷题个人总结</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%96%87%E4%BB%B6%E4%B8%8A%E4%BC%A0%E5%9F%BA%E6%9C%AC%E6%80%9D%E8%B7%AF"><span class="toc-number">1.1.</span> <span class="toc-text">文件上传基本思路</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Pass-01-%EF%BC%88%E5%89%8D%E7%AB%AF%E9%AA%8C%E8%AF%81%EF%BC%89"><span class="toc-number">1.2.</span> <span class="toc-text">Pass-01 （前端验证）</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Pass-02%EF%BC%88MIME%E9%AA%8C%E8%AF%81%EF%BC%89"><span class="toc-number">1.3.</span> <span class="toc-text">Pass-02（MIME验证）</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Pass-03%EF%BC%88%E5%90%8E%E7%BC%80%E9%BB%91%E5%90%8D%E5%8D%95%E6%A0%A1%E9%AA%8C%E7%BB%95%E8%BF%87%EF%BC%89"><span class="toc-number">1.4.</span> <span class="toc-text">Pass-03（后缀黑名单校验绕过）</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Pass-04%EF%BC%88%E9%BB%91%E5%90%8D%E5%8D%952-htaccess%EF%BC%89"><span class="toc-number">1.5.</span> <span class="toc-text">Pass-04（黑名单2  .htaccess）</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#htaccess%E7%BB%95%E8%BF%87%E7%9A%84%E6%80%BB%E7%BB%93"><span class="toc-number">1.6.</span> <span class="toc-text">htaccess绕过的总结</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%A0%B8%E5%BF%83%E5%8E%9F%E7%90%86"><span class="toc-number">1.6.1.</span> <span class="toc-text">核心原理</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#htaccess-%E7%BC%96%E5%86%99%E8%AF%AD%E6%B3%95%E7%B2%BE%E8%A6%81"><span class="toc-number">1.6.2.</span> <span class="toc-text">.htaccess 编写语法精要</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%B8%B8%E7%94%A8%E7%9A%84-htaccess-%E9%85%8D%E7%BD%AE%E5%8F%8A%E5%85%B6%E4%BD%9C%E7%94%A8"><span class="toc-number">1.6.3.</span> <span class="toc-text">常用的 .htaccess 配置及其作用</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%94%BB%E5%87%BB%E6%B5%81%E7%A8%8B%E5%BB%BA%E8%AE%AE%EF%BC%88CTF-%E5%AE%9E%E6%88%98%EF%BC%89"><span class="toc-number">1.6.4.</span> <span class="toc-text">攻击流程建议（CTF&#x2F;实战）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%98%B2%E5%BE%A1%E5%BB%BA%E8%AE%AE%EF%BC%88%E5%AE%89%E5%85%A8%E8%A7%86%E8%A7%92%EF%BC%89"><span class="toc-number">1.6.5.</span> <span class="toc-text">防御建议（安全视角）</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Pass-05%EF%BC%88%E9%BB%91%E5%90%8D%E5%8D%953-%E5%A4%A7%E5%B0%8F%E5%86%99%E7%BB%95%E8%BF%87%EF%BC%89"><span class="toc-number">1.7.</span> <span class="toc-text">Pass-05（黑名单3 大小写绕过）</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Pass-06%EF%BC%88%E9%BB%91%E5%90%8D%E5%8D%954-%E7%A9%BA%E6%A0%BC%E7%BB%95%E8%BF%87%EF%BC%89"><span class="toc-number">1.8.</span> <span class="toc-text">Pass-06（黑名单4 空格绕过）</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Pass-07%EF%BC%88%E9%BB%91%E5%90%8D%E5%8D%955-%E7%82%B9%E5%8F%B7%E7%BB%95%E8%BF%87%EF%BC%89"><span class="toc-number">1.9.</span> <span class="toc-text">Pass-07（黑名单5 点号绕过）</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Pass-08%EF%BC%88%E9%BB%91%E5%90%8D%E5%8D%956-DATA%E7%BB%95%E8%BF%87%EF%BC%89"><span class="toc-number">1.10.</span> <span class="toc-text">Pass-08（黑名单6 ::$DATA绕过）</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Pass-09-%E9%BB%91%E5%90%8D%E5%8D%957-%E5%8D%95%E6%AC%A1%E9%AA%8C%E8%AF%81"><span class="toc-number">1.11.</span> <span class="toc-text">Pass-09(黑名单7 单次验证)</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Pass-10%EF%BC%88%E9%BB%91%E5%90%8D%E5%8D%958-%E5%8F%8C%E5%86%99%E7%BB%95%E8%BF%87%EF%BC%89"><span class="toc-number">1.12.</span> <span class="toc-text">Pass-10（黑名单8 双写绕过）</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%98%B6%E6%AE%B5%E6%80%A7%E6%80%BB%E7%BB%93"><span class="toc-number">1.13.</span> <span class="toc-text">阶段性总结</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Pass-11%EF%BC%88%E7%99%BD%E5%90%8D%E5%8D%95-00%E6%88%AA%E6%96%AD-GET%EF%BC%89"><span class="toc-number">1.14.</span> <span class="toc-text">Pass-11（白名单 %00截断 GET）</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Pass-12%EF%BC%88%E7%99%BD%E5%90%8D%E5%8D%95-00%E6%88%AA%E6%96%AD-POST%EF%BC%89"><span class="toc-number">1.15.</span> <span class="toc-text">Pass-12（白名单 %00截断 POST）</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Pass-13%EF%BC%88%E7%99%BD%E5%90%8D%E5%8D%953-%E5%9B%BE%E7%89%87%E9%A9%AC-%E6%96%87%E4%BB%B6%E5%8C%85%E5%90%AB%EF%BC%89"><span class="toc-number">1.16.</span> <span class="toc-text">Pass-13（白名单3 图片马+文件包含）</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%88%B6%E4%BD%9C%E5%9B%BE%E7%89%87%E9%A9%AC"><span class="toc-number">1.16.1.</span> <span class="toc-text">制作图片马</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Pass-14%EF%BC%88%E7%99%BD%E5%90%8D%E5%8D%954-getimagesize-%E5%9B%BE%E7%89%87%E9%A9%AC-%E6%96%87%E4%BB%B6%E5%8C%85%E5%90%AB%EF%BC%89"><span class="toc-number">1.17.</span> <span class="toc-text">Pass-14（白名单4 getimagesize() 图片马+文件包含）</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Pass-15%EF%BC%88%E7%99%BD%E5%90%8D%E5%8D%955-exif-imagetype-%E5%9B%BE%E7%89%87%E9%A9%AC-%E6%96%87%E4%BB%B6%E5%8C%85%E5%90%AB%EF%BC%89"><span class="toc-number">1.18.</span> <span class="toc-text">Pass-15（白名单5 exif_imagetype() 图片马+文件包含）</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Pass-16%EF%BC%88%E7%99%BD%E5%90%8D%E5%8D%956-%E4%BA%8C%E6%AC%A1%E6%B8%B2%E6%9F%93%E7%BB%95%E8%BF%87-%E5%9B%BE%E7%89%87%E9%A9%AC-%E6%96%87%E4%BB%B6%E5%8C%85%E5%90%AB%EF%BC%89"><span class="toc-number">1.19.</span> <span class="toc-text">Pass-16（白名单6 二次渲染绕过+图片马+文件包含）</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Pass-17%EF%BC%88%E6%9D%A1%E4%BB%B6%E7%AB%9E%E4%BA%89%EF%BC%89"><span class="toc-number">1.20.</span> <span class="toc-text">Pass-17（条件竞争）</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Pass-18-apache%E5%A4%9A%E5%90%8E%E7%BC%80-%E6%9D%A1%E4%BB%B6%E7%AB%9E%E4%BA%89"><span class="toc-number">1.21.</span> <span class="toc-text">Pass-18(apache多后缀+条件竞争)</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Pass-19%EF%BC%88%E5%90%8E%E7%BC%80%E7%BB%95%E8%BF%87-%E5%A4%9A%E7%A7%8D%E6%96%B9%E5%BC%8F%EF%BC%89"><span class="toc-number">1.22.</span> <span class="toc-text">Pass-19（后缀绕过 多种方式）</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Pass-20%EF%BC%88-%E6%95%B0%E7%BB%84%E7%BB%95%E8%BF%87%E9%AA%8C%E8%AF%81-%EF%BC%89"><span class="toc-number">1.23.</span> <span class="toc-text">Pass-20（ 数组绕过验证 ）</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%80%E4%BA%9B%E7%BB%95%E8%BF%87%E6%80%9D%E8%B7%AF%E7%9A%84%E8%A1%A5%E5%85%85"><span class="toc-number">1.24.</span> <span class="toc-text">一些绕过思路的补充</span></a></li></ol></li></ol>
+      </div>
+    
 
+    <div id="share-footer" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=http://yatq.xyz/web%E5%9F%BA%E7%A1%80%E6%80%BB%E7%BB%93%E7%AC%94%E8%AE%B0/upload-labs/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=http://yatq.xyz/web%E5%9F%BA%E7%A1%80%E6%80%BB%E7%BB%93%E7%AC%94%E8%AE%B0/upload-labs/&text=upload-labs"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=http://yatq.xyz/web%E5%9F%BA%E7%A1%80%E6%80%BB%E7%BB%93%E7%AC%94%E8%AE%B0/upload-labs/&title=upload-labs"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=http://yatq.xyz/web%E5%9F%BA%E7%A1%80%E6%80%BB%E7%BB%93%E7%AC%94%E8%AE%B0/upload-labs/&is_video=false&description=upload-labs"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=upload-labs&body=Check out this article: http://yatq.xyz/web%E5%9F%BA%E7%A1%80%E6%80%BB%E7%BB%93%E7%AC%94%E8%AE%B0/upload-labs/"><i class="fa-solid fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=http://yatq.xyz/web%E5%9F%BA%E7%A1%80%E6%80%BB%E7%BB%93%E7%AC%94%E8%AE%B0/upload-labs/&title=upload-labs"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=http://yatq.xyz/web%E5%9F%BA%E7%A1%80%E6%80%BB%E7%BB%93%E7%AC%94%E8%AE%B0/upload-labs/&title=upload-labs"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=http://yatq.xyz/web%E5%9F%BA%E7%A1%80%E6%80%BB%E7%BB%93%E7%AC%94%E8%AE%B0/upload-labs/&title=upload-labs"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=http://yatq.xyz/web%E5%9F%BA%E7%A1%80%E6%80%BB%E7%BB%93%E7%AC%94%E8%AE%B0/upload-labs/&title=upload-labs"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=http://yatq.xyz/web%E5%9F%BA%E7%A1%80%E6%80%BB%E7%BB%93%E7%AC%94%E8%AE%B0/upload-labs/&name=upload-labs&description=&lt;p&gt;[TOC]&lt;/p&gt;
+&lt;h1 id=&#34;upload-labs靶场刷题个人总结&#34;&gt;&lt;a href=&#34;#upload-labs靶场刷题个人总结&#34; class=&#34;headerlink&#34; title=&#34;upload-labs靶场刷题个人总结&#34;&gt;&lt;/a&gt;upload-labs靶场刷题个人总结&lt;/h1&gt;&lt;h2 id=&#34;文件上传基本思路&#34;&gt;&lt;a href=&#34;#文件上传基本思路&#34; class=&#34;headerlink&#34; title=&#34;文件上传基本思路&#34;&gt;&lt;/a&gt;文件上传基本思路&lt;/h2&gt;&lt;p&gt;一般是网站有相关的文件上传的地方，例如传图片文本之类，我们会尝试在这里绕过各种waf最终达到上传一个后门来达到连接服务器的目的。&lt;/p&gt;
+&lt;p&gt;这里我自己在写完这些之后画了一个思维导图让自己做题思路更加清晰一些：&lt;br&gt;&lt;img src=&#34;https://raw.githubusercontent.com/yatq21/Pictures/main/Blog/study/sql%E6%B3%A8%E5%85%A5%E6%80%9D%E8%B7%AF%E6%80%BB%E7%BB%93.png&#34; alt=&#34;sql注入思路总结&#34;&gt;&lt;/p&gt;"><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=http://yatq.xyz/web%E5%9F%BA%E7%A1%80%E6%80%BB%E7%BB%93%E7%AC%94%E8%AE%B0/upload-labs/&t=upload-labs"><i class="fab fa-hacker-news fa-lg" aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+
+    <div id="actions-footer">
+        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fa-solid fa-bars fa-lg" aria-hidden="true"></i> 菜单</a>
+        
+          <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fa-solid fa-list fa-lg" aria-hidden="true"></i> 目录</a>
+        
+        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fa-solid fa-share-alt fa-lg" aria-hidden="true"></i> 分享</a>
+        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa-solid fa-chevron-up fa-lg" aria-hidden="true"></i> 返回顶部</a>
+    </div>
+
+  </div>
 </div>
-                <div class="footer">
-    <span>Copyright © 2022 y@7q</span>
-    <span>Theme Designed By <a target="_blank" href="https://zheli.design/one-paper">這李設計</a></span>
-</div>
+
+        
+        <footer id="footer">
+  <div class="footer-left">
+    Copyright &copy;
+    
+    
+    2016-2025
+    y@7q
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+        <!--
+       --><li><a href="/">首页</a></li><!--
+     --><!--
+       --><li><a href="/about/">关于</a></li><!--
+     --><!--
+       --><li><a href="/archives/">归档</a></li><!--
+     --><!--
+       --><li><a target="_blank" rel="noopener" href="http://github.com/probberechts">项目</a></li><!--
+     -->
+      </ul>
+    </nav>
+  </div>
+</footer>
+
+    </div>
+    <!-- styles -->
 
 
-<link rel="stylesheet" href="/css/a11y-dark.min.css">
+
+  <link rel="preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" crossorigin="anonymous" onload="this.onload=null;this.rel='stylesheet'"/>
 
 
-<script src="/js/highlight.min.js"></script>
+    <!-- jquery -->
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js" crossorigin="anonymous"></script>
 
 
-<script src="/js/highlightjs-line-numbers.js"></script>
 
 
-<script>
-    hljs.initHighlightingOnLoad();
-    hljs.initLineNumbersOnLoad();
-</script>
+<!-- clipboard -->
 
-            </div>
-        </div>
-    </body>
+  
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.7/clipboard.min.js" crossorigin="anonymous"></script>
+  
+  <script type="text/javascript">
+  $(function() {
+    // copy-btn HTML
+    var btn = "<span class=\"btn-copy tooltipped tooltipped-sw\" aria-label=\"复制到粘贴板！\">";
+    btn += '<i class="fa-regular fa-clone"></i>';
+    btn += '</span>';
+    // mount it!
+    $(".highlight table").before(btn);
+    var clip = new ClipboardJS('.btn-copy', {
+      text: function(trigger) {
+        return Array.from(trigger.nextElementSibling.querySelectorAll('.code')).reduce((str,it)=>str+it.innerText+'\n','')
+      }
+    });
+    clip.on('success', function(e) {
+      e.trigger.setAttribute('aria-label', "复制成功！");
+      e.clearSelection();
+    })
+  })
+  </script>
+
+
+<script src="/js/main.js"></script>
+
+<!-- search -->
+
+<!-- Baidu Analytics -->
+
+<!-- Cloudflare Analytics -->
+
+<!-- Disqus Comments -->
+
+<!-- utterances Comments -->
+
+</body>
 </html>

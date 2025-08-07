@@ -1,48 +1,174 @@
 <!DOCTYPE html>
-<html>
-    <head>
+<html lang=zh>
+<head>
+    <!-- so meta -->
     <meta charset="utf-8">
-    <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" name="viewport" />
-    <link rel="alternate icon" type="image/png" href="/img/favicon.png">
-    <title>y@7q | </title>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
+    <meta name="description" content="[TOC]  前言花了两天时间，终于把sqli-lab前20关都刷完了！感觉之前只有朦胧的对sqli的印象，结果现在才知道我见过的只是get类型的union注入，最简单的那种（晕）。。。了解和实践了很多注入手法，union，报错，延时，布尔…..前段时间面试实验室的时候其实还不了解就敢说自己懂（惭愧《从0到1：CTFer成长之路》这本书我觉得很棒，希望能尽快看完！我参考了很多师傅的wp以及相关文章">
+<meta property="og:type" content="article">
+<meta property="og:title" content="sqli-labs刷题">
+<meta property="og:url" content="http://yatq.xyz/web%E5%9F%BA%E7%A1%80%E6%80%BB%E7%BB%93%E7%AC%94%E8%AE%B0/sqli-labs%E5%88%B7%E9%A2%98/index.html">
+<meta property="og:site_name" content="y@7q">
+<meta property="og:description" content="[TOC]  前言花了两天时间，终于把sqli-lab前20关都刷完了！感觉之前只有朦胧的对sqli的印象，结果现在才知道我见过的只是get类型的union注入，最简单的那种（晕）。。。了解和实践了很多注入手法，union，报错，延时，布尔…..前段时间面试实验室的时候其实还不了解就敢说自己懂（惭愧《从0到1：CTFer成长之路》这本书我觉得很棒，希望能尽快看完！我参考了很多师傅的wp以及相关文章">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2025-03-20T06:45:43.000Z">
+<meta property="article:modified_time" content="2025-07-26T22:54:17.516Z">
+<meta property="article:author" content="y@7q">
+<meta property="article:tag" content="CTF">
+<meta property="article:tag" content="靶场刷题">
+<meta property="article:tag" content="sqli">
+<meta name="twitter:card" content="summary">
     
-<link rel="stylesheet" href="/css/reset.css">
+    
+      
+        
+          <link rel="shortcut icon" href="/images/favicon.ico">
+        
+      
+      
+        
+          <link rel="icon" type="image/png" href="/images/favicon-192x192.png" sizes="192x192">
+        
+      
+      
+        
+          <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+        
+      
+    
+    <!-- title -->
+    <title>sqli-labs刷题</title>
+    <!-- async scripts -->
+    <!-- Google Analytics -->
 
+
+    <!-- Umami Analytics -->
+
+
+    <!-- styles -->
     
 <link rel="stylesheet" href="/css/style.css">
 
+    <!-- persian styles -->
     
-<link rel="stylesheet" href="/css/markdown.css">
-
+    <!-- rss -->
     
-<link rel="stylesheet" href="/css/fonts.css">
-
+    
+	<!-- mathjax -->
+	
 <meta name="generator" content="Hexo 7.3.0"></head>
-    <body>
-        <div class="paper">
-            <div class="paper-main">
-                
-                    <div class="post-header">
-    <a class="logo" href="/">y@7q</a>
-    <a class="go-home" href="/">
-        <svg width="8" height="14" viewBox="0 0 8 14">
-            <path d="M7 1L1 7l6 6" stroke="#000" stroke-width="2" fill="none" fill-rule="evenodd" stroke-linecap="round" stroke-linejoin="round"/>
-        </svg>
-    </a>
+
+<body class="max-width mx-auto px3 ltr">
+    
+      <div id="header-post">
+  <a id="menu-icon" href="#" aria-label="目录"><i class="fa-solid fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#" aria-label="目录"><i class="fa-solid fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" aria-label="顶部" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fa-solid fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+        <!--
+       --><li><a href="/">首页</a></li><!--
+     --><!--
+       --><li><a href="/about/">关于</a></li><!--
+     --><!--
+       --><li><a href="/archives/">归档</a></li><!--
+     --><!--
+       --><li><a target="_blank" rel="noopener" href="http://github.com/probberechts">项目</a></li><!--
+     -->
+      </ul>
+    </span>
+    <br/>
+    <span id="actions">
+      <ul>
+        
+        <li><a class="icon" aria-label="上一篇" href="/CTF%E8%B5%9B%E4%BA%8B%E5%A4%8D%E7%9B%98/polarctf%E5%A4%8D%E7%8E%B0/"><i class="fa-solid fa-chevron-left" aria-hidden="true" onmouseover="$('#i-prev').toggle();" onmouseout="$('#i-prev').toggle();"></i></a></li>
+        
+        
+        <li><a class="icon" aria-label="下一篇" href="/web%E5%9F%BA%E7%A1%80%E6%80%BB%E7%BB%93%E7%AC%94%E8%AE%B0/upload-labs/"><i class="fa-solid fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
+        
+        <li><a class="icon" aria-label="返回顶部" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa-solid fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
+        <li><a class="icon" aria-label="分享文章" href="#"><i class="fa-solid fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">上一篇</span>
+      <span id="i-next" class="info" style="display:none;">下一篇</span>
+      <span id="i-top" class="info" style="display:none;">返回顶部</span>
+      <span id="i-share" class="info" style="display:none;">分享文章</span>
+    </span>
+    <br/>
+    <div id="share" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=http://yatq.xyz/web%E5%9F%BA%E7%A1%80%E6%80%BB%E7%BB%93%E7%AC%94%E8%AE%B0/sqli-labs%E5%88%B7%E9%A2%98/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=http://yatq.xyz/web%E5%9F%BA%E7%A1%80%E6%80%BB%E7%BB%93%E7%AC%94%E8%AE%B0/sqli-labs%E5%88%B7%E9%A2%98/&text=sqli-labs刷题"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=http://yatq.xyz/web%E5%9F%BA%E7%A1%80%E6%80%BB%E7%BB%93%E7%AC%94%E8%AE%B0/sqli-labs%E5%88%B7%E9%A2%98/&title=sqli-labs刷题"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=http://yatq.xyz/web%E5%9F%BA%E7%A1%80%E6%80%BB%E7%BB%93%E7%AC%94%E8%AE%B0/sqli-labs%E5%88%B7%E9%A2%98/&is_video=false&description=sqli-labs刷题"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=sqli-labs刷题&body=Check out this article: http://yatq.xyz/web%E5%9F%BA%E7%A1%80%E6%80%BB%E7%BB%93%E7%AC%94%E8%AE%B0/sqli-labs%E5%88%B7%E9%A2%98/"><i class="fa-solid fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=http://yatq.xyz/web%E5%9F%BA%E7%A1%80%E6%80%BB%E7%BB%93%E7%AC%94%E8%AE%B0/sqli-labs%E5%88%B7%E9%A2%98/&title=sqli-labs刷题"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=http://yatq.xyz/web%E5%9F%BA%E7%A1%80%E6%80%BB%E7%BB%93%E7%AC%94%E8%AE%B0/sqli-labs%E5%88%B7%E9%A2%98/&title=sqli-labs刷题"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=http://yatq.xyz/web%E5%9F%BA%E7%A1%80%E6%80%BB%E7%BB%93%E7%AC%94%E8%AE%B0/sqli-labs%E5%88%B7%E9%A2%98/&title=sqli-labs刷题"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=http://yatq.xyz/web%E5%9F%BA%E7%A1%80%E6%80%BB%E7%BB%93%E7%AC%94%E8%AE%B0/sqli-labs%E5%88%B7%E9%A2%98/&title=sqli-labs刷题"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=http://yatq.xyz/web%E5%9F%BA%E7%A1%80%E6%80%BB%E7%BB%93%E7%AC%94%E8%AE%B0/sqli-labs%E5%88%B7%E9%A2%98/&name=sqli-labs刷题&description=&lt;p&gt;[TOC] &lt;/p&gt;
+&lt;h1 id=&#34;前言&#34;&gt;&lt;a href=&#34;#前言&#34; class=&#34;headerlink&#34; title=&#34;前言&#34;&gt;&lt;/a&gt;前言&lt;/h1&gt;&lt;p&gt;花了两天时间，终于把sqli-lab前20关都刷完了！感觉之前只有朦胧的对sqli的印象，结果现在才知道我见过的只是get类型的union注入，最简单的那种（晕）。。。&lt;br&gt;了解和实践了很多注入手法，union，报错，延时，布尔…..前段时间面试实验室的时候其实还不了解就敢说自己懂（惭愧&lt;br&gt;《从0到1：CTFer成长之路》这本书我觉得很棒，希望能尽快看完！&lt;br&gt;我参考了很多师傅的wp以及相关文章，一并附在了文章结尾。那么，下面是我的题目总结，有一些没写或者简写，以及没有图片（还没想到怎样简化插入图片还能上传到网站的办法），如果观感不好请多担待。&lt;/p&gt;"><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=http://yatq.xyz/web%E5%9F%BA%E7%A1%80%E6%80%BB%E7%BB%93%E7%AC%94%E8%AE%B0/sqli-labs%E5%88%B7%E9%A2%98/&t=sqli-labs刷题"><i class="fab fa-hacker-news " aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+    
+    
+      <div id="toc">
+        <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%89%8D%E8%A8%80"><span class="toc-number">1.</span> <span class="toc-text">前言</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#sql%E6%B3%A8%E5%85%A5%E5%9F%BA%E7%A1%80%E6%80%9D%E8%B7%AF"><span class="toc-number">2.</span> <span class="toc-text">sql注入基础思路</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%AC%A6%E5%8F%B7%E8%AF%B4%E6%98%8E"><span class="toc-number">2.1.</span> <span class="toc-text">符号说明</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%B1%BB%E5%9E%8B%E5%88%A4%E6%96%AD"><span class="toc-number">2.2.</span> <span class="toc-text">类型判断</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#less-1-less-2"><span class="toc-number">3.</span> <span class="toc-text">less-1&amp;less-2</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#less-1"><span class="toc-number">3.1.</span> <span class="toc-text">less-1</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#less-2"><span class="toc-number">3.2.</span> <span class="toc-text">less-2</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#less-3-less-4"><span class="toc-number">4.</span> <span class="toc-text">less-3&amp;less-4</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#less-3"><span class="toc-number">4.1.</span> <span class="toc-text">less-3</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#less-4"><span class="toc-number">4.2.</span> <span class="toc-text">less-4</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#less-5-less-6"><span class="toc-number">5.</span> <span class="toc-text">less-5&amp;less-6</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%9B%B2%E6%B3%A8%E4%B8%AD%E7%9A%84%E7%9B%B8%E5%85%B3%E5%87%BD%E6%95%B0"><span class="toc-number">5.1.</span> <span class="toc-text">盲注中的相关函数:</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#less-5"><span class="toc-number">5.2.</span> <span class="toc-text">less-5</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%B8%83%E5%B0%94%E7%9B%B2%E6%B3%A8"><span class="toc-number">5.2.1.</span> <span class="toc-text">布尔盲注</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#sqlmap%E7%9A%84%E4%BD%BF%E7%94%A8"><span class="toc-number">5.2.1.1.</span> <span class="toc-text">sqlmap的使用</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%8A%A5%E9%94%99%E6%B3%A8%E5%85%A5"><span class="toc-number">5.2.2.</span> <span class="toc-text">报错注入</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#less-6"><span class="toc-number">5.3.</span> <span class="toc-text">less-6</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#less-7-into-outlife-less-8"><span class="toc-number">6.</span> <span class="toc-text">less-7 into outlife&amp;less-8</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#less-7"><span class="toc-number">6.1.</span> <span class="toc-text">less-7</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%B8%B8%E8%A7%81%E9%97%AD%E5%90%88%EF%BC%9A"><span class="toc-number">6.1.1.</span> <span class="toc-text">常见闭合：</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#less-8"><span class="toc-number">6.2.</span> <span class="toc-text">less-8</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#less-9-%E5%9B%9E%E6%98%BE%E7%9B%B8%E5%90%8C%EF%BC%8C%E6%97%B6%E9%97%B4%E7%9B%B2%E6%B3%A8"><span class="toc-number">7.</span> <span class="toc-text">less-9 回显相同，时间盲注</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#less-10-%E5%90%8Cless-9-%E9%97%AD%E5%90%88%E4%B8%8D%E5%90%8C"><span class="toc-number">8.</span> <span class="toc-text">less-10 同less-9,闭合不同</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#less-11-%E7%99%BB%E5%BD%95%E6%A1%86-%E4%B8%87%E8%83%BD%E5%AF%86%E7%A0%81"><span class="toc-number">9.</span> <span class="toc-text">less-11  登录框 万能密码</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#less-12"><span class="toc-number">10.</span> <span class="toc-text">less-12</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#less-13"><span class="toc-number">11.</span> <span class="toc-text">less-13</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#less-14"><span class="toc-number">12.</span> <span class="toc-text">less-14</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#less-15"><span class="toc-number">13.</span> <span class="toc-text">less-15</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#less-16"><span class="toc-number">14.</span> <span class="toc-text">less-16</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#less-17-%E4%BF%AE%E6%94%B9%E5%AF%86%E7%A0%81%E7%95%8C%E9%9D%A2-update%E6%B3%A8%E5%85%A5%E7%82%B9"><span class="toc-number">15.</span> <span class="toc-text">less-17 (修改密码界面 update注入点)</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#less-18-%E6%8A%A5%E9%94%99%EF%BC%8C%E5%BB%B6%E6%97%B6%E7%9B%B2%E6%B3%A8-User-Agent%E6%B3%A8%E5%85%A5%E7%82%B9"><span class="toc-number">16.</span> <span class="toc-text">less-18(报错，延时盲注 User-Agent注入点)</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#less-19-%E6%8A%A5%E9%94%99%EF%BC%8C%E5%BB%B6%E6%97%B6%E7%9B%B2%E6%B3%A8-Referer%E6%B3%A8%E5%85%A5%E7%82%B9"><span class="toc-number">17.</span> <span class="toc-text">less-19(报错，延时盲注 Referer注入点)</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#less-20-%E6%8A%A5%E9%94%99%EF%BC%8C%E5%BB%B6%E6%97%B6%E7%9B%B2%E6%B3%A8-Cookie%E6%B3%A8%E5%85%A5%E7%82%B9"><span class="toc-number">18.</span> <span class="toc-text">less-20(报错，延时盲注 Cookie注入点)</span></a></li></ol>
+      </div>
+    
+  </span>
 </div>
-                
-                <div class="post-main">
 
     
+    <div class="content index py4 ">
+        
+        <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
     
-        <div class="post-main-title">
-            sqli-labs刷题
-        </div>
-        <div class="post-meta">
-            2025-03-20
-        </div>
-        <div class="post-md">
-            <p>[TOC] </p>
+    <h1 class="posttitle p-name" itemprop="name headline">
+        sqli-labs刷题
+    </h1>
+
+
+
+    <div class="meta">
+      <span class="author p-author h-card" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span class="p-name" itemprop="name">y@7q</span>
+      </span>
+      
+    <div class="postdate">
+      
+        <time datetime="2025-03-20T06:45:43.000Z" class="dt-published" itemprop="datePublished">2025-03-20</time>
+        
+      
+    </div>
+
+
+      
+    <div class="article-category">
+        <i class="fa-solid fa-archive"></i>
+        <a class="category-link" href="/categories/%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86%E6%90%AD%E5%BB%BA/">基础知识搭建</a>
+    </div>
+
+
+      
+    <div class="article-tag">
+        <i class="fa-solid fa-tag"></i>
+        <a class="p-category" href="/tags/CTF/" rel="tag">CTF</a>, <a class="p-category" href="/tags/sqli/" rel="tag">sqli</a>, <a class="p-category" href="/tags/%E9%9D%B6%E5%9C%BA%E5%88%B7%E9%A2%98/" rel="tag">靶场刷题</a>
+    </div>
+
+
+    </div>
+  </header>
+  
+
+  <div class="content e-content" itemprop="articleBody">
+    <p>[TOC] </p>
 <h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>花了两天时间，终于把sqli-lab前20关都刷完了！感觉之前只有朦胧的对sqli的印象，结果现在才知道我见过的只是get类型的union注入，最简单的那种（晕）。。。<br>了解和实践了很多注入手法，union，报错，延时，布尔…..前段时间面试实验室的时候其实还不了解就敢说自己懂（惭愧<br>《从0到1：CTFer成长之路》这本书我觉得很棒，希望能尽快看完！<br>我参考了很多师傅的wp以及相关文章，一并附在了文章结尾。那么，下面是我的题目总结，有一些没写或者简写，以及没有图片（还没想到怎样简化插入图片还能上传到网站的办法），如果观感不好请多担待。</p>
 <span id="more"></span>
 
@@ -161,32 +287,144 @@
 
 <p>参考文章：<br><a target="_blank" rel="noopener" href="https://www.anquanke.com/post/id/266244">https://www.anquanke.com/post/id/266244</a><br><a target="_blank" rel="noopener" href="https://www.cnblogs.com/-qing-/p/11610385.html">https://www.cnblogs.com/-qing-/p/11610385.html</a><br><a target="_blank" rel="noopener" href="https://weread.qq.com/web/bookDetail/77d32500721a485577d8eee">从0到1：CTFer成长之路</a>（其中的sqli部分）<br><a target="_blank" rel="noopener" href="http://blog.csdn.net/qq_46432288/article/details/109295457">sqli-labs-less-5布尔盲注+错误注入（超详细，小白专属）</a><br><a target="_blank" rel="noopener" href="https://github.com/jason-blog/blog/blob/master/Kali/Sqlmap%E4%BD%BF%E7%94%A8%E6%95%99%E7%A8%8B%E3%80%90%E4%B8%AA%E4%BA%BA%E7%AC%94%E8%AE%B0%E7%B2%BE%E5%8D%8E%E6%95%B4%E7%90%86%E3%80%91.MD">Sqlmap使用教程【个人笔记精华整理】</a><br><a target="_blank" rel="noopener" href="https://www.cnblogs.com/Timesi/p/16661422.html">SQLI-LABS(Less-7)</a><br><a target="_blank" rel="noopener" href="https://blog.csdn.net/zxj993853579/article/details/128810152">sqli-labs less-7 一句话木马</a><br><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s?__biz=Mzk3NTEyMzQzOA==&mid=2247484371&idx=1&sn=995cc8f24e3ad1a2f4b010d0e3dddf6a&chksm=c5279ce2c1c3e7429ae5a87b8bd3df637f3bd088e244b0b8a3d455082e3a965a8394bcec2d05#rd">最适合POST型SQL注入小白之sqli-labs靶场（less-17~less-21：POST手动注入和sqlmap自动注入)</a><br><a target="_blank" rel="noopener" href="https://tari.moe/2022/sqli-labs">sqli-labs 靶场 1-65 通关记</a><br><a target="_blank" rel="noopener" href="https://www.cnblogs.com/linfangnan/p/13849619.html#%E5%88%A4%E6%96%AD%E6%B3%A8%E5%85%A5%E7%B1%BB%E5%9E%8B-1">sqli-labs 通关指南：Less 18、19</a></p>
 
-        </div>
+  </div>
+</article>
+
+
+
+        
+          <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+        
+          <li><a href="/">首页</a></li>
+        
+          <li><a href="/about/">关于</a></li>
+        
+          <li><a href="/archives/">归档</a></li>
+        
+          <li><a target="_blank" rel="noopener" href="http://github.com/probberechts">项目</a></li>
+        
+      </ul>
+    </div>
 
     
+    
+      <div id="toc-footer" style="display: none">
+        <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%89%8D%E8%A8%80"><span class="toc-number">1.</span> <span class="toc-text">前言</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#sql%E6%B3%A8%E5%85%A5%E5%9F%BA%E7%A1%80%E6%80%9D%E8%B7%AF"><span class="toc-number">2.</span> <span class="toc-text">sql注入基础思路</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%AC%A6%E5%8F%B7%E8%AF%B4%E6%98%8E"><span class="toc-number">2.1.</span> <span class="toc-text">符号说明</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%B1%BB%E5%9E%8B%E5%88%A4%E6%96%AD"><span class="toc-number">2.2.</span> <span class="toc-text">类型判断</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#less-1-less-2"><span class="toc-number">3.</span> <span class="toc-text">less-1&amp;less-2</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#less-1"><span class="toc-number">3.1.</span> <span class="toc-text">less-1</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#less-2"><span class="toc-number">3.2.</span> <span class="toc-text">less-2</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#less-3-less-4"><span class="toc-number">4.</span> <span class="toc-text">less-3&amp;less-4</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#less-3"><span class="toc-number">4.1.</span> <span class="toc-text">less-3</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#less-4"><span class="toc-number">4.2.</span> <span class="toc-text">less-4</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#less-5-less-6"><span class="toc-number">5.</span> <span class="toc-text">less-5&amp;less-6</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%9B%B2%E6%B3%A8%E4%B8%AD%E7%9A%84%E7%9B%B8%E5%85%B3%E5%87%BD%E6%95%B0"><span class="toc-number">5.1.</span> <span class="toc-text">盲注中的相关函数:</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#less-5"><span class="toc-number">5.2.</span> <span class="toc-text">less-5</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%B8%83%E5%B0%94%E7%9B%B2%E6%B3%A8"><span class="toc-number">5.2.1.</span> <span class="toc-text">布尔盲注</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#sqlmap%E7%9A%84%E4%BD%BF%E7%94%A8"><span class="toc-number">5.2.1.1.</span> <span class="toc-text">sqlmap的使用</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%8A%A5%E9%94%99%E6%B3%A8%E5%85%A5"><span class="toc-number">5.2.2.</span> <span class="toc-text">报错注入</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#less-6"><span class="toc-number">5.3.</span> <span class="toc-text">less-6</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#less-7-into-outlife-less-8"><span class="toc-number">6.</span> <span class="toc-text">less-7 into outlife&amp;less-8</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#less-7"><span class="toc-number">6.1.</span> <span class="toc-text">less-7</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%B8%B8%E8%A7%81%E9%97%AD%E5%90%88%EF%BC%9A"><span class="toc-number">6.1.1.</span> <span class="toc-text">常见闭合：</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#less-8"><span class="toc-number">6.2.</span> <span class="toc-text">less-8</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#less-9-%E5%9B%9E%E6%98%BE%E7%9B%B8%E5%90%8C%EF%BC%8C%E6%97%B6%E9%97%B4%E7%9B%B2%E6%B3%A8"><span class="toc-number">7.</span> <span class="toc-text">less-9 回显相同，时间盲注</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#less-10-%E5%90%8Cless-9-%E9%97%AD%E5%90%88%E4%B8%8D%E5%90%8C"><span class="toc-number">8.</span> <span class="toc-text">less-10 同less-9,闭合不同</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#less-11-%E7%99%BB%E5%BD%95%E6%A1%86-%E4%B8%87%E8%83%BD%E5%AF%86%E7%A0%81"><span class="toc-number">9.</span> <span class="toc-text">less-11  登录框 万能密码</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#less-12"><span class="toc-number">10.</span> <span class="toc-text">less-12</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#less-13"><span class="toc-number">11.</span> <span class="toc-text">less-13</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#less-14"><span class="toc-number">12.</span> <span class="toc-text">less-14</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#less-15"><span class="toc-number">13.</span> <span class="toc-text">less-15</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#less-16"><span class="toc-number">14.</span> <span class="toc-text">less-16</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#less-17-%E4%BF%AE%E6%94%B9%E5%AF%86%E7%A0%81%E7%95%8C%E9%9D%A2-update%E6%B3%A8%E5%85%A5%E7%82%B9"><span class="toc-number">15.</span> <span class="toc-text">less-17 (修改密码界面 update注入点)</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#less-18-%E6%8A%A5%E9%94%99%EF%BC%8C%E5%BB%B6%E6%97%B6%E7%9B%B2%E6%B3%A8-User-Agent%E6%B3%A8%E5%85%A5%E7%82%B9"><span class="toc-number">16.</span> <span class="toc-text">less-18(报错，延时盲注 User-Agent注入点)</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#less-19-%E6%8A%A5%E9%94%99%EF%BC%8C%E5%BB%B6%E6%97%B6%E7%9B%B2%E6%B3%A8-Referer%E6%B3%A8%E5%85%A5%E7%82%B9"><span class="toc-number">17.</span> <span class="toc-text">less-19(报错，延时盲注 Referer注入点)</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#less-20-%E6%8A%A5%E9%94%99%EF%BC%8C%E5%BB%B6%E6%97%B6%E7%9B%B2%E6%B3%A8-Cookie%E6%B3%A8%E5%85%A5%E7%82%B9"><span class="toc-number">18.</span> <span class="toc-text">less-20(报错，延时盲注 Cookie注入点)</span></a></li></ol>
+      </div>
+    
 
+    <div id="share-footer" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=http://yatq.xyz/web%E5%9F%BA%E7%A1%80%E6%80%BB%E7%BB%93%E7%AC%94%E8%AE%B0/sqli-labs%E5%88%B7%E9%A2%98/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=http://yatq.xyz/web%E5%9F%BA%E7%A1%80%E6%80%BB%E7%BB%93%E7%AC%94%E8%AE%B0/sqli-labs%E5%88%B7%E9%A2%98/&text=sqli-labs刷题"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=http://yatq.xyz/web%E5%9F%BA%E7%A1%80%E6%80%BB%E7%BB%93%E7%AC%94%E8%AE%B0/sqli-labs%E5%88%B7%E9%A2%98/&title=sqli-labs刷题"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=http://yatq.xyz/web%E5%9F%BA%E7%A1%80%E6%80%BB%E7%BB%93%E7%AC%94%E8%AE%B0/sqli-labs%E5%88%B7%E9%A2%98/&is_video=false&description=sqli-labs刷题"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=sqli-labs刷题&body=Check out this article: http://yatq.xyz/web%E5%9F%BA%E7%A1%80%E6%80%BB%E7%BB%93%E7%AC%94%E8%AE%B0/sqli-labs%E5%88%B7%E9%A2%98/"><i class="fa-solid fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=http://yatq.xyz/web%E5%9F%BA%E7%A1%80%E6%80%BB%E7%BB%93%E7%AC%94%E8%AE%B0/sqli-labs%E5%88%B7%E9%A2%98/&title=sqli-labs刷题"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=http://yatq.xyz/web%E5%9F%BA%E7%A1%80%E6%80%BB%E7%BB%93%E7%AC%94%E8%AE%B0/sqli-labs%E5%88%B7%E9%A2%98/&title=sqli-labs刷题"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=http://yatq.xyz/web%E5%9F%BA%E7%A1%80%E6%80%BB%E7%BB%93%E7%AC%94%E8%AE%B0/sqli-labs%E5%88%B7%E9%A2%98/&title=sqli-labs刷题"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=http://yatq.xyz/web%E5%9F%BA%E7%A1%80%E6%80%BB%E7%BB%93%E7%AC%94%E8%AE%B0/sqli-labs%E5%88%B7%E9%A2%98/&title=sqli-labs刷题"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=http://yatq.xyz/web%E5%9F%BA%E7%A1%80%E6%80%BB%E7%BB%93%E7%AC%94%E8%AE%B0/sqli-labs%E5%88%B7%E9%A2%98/&name=sqli-labs刷题&description=&lt;p&gt;[TOC] &lt;/p&gt;
+&lt;h1 id=&#34;前言&#34;&gt;&lt;a href=&#34;#前言&#34; class=&#34;headerlink&#34; title=&#34;前言&#34;&gt;&lt;/a&gt;前言&lt;/h1&gt;&lt;p&gt;花了两天时间，终于把sqli-lab前20关都刷完了！感觉之前只有朦胧的对sqli的印象，结果现在才知道我见过的只是get类型的union注入，最简单的那种（晕）。。。&lt;br&gt;了解和实践了很多注入手法，union，报错，延时，布尔…..前段时间面试实验室的时候其实还不了解就敢说自己懂（惭愧&lt;br&gt;《从0到1：CTFer成长之路》这本书我觉得很棒，希望能尽快看完！&lt;br&gt;我参考了很多师傅的wp以及相关文章，一并附在了文章结尾。那么，下面是我的题目总结，有一些没写或者简写，以及没有图片（还没想到怎样简化插入图片还能上传到网站的办法），如果观感不好请多担待。&lt;/p&gt;"><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=http://yatq.xyz/web%E5%9F%BA%E7%A1%80%E6%80%BB%E7%BB%93%E7%AC%94%E8%AE%B0/sqli-labs%E5%88%B7%E9%A2%98/&t=sqli-labs刷题"><i class="fab fa-hacker-news fa-lg" aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+
+    <div id="actions-footer">
+        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fa-solid fa-bars fa-lg" aria-hidden="true"></i> 菜单</a>
+        
+          <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fa-solid fa-list fa-lg" aria-hidden="true"></i> 目录</a>
+        
+        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fa-solid fa-share-alt fa-lg" aria-hidden="true"></i> 分享</a>
+        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa-solid fa-chevron-up fa-lg" aria-hidden="true"></i> 返回顶部</a>
+    </div>
+
+  </div>
 </div>
-                <div class="footer">
-    <span>Copyright © 2022 y@7q</span>
-    <span>Theme Designed By <a target="_blank" href="https://zheli.design/one-paper">這李設計</a></span>
-</div>
+
+        
+        <footer id="footer">
+  <div class="footer-left">
+    Copyright &copy;
+    
+    
+    2016-2025
+    y@7q
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+        <!--
+       --><li><a href="/">首页</a></li><!--
+     --><!--
+       --><li><a href="/about/">关于</a></li><!--
+     --><!--
+       --><li><a href="/archives/">归档</a></li><!--
+     --><!--
+       --><li><a target="_blank" rel="noopener" href="http://github.com/probberechts">项目</a></li><!--
+     -->
+      </ul>
+    </nav>
+  </div>
+</footer>
+
+    </div>
+    <!-- styles -->
 
 
-<link rel="stylesheet" href="/css/a11y-dark.min.css">
+
+  <link rel="preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" crossorigin="anonymous" onload="this.onload=null;this.rel='stylesheet'"/>
 
 
-<script src="/js/highlight.min.js"></script>
+    <!-- jquery -->
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js" crossorigin="anonymous"></script>
 
 
-<script src="/js/highlightjs-line-numbers.js"></script>
 
 
-<script>
-    hljs.initHighlightingOnLoad();
-    hljs.initLineNumbersOnLoad();
-</script>
+<!-- clipboard -->
 
-            </div>
-        </div>
-    </body>
+  
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.7/clipboard.min.js" crossorigin="anonymous"></script>
+  
+  <script type="text/javascript">
+  $(function() {
+    // copy-btn HTML
+    var btn = "<span class=\"btn-copy tooltipped tooltipped-sw\" aria-label=\"复制到粘贴板！\">";
+    btn += '<i class="fa-regular fa-clone"></i>';
+    btn += '</span>';
+    // mount it!
+    $(".highlight table").before(btn);
+    var clip = new ClipboardJS('.btn-copy', {
+      text: function(trigger) {
+        return Array.from(trigger.nextElementSibling.querySelectorAll('.code')).reduce((str,it)=>str+it.innerText+'\n','')
+      }
+    });
+    clip.on('success', function(e) {
+      e.trigger.setAttribute('aria-label', "复制成功！");
+      e.clearSelection();
+    })
+  })
+  </script>
+
+
+<script src="/js/main.js"></script>
+
+<!-- search -->
+
+<!-- Baidu Analytics -->
+
+<!-- Cloudflare Analytics -->
+
+<!-- Disqus Comments -->
+
+<!-- utterances Comments -->
+
+</body>
 </html>

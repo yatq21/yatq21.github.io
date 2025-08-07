@@ -1,48 +1,181 @@
 <!DOCTYPE html>
-<html>
-    <head>
+<html lang=zh>
+<head>
+    <!-- so meta -->
     <meta charset="utf-8">
-    <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" name="viewport" />
-    <link rel="alternate icon" type="image/png" href="/img/favicon.png">
-    <title>y@7q | </title>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
+    <meta name="description" content="[TOC] CSRF概述Cross-site request forgery 简称为“CSRF”，中文名为跨站请求伪造。攻击者精心构造一个请求来诱导受害者点击，假如此时受害者刚好打开了相关网站，则有可能会导致执行了相关恶意操作。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="CSRF学习">
+<meta property="og:url" content="http://yatq.xyz/web%E5%9F%BA%E7%A1%80%E6%80%BB%E7%BB%93%E7%AC%94%E8%AE%B0/CSRF%E5%AD%A6%E4%B9%A0/index.html">
+<meta property="og:site_name" content="y@7q">
+<meta property="og:description" content="[TOC] CSRF概述Cross-site request forgery 简称为“CSRF”，中文名为跨站请求伪造。攻击者精心构造一个请求来诱导受害者点击，假如此时受害者刚好打开了相关网站，则有可能会导致执行了相关恶意操作。">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/yatq21/Pictures@master/Blog/study/image-20250413210824877.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/yatq21/Pictures@master/Blog/study/image-20250414210324500.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/yatq21/Pictures@master/Blog/study/image-20250414210545681.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/yatq21/Pictures@master/Blog/study/image-20250414210914121.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/yatq21/Pictures@master/Blog/study/image-20250414213540245.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/yatq21/Pictures@master/Blog/study/image-20250414213447382.png">
+<meta property="article:published_time" content="2025-04-12T13:59:26.000Z">
+<meta property="article:modified_time" content="2025-08-01T03:43:47.588Z">
+<meta property="article:author" content="y@7q">
+<meta property="article:tag" content="刷题">
+<meta property="article:tag" content="CTF">
+<meta property="article:tag" content="CSRF">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://cdn.jsdelivr.net/gh/yatq21/Pictures@master/Blog/study/image-20250413210824877.png">
     
-<link rel="stylesheet" href="/css/reset.css">
+    
+      
+        
+          <link rel="shortcut icon" href="/images/favicon.ico">
+        
+      
+      
+        
+          <link rel="icon" type="image/png" href="/images/favicon-192x192.png" sizes="192x192">
+        
+      
+      
+        
+          <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+        
+      
+    
+    <!-- title -->
+    <title>CSRF学习</title>
+    <!-- async scripts -->
+    <!-- Google Analytics -->
 
+
+    <!-- Umami Analytics -->
+
+
+    <!-- styles -->
     
 <link rel="stylesheet" href="/css/style.css">
 
+    <!-- persian styles -->
     
-<link rel="stylesheet" href="/css/markdown.css">
-
+    <!-- rss -->
     
-<link rel="stylesheet" href="/css/fonts.css">
-
+    
+	<!-- mathjax -->
+	
 <meta name="generator" content="Hexo 7.3.0"></head>
-    <body>
-        <div class="paper">
-            <div class="paper-main">
-                
-                    <div class="post-header">
-    <a class="logo" href="/">y@7q</a>
-    <a class="go-home" href="/">
-        <svg width="8" height="14" viewBox="0 0 8 14">
-            <path d="M7 1L1 7l6 6" stroke="#000" stroke-width="2" fill="none" fill-rule="evenodd" stroke-linecap="round" stroke-linejoin="round"/>
-        </svg>
-    </a>
+
+<body class="max-width mx-auto px3 ltr">
+    
+      <div id="header-post">
+  <a id="menu-icon" href="#" aria-label="目录"><i class="fa-solid fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#" aria-label="目录"><i class="fa-solid fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" aria-label="顶部" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fa-solid fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+        <!--
+       --><li><a href="/">首页</a></li><!--
+     --><!--
+       --><li><a href="/about/">关于</a></li><!--
+     --><!--
+       --><li><a href="/archives/">归档</a></li><!--
+     --><!--
+       --><li><a target="_blank" rel="noopener" href="http://github.com/probberechts">项目</a></li><!--
+     -->
+      </ul>
+    </span>
+    <br/>
+    <span id="actions">
+      <ul>
+        
+        <li><a class="icon" aria-label="上一篇" href="/web%E5%9F%BA%E7%A1%80%E6%80%BB%E7%BB%93%E7%AC%94%E8%AE%B0/SSRF%E5%AD%A6%E4%B9%A0/"><i class="fa-solid fa-chevron-left" aria-hidden="true" onmouseover="$('#i-prev').toggle();" onmouseout="$('#i-prev').toggle();"></i></a></li>
+        
+        
+        <li><a class="icon" aria-label="下一篇" href="/web%E5%9F%BA%E7%A1%80%E6%80%BB%E7%BB%93%E7%AC%94%E8%AE%B0/XML%20XPath%E6%B3%A8%E5%85%A5%E4%BB%A5%E5%8F%8AXXE/"><i class="fa-solid fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
+        
+        <li><a class="icon" aria-label="返回顶部" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa-solid fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
+        <li><a class="icon" aria-label="分享文章" href="#"><i class="fa-solid fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">上一篇</span>
+      <span id="i-next" class="info" style="display:none;">下一篇</span>
+      <span id="i-top" class="info" style="display:none;">返回顶部</span>
+      <span id="i-share" class="info" style="display:none;">分享文章</span>
+    </span>
+    <br/>
+    <div id="share" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=http://yatq.xyz/web%E5%9F%BA%E7%A1%80%E6%80%BB%E7%BB%93%E7%AC%94%E8%AE%B0/CSRF%E5%AD%A6%E4%B9%A0/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=http://yatq.xyz/web%E5%9F%BA%E7%A1%80%E6%80%BB%E7%BB%93%E7%AC%94%E8%AE%B0/CSRF%E5%AD%A6%E4%B9%A0/&text=CSRF学习"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=http://yatq.xyz/web%E5%9F%BA%E7%A1%80%E6%80%BB%E7%BB%93%E7%AC%94%E8%AE%B0/CSRF%E5%AD%A6%E4%B9%A0/&title=CSRF学习"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=http://yatq.xyz/web%E5%9F%BA%E7%A1%80%E6%80%BB%E7%BB%93%E7%AC%94%E8%AE%B0/CSRF%E5%AD%A6%E4%B9%A0/&is_video=false&description=CSRF学习"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=CSRF学习&body=Check out this article: http://yatq.xyz/web%E5%9F%BA%E7%A1%80%E6%80%BB%E7%BB%93%E7%AC%94%E8%AE%B0/CSRF%E5%AD%A6%E4%B9%A0/"><i class="fa-solid fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=http://yatq.xyz/web%E5%9F%BA%E7%A1%80%E6%80%BB%E7%BB%93%E7%AC%94%E8%AE%B0/CSRF%E5%AD%A6%E4%B9%A0/&title=CSRF学习"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=http://yatq.xyz/web%E5%9F%BA%E7%A1%80%E6%80%BB%E7%BB%93%E7%AC%94%E8%AE%B0/CSRF%E5%AD%A6%E4%B9%A0/&title=CSRF学习"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=http://yatq.xyz/web%E5%9F%BA%E7%A1%80%E6%80%BB%E7%BB%93%E7%AC%94%E8%AE%B0/CSRF%E5%AD%A6%E4%B9%A0/&title=CSRF学习"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=http://yatq.xyz/web%E5%9F%BA%E7%A1%80%E6%80%BB%E7%BB%93%E7%AC%94%E8%AE%B0/CSRF%E5%AD%A6%E4%B9%A0/&title=CSRF学习"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=http://yatq.xyz/web%E5%9F%BA%E7%A1%80%E6%80%BB%E7%BB%93%E7%AC%94%E8%AE%B0/CSRF%E5%AD%A6%E4%B9%A0/&name=CSRF学习&description=&lt;p&gt;[TOC]&lt;/p&gt;
+&lt;h1 id=&#34;CSRF概述&#34;&gt;&lt;a href=&#34;#CSRF概述&#34; class=&#34;headerlink&#34; title=&#34;CSRF概述&#34;&gt;&lt;/a&gt;CSRF概述&lt;/h1&gt;&lt;p&gt;Cross-site request forgery 简称为“CSRF”，中文名为跨站请求伪造。攻击者精心构造一个请求来诱导受害者点击，假如此时受害者刚好打开了相关网站，则有可能会导致执行了相关恶意操作。&lt;/p&gt;"><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=http://yatq.xyz/web%E5%9F%BA%E7%A1%80%E6%80%BB%E7%BB%93%E7%AC%94%E8%AE%B0/CSRF%E5%AD%A6%E4%B9%A0/&t=CSRF学习"><i class="fab fa-hacker-news " aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+    
+    
+      <div id="toc">
+        <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#CSRF%E6%A6%82%E8%BF%B0"><span class="toc-number">1.</span> <span class="toc-text">CSRF概述</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#CSRF%E6%94%BB%E5%87%BB%E8%BF%87%E7%A8%8B%E7%A4%BA%E4%BE%8B"><span class="toc-number">1.1.</span> <span class="toc-text">CSRF攻击过程示例</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#CSRF-GET"><span class="toc-number">1.1.1.</span> <span class="toc-text">CSRF(GET)</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#CSRF-POST"><span class="toc-number">1.1.2.</span> <span class="toc-text">CSRF(POST)</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#CSRF-Token"><span class="toc-number">1.1.3.</span> <span class="toc-text">CSRF Token</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%98%B2%E5%BE%A1%E6%8E%AA%E6%96%BD"><span class="toc-number">1.2.</span> <span class="toc-text">防御措施</span></a></li></ol></li></ol>
+      </div>
+    
+  </span>
 </div>
-                
-                <div class="post-main">
 
     
+    <div class="content index py4 ">
+        
+        <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
     
-        <div class="post-main-title">
-            CSRF学习
-        </div>
-        <div class="post-meta">
-            2025-04-12
-        </div>
-        <div class="post-md">
-            <p>[TOC]</p>
+    <h1 class="posttitle p-name" itemprop="name headline">
+        CSRF学习
+    </h1>
+
+
+
+    <div class="meta">
+      <span class="author p-author h-card" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span class="p-name" itemprop="name">y@7q</span>
+      </span>
+      
+    <div class="postdate">
+      
+        <time datetime="2025-04-12T13:59:26.000Z" class="dt-published" itemprop="datePublished">2025-04-12</time>
+        
+      
+    </div>
+
+
+      
+    <div class="article-category">
+        <i class="fa-solid fa-archive"></i>
+        <a class="category-link" href="/categories/%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86%E6%90%AD%E5%BB%BA/">基础知识搭建</a>
+    </div>
+
+
+      
+    <div class="article-tag">
+        <i class="fa-solid fa-tag"></i>
+        <a class="p-category" href="/tags/CSRF/" rel="tag">CSRF</a>, <a class="p-category" href="/tags/CTF/" rel="tag">CTF</a>, <a class="p-category" href="/tags/%E5%88%B7%E9%A2%98/" rel="tag">刷题</a>
+    </div>
+
+
+    </div>
+  </header>
+  
+
+  <div class="content e-content" itemprop="articleBody">
+    <p>[TOC]</p>
 <h1 id="CSRF概述"><a href="#CSRF概述" class="headerlink" title="CSRF概述"></a>CSRF概述</h1><p>Cross-site request forgery 简称为“CSRF”，中文名为跨站请求伪造。攻击者精心构造一个请求来诱导受害者点击，假如此时受害者刚好打开了相关网站，则有可能会导致执行了相关恶意操作。</p>
 <span id="more"></span>
 <p><strong>攻击场景（某购物网站）</strong></p>
@@ -94,32 +227,144 @@
 <p><a target="_blank" rel="noopener" href="https://www.cnblogs.com/Mchacha/p/18184186">CSRF(Pikachu靶场练习) - machacha - 博客园</a></p>
 <p><a target="_blank" rel="noopener" href="https://www.cnblogs.com/dogecheng/p/11583412.html">Pikachu漏洞练习平台实验——CSRF（三） - 那少年和狗 - 博客园</a></p>
 
-        </div>
+  </div>
+</article>
+
+
+
+        
+          <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+        
+          <li><a href="/">首页</a></li>
+        
+          <li><a href="/about/">关于</a></li>
+        
+          <li><a href="/archives/">归档</a></li>
+        
+          <li><a target="_blank" rel="noopener" href="http://github.com/probberechts">项目</a></li>
+        
+      </ul>
+    </div>
 
     
+    
+      <div id="toc-footer" style="display: none">
+        <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#CSRF%E6%A6%82%E8%BF%B0"><span class="toc-number">1.</span> <span class="toc-text">CSRF概述</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#CSRF%E6%94%BB%E5%87%BB%E8%BF%87%E7%A8%8B%E7%A4%BA%E4%BE%8B"><span class="toc-number">1.1.</span> <span class="toc-text">CSRF攻击过程示例</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#CSRF-GET"><span class="toc-number">1.1.1.</span> <span class="toc-text">CSRF(GET)</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#CSRF-POST"><span class="toc-number">1.1.2.</span> <span class="toc-text">CSRF(POST)</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#CSRF-Token"><span class="toc-number">1.1.3.</span> <span class="toc-text">CSRF Token</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%98%B2%E5%BE%A1%E6%8E%AA%E6%96%BD"><span class="toc-number">1.2.</span> <span class="toc-text">防御措施</span></a></li></ol></li></ol>
+      </div>
+    
 
+    <div id="share-footer" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=http://yatq.xyz/web%E5%9F%BA%E7%A1%80%E6%80%BB%E7%BB%93%E7%AC%94%E8%AE%B0/CSRF%E5%AD%A6%E4%B9%A0/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=http://yatq.xyz/web%E5%9F%BA%E7%A1%80%E6%80%BB%E7%BB%93%E7%AC%94%E8%AE%B0/CSRF%E5%AD%A6%E4%B9%A0/&text=CSRF学习"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=http://yatq.xyz/web%E5%9F%BA%E7%A1%80%E6%80%BB%E7%BB%93%E7%AC%94%E8%AE%B0/CSRF%E5%AD%A6%E4%B9%A0/&title=CSRF学习"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=http://yatq.xyz/web%E5%9F%BA%E7%A1%80%E6%80%BB%E7%BB%93%E7%AC%94%E8%AE%B0/CSRF%E5%AD%A6%E4%B9%A0/&is_video=false&description=CSRF学习"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=CSRF学习&body=Check out this article: http://yatq.xyz/web%E5%9F%BA%E7%A1%80%E6%80%BB%E7%BB%93%E7%AC%94%E8%AE%B0/CSRF%E5%AD%A6%E4%B9%A0/"><i class="fa-solid fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=http://yatq.xyz/web%E5%9F%BA%E7%A1%80%E6%80%BB%E7%BB%93%E7%AC%94%E8%AE%B0/CSRF%E5%AD%A6%E4%B9%A0/&title=CSRF学习"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=http://yatq.xyz/web%E5%9F%BA%E7%A1%80%E6%80%BB%E7%BB%93%E7%AC%94%E8%AE%B0/CSRF%E5%AD%A6%E4%B9%A0/&title=CSRF学习"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=http://yatq.xyz/web%E5%9F%BA%E7%A1%80%E6%80%BB%E7%BB%93%E7%AC%94%E8%AE%B0/CSRF%E5%AD%A6%E4%B9%A0/&title=CSRF学习"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=http://yatq.xyz/web%E5%9F%BA%E7%A1%80%E6%80%BB%E7%BB%93%E7%AC%94%E8%AE%B0/CSRF%E5%AD%A6%E4%B9%A0/&title=CSRF学习"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=http://yatq.xyz/web%E5%9F%BA%E7%A1%80%E6%80%BB%E7%BB%93%E7%AC%94%E8%AE%B0/CSRF%E5%AD%A6%E4%B9%A0/&name=CSRF学习&description=&lt;p&gt;[TOC]&lt;/p&gt;
+&lt;h1 id=&#34;CSRF概述&#34;&gt;&lt;a href=&#34;#CSRF概述&#34; class=&#34;headerlink&#34; title=&#34;CSRF概述&#34;&gt;&lt;/a&gt;CSRF概述&lt;/h1&gt;&lt;p&gt;Cross-site request forgery 简称为“CSRF”，中文名为跨站请求伪造。攻击者精心构造一个请求来诱导受害者点击，假如此时受害者刚好打开了相关网站，则有可能会导致执行了相关恶意操作。&lt;/p&gt;"><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=http://yatq.xyz/web%E5%9F%BA%E7%A1%80%E6%80%BB%E7%BB%93%E7%AC%94%E8%AE%B0/CSRF%E5%AD%A6%E4%B9%A0/&t=CSRF学习"><i class="fab fa-hacker-news fa-lg" aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+
+    <div id="actions-footer">
+        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fa-solid fa-bars fa-lg" aria-hidden="true"></i> 菜单</a>
+        
+          <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fa-solid fa-list fa-lg" aria-hidden="true"></i> 目录</a>
+        
+        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fa-solid fa-share-alt fa-lg" aria-hidden="true"></i> 分享</a>
+        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa-solid fa-chevron-up fa-lg" aria-hidden="true"></i> 返回顶部</a>
+    </div>
+
+  </div>
 </div>
-                <div class="footer">
-    <span>Copyright © 2022 y@7q</span>
-    <span>Theme Designed By <a target="_blank" href="https://zheli.design/one-paper">這李設計</a></span>
-</div>
+
+        
+        <footer id="footer">
+  <div class="footer-left">
+    Copyright &copy;
+    
+    
+    2016-2025
+    y@7q
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+        <!--
+       --><li><a href="/">首页</a></li><!--
+     --><!--
+       --><li><a href="/about/">关于</a></li><!--
+     --><!--
+       --><li><a href="/archives/">归档</a></li><!--
+     --><!--
+       --><li><a target="_blank" rel="noopener" href="http://github.com/probberechts">项目</a></li><!--
+     -->
+      </ul>
+    </nav>
+  </div>
+</footer>
+
+    </div>
+    <!-- styles -->
 
 
-<link rel="stylesheet" href="/css/a11y-dark.min.css">
+
+  <link rel="preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" crossorigin="anonymous" onload="this.onload=null;this.rel='stylesheet'"/>
 
 
-<script src="/js/highlight.min.js"></script>
+    <!-- jquery -->
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js" crossorigin="anonymous"></script>
 
 
-<script src="/js/highlightjs-line-numbers.js"></script>
 
 
-<script>
-    hljs.initHighlightingOnLoad();
-    hljs.initLineNumbersOnLoad();
-</script>
+<!-- clipboard -->
 
-            </div>
-        </div>
-    </body>
+  
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.7/clipboard.min.js" crossorigin="anonymous"></script>
+  
+  <script type="text/javascript">
+  $(function() {
+    // copy-btn HTML
+    var btn = "<span class=\"btn-copy tooltipped tooltipped-sw\" aria-label=\"复制到粘贴板！\">";
+    btn += '<i class="fa-regular fa-clone"></i>';
+    btn += '</span>';
+    // mount it!
+    $(".highlight table").before(btn);
+    var clip = new ClipboardJS('.btn-copy', {
+      text: function(trigger) {
+        return Array.from(trigger.nextElementSibling.querySelectorAll('.code')).reduce((str,it)=>str+it.innerText+'\n','')
+      }
+    });
+    clip.on('success', function(e) {
+      e.trigger.setAttribute('aria-label', "复制成功！");
+      e.clearSelection();
+    })
+  })
+  </script>
+
+
+<script src="/js/main.js"></script>
+
+<!-- search -->
+
+<!-- Baidu Analytics -->
+
+<!-- Cloudflare Analytics -->
+
+<!-- Disqus Comments -->
+
+<!-- utterances Comments -->
+
+</body>
 </html>
