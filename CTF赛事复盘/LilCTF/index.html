@@ -32,7 +32,7 @@
 <meta property="og:image" content="https://raw.githubusercontent.com/yatq21/Pictures/main/Blog/study/asynccode">
 <meta property="og:image" content="https://raw.githubusercontent.com/yatq21/Pictures/main/Blog/study/asynccode">
 <meta property="article:published_time" content="2025-08-18T14:30:25.000Z">
-<meta property="article:modified_time" content="2025-08-18T15:23:54.485Z">
+<meta property="article:modified_time" content="2025-08-18T16:55:03.817Z">
 <meta property="article:author" content="y@7q">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:image" content="https://raw.githubusercontent.com/yatq21/Pictures/main/Blog/study/image-20250818223257412.png">
@@ -224,7 +224,8 @@
 <figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">BLACK_DICT = <span class="punctuation">[</span><span class="string">&quot;&#123;&quot;</span><span class="punctuation">,</span> <span class="string">&quot;&#125;&quot;</span><span class="punctuation">,</span> <span class="string">&quot;os&quot;</span><span class="punctuation">,</span> <span class="string">&quot;eval&quot;</span><span class="punctuation">,</span> <span class="string">&quot;exec&quot;</span><span class="punctuation">,</span> <span class="string">&quot;sock&quot;</span><span class="punctuation">,</span> <span class="string">&quot;&lt;&quot;</span><span class="punctuation">,</span> <span class="string">&quot;&gt;&quot;</span><span class="punctuation">,</span> <span class="string">&quot;bul&quot;</span><span class="punctuation">,</span> <span class="string">&quot;class&quot;</span><span class="punctuation">,</span> <span class="string">&quot;?&quot;</span><span class="punctuation">,</span> <span class="string">&quot;:&quot;</span><span class="punctuation">,</span> <span class="string">&quot;bash&quot;</span><span class="punctuation">,</span> <span class="string">&quot;_&quot;</span><span class="punctuation">,</span> <span class="string">&quot;globals&quot;</span><span class="punctuation">,</span></span><br><span class="line">              <span class="string">&quot;get&quot;</span><span class="punctuation">,</span> <span class="string">&quot;open&quot;</span><span class="punctuation">]</span></span><br></pre></td></tr></table></figure>
 
 <p>绷不住了现在5个小时了还没绕过去。。。</p>
-<p>看了看模板语法，<code>&#123;&#123;&#125;&#125;</code>可以用<code>% </code>或者<code>&lt;%%&gt;</code>来代替,但这里尖括号被waf了，所以只能用%，模板语法显示%后面可以直接写一行python代码被执行，我们可以使用分号来达到执行多行的效果。</p>
+<figure class="highlight mel"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">看了看模板语法，&#123;&#123;&#125;&#125;可以用% 或者&lt;%%&gt;来代替,但这里尖括号被waf了，所以只能用%，模板语法显示%后面可以直接写一行<span class="keyword">python</span>代码被执行，我们可以使用分号来达到执行多行的效果。</span><br></pre></td></tr></table></figure>
+
 <p>在没搞清楚语法之前直接继承链在那打了好几个小时，试了很多payload，还在常常是绕waf(绷)。最后翻了一下python中能用来代码执行的库函数，找到了subprocess.run()。</p>
 <p>由于本题是无回显的，而且不能反弹shell，所以尝试直接读flag，写入静态目录&#x2F;static，| tee可用来代替重定向符号。</p>
 <p>构造了payload如下:</p>
