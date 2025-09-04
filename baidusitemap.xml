@@ -1,6 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
+    <loc>http://yatq.xyz/CScourse/CS61B%204.%20References,%20Recursion,%20and%20Lists/</loc>
+    <lastmod>2025-09-04</lastmod>
+  </url>
+  <url>
     <loc>http://yatq.xyz/CScourse/Lab2%E4%BD%9C%E4%B8%9A%E8%AE%B0%E5%BD%95/</loc>
     <lastmod>2025-09-04</lastmod>
   </url>
@@ -19,10 +23,6 @@
   <url>
     <loc>http://yatq.xyz/%E9%9D%B6%E5%9C%BA/ctfshow-Web%E5%BA%94%E7%94%A8%E5%AE%89%E5%85%A8%E4%B8%8E%E9%98%B2%E6%8A%A4/</loc>
     <lastmod>2025-09-03</lastmod>
-  </url>
-  <url>
-    <loc>http://yatq.xyz/CScourse/CS61B%204.%20References,%20Recursion,%20and%20Lists/</loc>
-    <lastmod>2025-09-02</lastmod>
   </url>
   <url>
     <loc>http://yatq.xyz/English/Word_Day1/</loc>
