@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang=zh>
+<head>
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
+    <meta name="description" content="Project 1: Data StructuresPackages当想要声明当前code是哪个包时，需要在文档开头使用package关键字。 1package deque;  当想要使用一个包中的一个类或者方法时，可以通过写它的全名，e.g. deque.ArrayDeque，也可以使用import关键字导入这个类或者包。 1import deque.ArrayDeque;  这样在之后使用的时">
+<meta property="og:type" content="article">
+<meta property="og:title" content="CS61B proj1作业记录">
+<meta property="og:url" content="http://yatq.xyz/web%E5%9F%BA%E7%A1%80%E7%AC%94%E8%AE%B0/CScourse/CS61B-proj1%E4%BD%9C%E4%B8%9A%E8%AE%B0%E5%BD%95/index.html">
+<meta property="og:site_name" content="y@7q">
+<meta property="og:description" content="Project 1: Data StructuresPackages当想要声明当前code是哪个包时，需要在文档开头使用package关键字。 1package deque;  当想要使用一个包中的一个类或者方法时，可以通过写它的全名，e.g. deque.ArrayDeque，也可以使用import关键字导入这个类或者包。 1import deque.ArrayDeque;  这样在之后使用的时">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2025-09-06T02:35:00.000Z">
+<meta property="article:modified_time" content="2025-09-06T03:49:34.969Z">
+<meta property="article:author" content="y@7q">
+<meta property="article:tag" content="Java">
+<meta property="article:tag" content="CS61B">
+<meta name="twitter:card" content="summary">
+    
+    
+      
+        
+          <link rel="shortcut icon" href="/images/favicon.ico">
+        
+      
+      
+        
+          <link rel="icon" type="image/png" href="/images/favicon-192x192.png" sizes="192x192">
+        
+      
+      
+        
+          <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+        
+      
+    
+    <!-- title -->
+    <title>CS61B proj1作业记录</title>
+    <!-- async scripts -->
+    <!-- Google Analytics -->
+
+
+    <!-- Umami Analytics -->
+
+
+    <!-- styles -->
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    <!-- persian styles -->
+    
+    <!-- rss -->
+    
+    
+	<!-- mathjax -->
+	
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+<body class="max-width mx-auto px3 ltr">
+    
+      <div id="header-post">
+  <a id="menu-icon" href="#" aria-label="目录"><i class="fa-solid fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#" aria-label="目录"><i class="fa-solid fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" aria-label="顶部" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fa-solid fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+        <!--
+       --><li><a href="/">首页</a></li><!--
+     --><!--
+       --><li><a href="/about/">关于</a></li><!--
+     --><!--
+       --><li><a href="/archives/">归档</a></li><!--
+     --><!--
+       --><li><a target="_blank" rel="noopener" href="http://github.com/probberechts">项目</a></li><!--
+     -->
+      </ul>
+    </span>
+    <br/>
+    <span id="actions">
+      <ul>
+        
+        
+        <li><a class="icon" aria-label="下一篇" href="/web%E5%9F%BA%E7%A1%80%E7%AC%94%E8%AE%B0/CScourse/CS61B%20Lab3%E4%BD%9C%E4%B8%9A%E8%AE%B0%E5%BD%95/"><i class="fa-solid fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
+        
+        <li><a class="icon" aria-label="返回顶部" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa-solid fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
+        <li><a class="icon" aria-label="分享文章" href="#"><i class="fa-solid fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">上一篇</span>
+      <span id="i-next" class="info" style="display:none;">下一篇</span>
+      <span id="i-top" class="info" style="display:none;">返回顶部</span>
+      <span id="i-share" class="info" style="display:none;">分享文章</span>
+    </span>
+    <br/>
+    <div id="share" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=http://yatq.xyz/web%E5%9F%BA%E7%A1%80%E7%AC%94%E8%AE%B0/CScourse/CS61B-proj1%E4%BD%9C%E4%B8%9A%E8%AE%B0%E5%BD%95/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=http://yatq.xyz/web%E5%9F%BA%E7%A1%80%E7%AC%94%E8%AE%B0/CScourse/CS61B-proj1%E4%BD%9C%E4%B8%9A%E8%AE%B0%E5%BD%95/&text=CS61B proj1作业记录"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=http://yatq.xyz/web%E5%9F%BA%E7%A1%80%E7%AC%94%E8%AE%B0/CScourse/CS61B-proj1%E4%BD%9C%E4%B8%9A%E8%AE%B0%E5%BD%95/&title=CS61B proj1作业记录"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=http://yatq.xyz/web%E5%9F%BA%E7%A1%80%E7%AC%94%E8%AE%B0/CScourse/CS61B-proj1%E4%BD%9C%E4%B8%9A%E8%AE%B0%E5%BD%95/&is_video=false&description=CS61B proj1作业记录"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=CS61B proj1作业记录&body=Check out this article: http://yatq.xyz/web%E5%9F%BA%E7%A1%80%E7%AC%94%E8%AE%B0/CScourse/CS61B-proj1%E4%BD%9C%E4%B8%9A%E8%AE%B0%E5%BD%95/"><i class="fa-solid fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=http://yatq.xyz/web%E5%9F%BA%E7%A1%80%E7%AC%94%E8%AE%B0/CScourse/CS61B-proj1%E4%BD%9C%E4%B8%9A%E8%AE%B0%E5%BD%95/&title=CS61B proj1作业记录"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=http://yatq.xyz/web%E5%9F%BA%E7%A1%80%E7%AC%94%E8%AE%B0/CScourse/CS61B-proj1%E4%BD%9C%E4%B8%9A%E8%AE%B0%E5%BD%95/&title=CS61B proj1作业记录"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=http://yatq.xyz/web%E5%9F%BA%E7%A1%80%E7%AC%94%E8%AE%B0/CScourse/CS61B-proj1%E4%BD%9C%E4%B8%9A%E8%AE%B0%E5%BD%95/&title=CS61B proj1作业记录"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=http://yatq.xyz/web%E5%9F%BA%E7%A1%80%E7%AC%94%E8%AE%B0/CScourse/CS61B-proj1%E4%BD%9C%E4%B8%9A%E8%AE%B0%E5%BD%95/&title=CS61B proj1作业记录"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=http://yatq.xyz/web%E5%9F%BA%E7%A1%80%E7%AC%94%E8%AE%B0/CScourse/CS61B-proj1%E4%BD%9C%E4%B8%9A%E8%AE%B0%E5%BD%95/&name=CS61B proj1作业记录&description="><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=http://yatq.xyz/web%E5%9F%BA%E7%A1%80%E7%AC%94%E8%AE%B0/CScourse/CS61B-proj1%E4%BD%9C%E4%B8%9A%E8%AE%B0%E5%BD%95/&t=CS61B proj1作业记录"><i class="fab fa-hacker-news " aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+    
+    
+      <div id="toc">
+        <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Project-1-Data-Structures"><span class="toc-number">1.</span> <span class="toc-text">Project 1: Data Structures</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#Packages"><span class="toc-number">1.1.</span> <span class="toc-text">Packages</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#The-Deque-API"><span class="toc-number">1.2.</span> <span class="toc-text">The Deque API</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Project-Tasks"><span class="toc-number">1.3.</span> <span class="toc-text">Project Tasks</span></a></li></ol></li></ol>
+      </div>
+    
+  </span>
+</div>
+
+    
+    <div class="content index py4 ">
+        
+        <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle p-name" itemprop="name headline">
+        CS61B proj1作业记录
+    </h1>
+
+
+
+    <div class="meta">
+      <span class="author p-author h-card" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span class="p-name" itemprop="name">y@7q</span>
+      </span>
+      
+    <div class="postdate">
+      
+        <time datetime="2025-09-06T02:35:00.000Z" class="dt-published" itemprop="datePublished">2025-09-06</time>
+        
+      
+    </div>
+
+
+      
+    <div class="article-category">
+        <i class="fa-solid fa-archive"></i>
+        <a class="category-link" href="/categories/CS%E5%9F%BA%E7%A1%80-ABC/">CS基础(ABC)</a>
+    </div>
+
+
+      
+    <div class="article-tag">
+        <i class="fa-solid fa-tag"></i>
+        <a class="p-category" href="/tags/CS61B/" rel="tag">CS61B</a>, <a class="p-category" href="/tags/Java/" rel="tag">Java</a>
+    </div>
+
+
+    </div>
+  </header>
+  
+
+  <div class="content e-content" itemprop="articleBody">
+    <h1 id="Project-1-Data-Structures"><a href="#Project-1-Data-Structures" class="headerlink" title="Project 1: Data Structures"></a>Project 1: Data Structures</h1><h2 id="Packages"><a href="#Packages" class="headerlink" title="Packages"></a>Packages</h2><p>当想要声明当前code是哪个包时，需要在文档开头使用<code>package</code>关键字。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> deque;</span><br></pre></td></tr></table></figure>
+
+<p>当想要使用一个包中的一个类或者方法时，可以通过写它的全名，e.g. <code>deque.ArrayDeque</code>，也可以使用<code>import</code>关键字导入这个类或者包。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> deque.ArrayDeque;</span><br></pre></td></tr></table></figure>
+
+<p>这样在之后使用的时候就可以使用简写<code>ArrayDeque</code>。</p>
+<h2 id="The-Deque-API"><a href="#The-Deque-API" class="headerlink" title="The Deque API"></a>The Deque API</h2><p>大致就是让我们了解，接下来需要做出来两个类<code>ArrayDeque</code>和<code>LinkedListDeque</code>，一个是基于数组实现，另一个则是基于链表，它们都需要实现<code>Deque</code>接口。</p>
+<h2 id="Project-Tasks"><a href="#Project-Tasks" class="headerlink" title="Project Tasks"></a>Project Tasks</h2>
+  </div>
+</article>
+
+
+
+        
+          <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+        
+          <li><a href="/">首页</a></li>
+        
+          <li><a href="/about/">关于</a></li>
+        
+          <li><a href="/archives/">归档</a></li>
+        
+          <li><a target="_blank" rel="noopener" href="http://github.com/probberechts">项目</a></li>
+        
+      </ul>
+    </div>
+
+    
+    
+      <div id="toc-footer" style="display: none">
+        <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Project-1-Data-Structures"><span class="toc-number">1.</span> <span class="toc-text">Project 1: Data Structures</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#Packages"><span class="toc-number">1.1.</span> <span class="toc-text">Packages</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#The-Deque-API"><span class="toc-number">1.2.</span> <span class="toc-text">The Deque API</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Project-Tasks"><span class="toc-number">1.3.</span> <span class="toc-text">Project Tasks</span></a></li></ol></li></ol>
+      </div>
+    
+
+    <div id="share-footer" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=http://yatq.xyz/web%E5%9F%BA%E7%A1%80%E7%AC%94%E8%AE%B0/CScourse/CS61B-proj1%E4%BD%9C%E4%B8%9A%E8%AE%B0%E5%BD%95/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=http://yatq.xyz/web%E5%9F%BA%E7%A1%80%E7%AC%94%E8%AE%B0/CScourse/CS61B-proj1%E4%BD%9C%E4%B8%9A%E8%AE%B0%E5%BD%95/&text=CS61B proj1作业记录"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=http://yatq.xyz/web%E5%9F%BA%E7%A1%80%E7%AC%94%E8%AE%B0/CScourse/CS61B-proj1%E4%BD%9C%E4%B8%9A%E8%AE%B0%E5%BD%95/&title=CS61B proj1作业记录"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=http://yatq.xyz/web%E5%9F%BA%E7%A1%80%E7%AC%94%E8%AE%B0/CScourse/CS61B-proj1%E4%BD%9C%E4%B8%9A%E8%AE%B0%E5%BD%95/&is_video=false&description=CS61B proj1作业记录"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=CS61B proj1作业记录&body=Check out this article: http://yatq.xyz/web%E5%9F%BA%E7%A1%80%E7%AC%94%E8%AE%B0/CScourse/CS61B-proj1%E4%BD%9C%E4%B8%9A%E8%AE%B0%E5%BD%95/"><i class="fa-solid fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=http://yatq.xyz/web%E5%9F%BA%E7%A1%80%E7%AC%94%E8%AE%B0/CScourse/CS61B-proj1%E4%BD%9C%E4%B8%9A%E8%AE%B0%E5%BD%95/&title=CS61B proj1作业记录"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=http://yatq.xyz/web%E5%9F%BA%E7%A1%80%E7%AC%94%E8%AE%B0/CScourse/CS61B-proj1%E4%BD%9C%E4%B8%9A%E8%AE%B0%E5%BD%95/&title=CS61B proj1作业记录"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=http://yatq.xyz/web%E5%9F%BA%E7%A1%80%E7%AC%94%E8%AE%B0/CScourse/CS61B-proj1%E4%BD%9C%E4%B8%9A%E8%AE%B0%E5%BD%95/&title=CS61B proj1作业记录"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=http://yatq.xyz/web%E5%9F%BA%E7%A1%80%E7%AC%94%E8%AE%B0/CScourse/CS61B-proj1%E4%BD%9C%E4%B8%9A%E8%AE%B0%E5%BD%95/&title=CS61B proj1作业记录"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=http://yatq.xyz/web%E5%9F%BA%E7%A1%80%E7%AC%94%E8%AE%B0/CScourse/CS61B-proj1%E4%BD%9C%E4%B8%9A%E8%AE%B0%E5%BD%95/&name=CS61B proj1作业记录&description="><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=http://yatq.xyz/web%E5%9F%BA%E7%A1%80%E7%AC%94%E8%AE%B0/CScourse/CS61B-proj1%E4%BD%9C%E4%B8%9A%E8%AE%B0%E5%BD%95/&t=CS61B proj1作业记录"><i class="fab fa-hacker-news fa-lg" aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+
+    <div id="actions-footer">
+        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fa-solid fa-bars fa-lg" aria-hidden="true"></i> 菜单</a>
+        
+          <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fa-solid fa-list fa-lg" aria-hidden="true"></i> 目录</a>
+        
+        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fa-solid fa-share-alt fa-lg" aria-hidden="true"></i> 分享</a>
+        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa-solid fa-chevron-up fa-lg" aria-hidden="true"></i> 返回顶部</a>
+    </div>
+
+  </div>
+</div>
+
+        
+        <footer id="footer">
+  <div class="footer-left">
+    Copyright &copy;
+    
+    
+    2016-2025
+    y@7q
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+        <!--
+       --><li><a href="/">首页</a></li><!--
+     --><!--
+       --><li><a href="/about/">关于</a></li><!--
+     --><!--
+       --><li><a href="/archives/">归档</a></li><!--
+     --><!--
+       --><li><a target="_blank" rel="noopener" href="http://github.com/probberechts">项目</a></li><!--
+     -->
+      </ul>
+    </nav>
+  </div>
+</footer>
+
+    </div>
+    <!-- styles -->
+
+
+
+  <link rel="preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" crossorigin="anonymous" onload="this.onload=null;this.rel='stylesheet'"/>
+
+
+    <!-- jquery -->
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js" crossorigin="anonymous"></script>
+
+
+
+
+<!-- clipboard -->
+
+  
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.7/clipboard.min.js" crossorigin="anonymous"></script>
+  
+  <script type="text/javascript">
+  $(function() {
+    // copy-btn HTML
+    var btn = "<span class=\"btn-copy tooltipped tooltipped-sw\" aria-label=\"复制到粘贴板！\">";
+    btn += '<i class="fa-regular fa-clone"></i>';
+    btn += '</span>';
+    // mount it!
+    $(".highlight table").before(btn);
+    var clip = new ClipboardJS('.btn-copy', {
+      text: function(trigger) {
+        return Array.from(trigger.nextElementSibling.querySelectorAll('.code')).reduce((str,it)=>str+it.innerText+'\n','')
+      }
+    });
+    clip.on('success', function(e) {
+      e.trigger.setAttribute('aria-label', "复制成功！");
+      e.clearSelection();
+    })
+  })
+  </script>
+
+
+<script src="/js/main.js"></script>
+
+<!-- search -->
+
+<!-- Baidu Analytics -->
+
+<!-- Cloudflare Analytics -->
+
+<!-- Disqus Comments -->
+
+<!-- utterances Comments -->
+
+</body>
+</html>

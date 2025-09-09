@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html lang=zh>
+<head>
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
+    <meta name="description" content="今天时间有点紧只记了一下重点的，要注意的部分。 Timing Tests for List61BTiming the getLast method of SLList这里刚开始第一时间读完文档之后，没想懂测试时间的例子哪里来，苦思冥想许久没办法了，于是参考了一下别人的仓库，发现确实是自己手动编写的。 1234567891011121314151617181920212223public stati">
+<meta property="og:type" content="article">
+<meta property="og:title" content="CS61B Lab3作业记录">
+<meta property="og:url" content="http://yatq.xyz/web%E5%9F%BA%E7%A1%80%E7%AC%94%E8%AE%B0/CScourse/CS61B%20Lab3%E4%BD%9C%E4%B8%9A%E8%AE%B0%E5%BD%95/index.html">
+<meta property="og:site_name" content="y@7q">
+<meta property="og:description" content="今天时间有点紧只记了一下重点的，要注意的部分。 Timing Tests for List61BTiming the getLast method of SLList这里刚开始第一时间读完文档之后，没想懂测试时间的例子哪里来，苦思冥想许久没办法了，于是参考了一下别人的仓库，发现确实是自己手动编写的。 1234567891011121314151617181920212223public stati">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://raw.githubusercontent.com/yatq21/Pictures/main/images/20250905192932.png">
+<meta property="article:published_time" content="2025-09-05T11:17:56.000Z">
+<meta property="article:modified_time" content="2025-09-06T02:34:03.665Z">
+<meta property="article:author" content="y@7q">
+<meta property="article:tag" content="Java">
+<meta property="article:tag" content="CS61B">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://raw.githubusercontent.com/yatq21/Pictures/main/images/20250905192932.png">
+    
+    
+      
+        
+          <link rel="shortcut icon" href="/images/favicon.ico">
+        
+      
+      
+        
+          <link rel="icon" type="image/png" href="/images/favicon-192x192.png" sizes="192x192">
+        
+      
+      
+        
+          <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+        
+      
+    
+    <!-- title -->
+    <title>CS61B Lab3作业记录</title>
+    <!-- async scripts -->
+    <!-- Google Analytics -->
+
+
+    <!-- Umami Analytics -->
+
+
+    <!-- styles -->
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    <!-- persian styles -->
+    
+    <!-- rss -->
+    
+    
+	<!-- mathjax -->
+	
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+<body class="max-width mx-auto px3 ltr">
+    
+      <div id="header-post">
+  <a id="menu-icon" href="#" aria-label="目录"><i class="fa-solid fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#" aria-label="目录"><i class="fa-solid fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" aria-label="顶部" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fa-solid fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+        <!--
+       --><li><a href="/">首页</a></li><!--
+     --><!--
+       --><li><a href="/about/">关于</a></li><!--
+     --><!--
+       --><li><a href="/archives/">归档</a></li><!--
+     --><!--
+       --><li><a target="_blank" rel="noopener" href="http://github.com/probberechts">项目</a></li><!--
+     -->
+      </ul>
+    </span>
+    <br/>
+    <span id="actions">
+      <ul>
+        
+        <li><a class="icon" aria-label="上一篇" href="/web%E5%9F%BA%E7%A1%80%E7%AC%94%E8%AE%B0/CScourse/CS61B-proj1%E4%BD%9C%E4%B8%9A%E8%AE%B0%E5%BD%95/"><i class="fa-solid fa-chevron-left" aria-hidden="true" onmouseover="$('#i-prev').toggle();" onmouseout="$('#i-prev').toggle();"></i></a></li>
+        
+        
+        <li><a class="icon" aria-label="下一篇" href="/web%E5%9F%BA%E7%A1%80%E7%AC%94%E8%AE%B0/CScourse/CS61B%20Lab2%E4%BD%9C%E4%B8%9A%E8%AE%B0%E5%BD%95/"><i class="fa-solid fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
+        
+        <li><a class="icon" aria-label="返回顶部" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa-solid fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
+        <li><a class="icon" aria-label="分享文章" href="#"><i class="fa-solid fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">上一篇</span>
+      <span id="i-next" class="info" style="display:none;">下一篇</span>
+      <span id="i-top" class="info" style="display:none;">返回顶部</span>
+      <span id="i-share" class="info" style="display:none;">分享文章</span>
+    </span>
+    <br/>
+    <div id="share" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=http://yatq.xyz/web%E5%9F%BA%E7%A1%80%E7%AC%94%E8%AE%B0/CScourse/CS61B%20Lab3%E4%BD%9C%E4%B8%9A%E8%AE%B0%E5%BD%95/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=http://yatq.xyz/web%E5%9F%BA%E7%A1%80%E7%AC%94%E8%AE%B0/CScourse/CS61B%20Lab3%E4%BD%9C%E4%B8%9A%E8%AE%B0%E5%BD%95/&text=CS61B Lab3作业记录"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=http://yatq.xyz/web%E5%9F%BA%E7%A1%80%E7%AC%94%E8%AE%B0/CScourse/CS61B%20Lab3%E4%BD%9C%E4%B8%9A%E8%AE%B0%E5%BD%95/&title=CS61B Lab3作业记录"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=http://yatq.xyz/web%E5%9F%BA%E7%A1%80%E7%AC%94%E8%AE%B0/CScourse/CS61B%20Lab3%E4%BD%9C%E4%B8%9A%E8%AE%B0%E5%BD%95/&is_video=false&description=CS61B Lab3作业记录"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=CS61B Lab3作业记录&body=Check out this article: http://yatq.xyz/web%E5%9F%BA%E7%A1%80%E7%AC%94%E8%AE%B0/CScourse/CS61B%20Lab3%E4%BD%9C%E4%B8%9A%E8%AE%B0%E5%BD%95/"><i class="fa-solid fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=http://yatq.xyz/web%E5%9F%BA%E7%A1%80%E7%AC%94%E8%AE%B0/CScourse/CS61B%20Lab3%E4%BD%9C%E4%B8%9A%E8%AE%B0%E5%BD%95/&title=CS61B Lab3作业记录"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=http://yatq.xyz/web%E5%9F%BA%E7%A1%80%E7%AC%94%E8%AE%B0/CScourse/CS61B%20Lab3%E4%BD%9C%E4%B8%9A%E8%AE%B0%E5%BD%95/&title=CS61B Lab3作业记录"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=http://yatq.xyz/web%E5%9F%BA%E7%A1%80%E7%AC%94%E8%AE%B0/CScourse/CS61B%20Lab3%E4%BD%9C%E4%B8%9A%E8%AE%B0%E5%BD%95/&title=CS61B Lab3作业记录"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=http://yatq.xyz/web%E5%9F%BA%E7%A1%80%E7%AC%94%E8%AE%B0/CScourse/CS61B%20Lab3%E4%BD%9C%E4%B8%9A%E8%AE%B0%E5%BD%95/&title=CS61B Lab3作业记录"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=http://yatq.xyz/web%E5%9F%BA%E7%A1%80%E7%AC%94%E8%AE%B0/CScourse/CS61B%20Lab3%E4%BD%9C%E4%B8%9A%E8%AE%B0%E5%BD%95/&name=CS61B Lab3作业记录&description="><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=http://yatq.xyz/web%E5%9F%BA%E7%A1%80%E7%AC%94%E8%AE%B0/CScourse/CS61B%20Lab3%E4%BD%9C%E4%B8%9A%E8%AE%B0%E5%BD%95/&t=CS61B Lab3作业记录"><i class="fab fa-hacker-news " aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+    
+    
+      <div id="toc">
+        <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Timing-Tests-for-List61B"><span class="toc-number">1.</span> <span class="toc-text">Timing Tests for List61B</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#Timing-the-getLast-method-of-SLList"><span class="toc-number">1.1.</span> <span class="toc-text">Timing the getLast method of SLList</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Randomized-Comparison-Tests"><span class="toc-number">2.</span> <span class="toc-text">Randomized Comparison Tests</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#Conditional-Breakpoints"><span class="toc-number">2.1.</span> <span class="toc-text">Conditional Breakpoints</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Adding-More-Randomized-Calls"><span class="toc-number">2.2.</span> <span class="toc-text">Adding More Randomized Calls</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Adding-Randomized-Comparisons"><span class="toc-number">2.3.</span> <span class="toc-text">Adding Randomized Comparisons</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Running-our-Randomized-Test"><span class="toc-number">2.4.</span> <span class="toc-text">Running our Randomized Test</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Fixing-the-Bug-and-Execution-Breakpoints"><span class="toc-number">2.5.</span> <span class="toc-text">Fixing the Bug and Execution Breakpoints</span></a></li></ol></li></ol>
+      </div>
+    
+  </span>
+</div>
+
+    
+    <div class="content index py4 ">
+        
+        <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle p-name" itemprop="name headline">
+        CS61B Lab3作业记录
+    </h1>
+
+
+
+    <div class="meta">
+      <span class="author p-author h-card" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span class="p-name" itemprop="name">y@7q</span>
+      </span>
+      
+    <div class="postdate">
+      
+        <time datetime="2025-09-05T11:17:56.000Z" class="dt-published" itemprop="datePublished">2025-09-05</time>
+        
+      
+    </div>
+
+
+      
+    <div class="article-category">
+        <i class="fa-solid fa-archive"></i>
+        <a class="category-link" href="/categories/CS%E5%9F%BA%E7%A1%80-ABC/">CS基础(ABC)</a>
+    </div>
+
+
+      
+    <div class="article-tag">
+        <i class="fa-solid fa-tag"></i>
+        <a class="p-category" href="/tags/CS61B/" rel="tag">CS61B</a>, <a class="p-category" href="/tags/Java/" rel="tag">Java</a>
+    </div>
+
+
+    </div>
+  </header>
+  
+
+  <div class="content e-content" itemprop="articleBody">
+    <p><strong>今天时间有点紧只记了一下重点的，要注意的部分。</strong></p>
+<h1 id="Timing-Tests-for-List61B"><a href="#Timing-Tests-for-List61B" class="headerlink" title="Timing Tests for List61B"></a>Timing Tests for List61B</h1><h2 id="Timing-the-getLast-method-of-SLList"><a href="#Timing-the-getLast-method-of-SLList" class="headerlink" title="Timing the getLast method of SLList"></a>Timing the getLast method of SLList</h2><p>这里刚开始第一时间读完文档之后，没想懂测试时间的例子哪里来，苦思冥想许久没办法了，于是参考了一下别人的仓库，发现确实是自己手动编写的。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">timeAListConstruction</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="comment">// <span class="doctag">TODO:</span> YOUR CODE HERE</span></span><br><span class="line">        AList&lt;Integer&gt; Ns = <span class="keyword">new</span> <span class="title class_">AList</span>&lt;&gt;();</span><br><span class="line">        AList&lt;Double&gt; times = <span class="keyword">new</span> <span class="title class_">AList</span>&lt;&gt;();</span><br><span class="line">        AList&lt;Integer&gt; opCounts = <span class="keyword">new</span> <span class="title class_">AList</span>&lt;&gt;();</span><br><span class="line">        <span class="type">int</span> <span class="variable">temp</span> <span class="operator">=</span> <span class="number">1</span>;</span><br><span class="line">        <span class="type">int</span> <span class="variable">N</span> <span class="operator">=</span> <span class="number">1000</span>;</span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> <span class="variable">i</span> <span class="operator">=</span> <span class="number">0</span>; i &lt; <span class="number">8</span>; i++) &#123;</span><br><span class="line">            AList&lt;Integer&gt; tempAList = <span class="keyword">new</span> <span class="title class_">AList</span>&lt;&gt;();</span><br><span class="line"></span><br><span class="line">            <span class="type">Stopwatch</span> <span class="variable">sw</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">Stopwatch</span>();</span><br><span class="line">            <span class="keyword">for</span> (<span class="type">int</span> <span class="variable">j</span> <span class="operator">=</span> <span class="number">0</span>; j &lt; N; j += <span class="number">1</span>) &#123;</span><br><span class="line">                tempAList.addLast(temp);</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="type">double</span> <span class="variable">timeInSeconds</span> <span class="operator">=</span> sw.elapsedTime();</span><br><span class="line"></span><br><span class="line">            Ns.addLast(N);</span><br><span class="line">            times.addLast(timeInSeconds);</span><br><span class="line">            opCounts.addLast(N);</span><br><span class="line">            N *= <span class="number">2</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        printTimingTable(Ns, times, opCounts);</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+<p>后续两个都差不多的思路。</p>
+<h1 id="Randomized-Comparison-Tests"><a href="#Randomized-Comparison-Tests" class="headerlink" title="Randomized Comparison Tests"></a>Randomized Comparison Tests</h1><h2 id="Conditional-Breakpoints"><a href="#Conditional-Breakpoints" class="headerlink" title="Conditional Breakpoints"></a>Conditional Breakpoints</h2><p>IDEA中可以为断点设置触发条件，只有在满足条件的时候才会停下来。</p>
+<p><img src="https://raw.githubusercontent.com/yatq21/Pictures/main/images/20250905192932.png" alt="20250905192932"></p>
+<h2 id="Adding-More-Randomized-Calls"><a href="#Adding-More-Randomized-Calls" class="headerlink" title="Adding More Randomized Calls"></a>Adding More Randomized Calls</h2><p>这里添加了两个新的随机函数调用：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">randomizedTest</span> &#123;</span><br><span class="line">    <span class="meta">@Test</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">randomizedTest</span><span class="params">()</span> &#123;</span><br><span class="line">        AListNoResizing&lt;Integer&gt; L = <span class="keyword">new</span> <span class="title class_">AListNoResizing</span>&lt;&gt;();</span><br><span class="line"></span><br><span class="line">        <span class="type">int</span> <span class="variable">N</span> <span class="operator">=</span> <span class="number">500</span>;</span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> <span class="variable">i</span> <span class="operator">=</span> <span class="number">0</span>; i &lt; N; i += <span class="number">1</span>) &#123;</span><br><span class="line">            <span class="type">int</span> <span class="variable">operationNumber</span> <span class="operator">=</span> StdRandom.uniform(<span class="number">0</span>, <span class="number">4</span>);</span><br><span class="line">            <span class="keyword">if</span> (operationNumber == <span class="number">0</span>) &#123;</span><br><span class="line">                <span class="comment">// addLast</span></span><br><span class="line">                <span class="type">int</span> <span class="variable">randVal</span> <span class="operator">=</span> StdRandom.uniform(<span class="number">0</span>, <span class="number">100</span>);</span><br><span class="line">                L.addLast(randVal);</span><br><span class="line">                System.out.println(<span class="string">&quot;addLast(&quot;</span> + randVal + <span class="string">&quot;)&quot;</span>);</span><br><span class="line">            &#125; <span class="keyword">else</span> <span class="keyword">if</span> (operationNumber == <span class="number">1</span>) &#123;</span><br><span class="line">                <span class="comment">// size</span></span><br><span class="line">                <span class="type">int</span> <span class="variable">size</span> <span class="operator">=</span> L.size();</span><br><span class="line">                System.out.println(<span class="string">&quot;size: &quot;</span> + size);</span><br><span class="line">            &#125; <span class="keyword">else</span> <span class="keyword">if</span> (operationNumber == <span class="number">2</span> &amp;&amp; L.size() &gt; <span class="number">0</span>) &#123;</span><br><span class="line">                <span class="comment">// getLast</span></span><br><span class="line">                <span class="type">int</span> <span class="variable">Last</span> <span class="operator">=</span> L.getLast();</span><br><span class="line">                System.out.println(<span class="string">&quot;LastItem: &quot;</span> + Last);</span><br><span class="line">            &#125; <span class="keyword">else</span> <span class="keyword">if</span> (operationNumber == <span class="number">3</span> &amp;&amp; L.size() &gt; <span class="number">0</span>) &#123;</span><br><span class="line">                <span class="comment">// removeLast</span></span><br><span class="line">                <span class="type">int</span> <span class="variable">Last</span> <span class="operator">=</span> L.removeLast();</span><br><span class="line">                System.out.println(<span class="string">&quot;removeLastItem: &quot;</span> + Last);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+<h2 id="Adding-Randomized-Comparisons"><a href="#Adding-Randomized-Comparisons" class="headerlink" title="Adding Randomized Comparisons"></a>Adding Randomized Comparisons</h2><p>把每次随机操作之后的两个数组都比较一下：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> randomizedtest;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> org.junit.Test;</span><br><span class="line"><span class="keyword">import</span> <span class="keyword">static</span> org.junit.Assert.*;</span><br><span class="line"><span class="keyword">import</span> edu.princeton.cs.algs4.StdRandom;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">randomizedTest</span> &#123;</span><br><span class="line">    <span class="meta">@Test</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">randomizedTest</span><span class="params">()</span> &#123;</span><br><span class="line">        AListNoResizing&lt;Integer&gt; L1 = <span class="keyword">new</span> <span class="title class_">AListNoResizing</span>&lt;&gt;();</span><br><span class="line">        BuggyAList&lt;Integer&gt; L2 = <span class="keyword">new</span> <span class="title class_">BuggyAList</span>&lt;&gt;();</span><br><span class="line">        <span class="type">int</span> <span class="variable">N</span> <span class="operator">=</span> <span class="number">5000</span>;</span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> <span class="variable">i</span> <span class="operator">=</span> <span class="number">0</span>; i &lt; N; i += <span class="number">1</span>) &#123;</span><br><span class="line">            <span class="type">int</span> <span class="variable">operationNumber</span> <span class="operator">=</span> StdRandom.uniform(<span class="number">0</span>, <span class="number">4</span>);</span><br><span class="line">            <span class="keyword">if</span> (operationNumber == <span class="number">0</span>) &#123;</span><br><span class="line">                <span class="comment">// addLast</span></span><br><span class="line">                <span class="type">int</span> <span class="variable">randVal</span> <span class="operator">=</span> StdRandom.uniform(<span class="number">0</span>, <span class="number">100</span>);</span><br><span class="line">                L1.addLast(randVal);</span><br><span class="line">                L2.addLast(randVal);</span><br><span class="line">                System.out.println(<span class="string">&quot;addLast(&quot;</span> + randVal + <span class="string">&quot;)&quot;</span>);</span><br><span class="line">            &#125; <span class="keyword">else</span> <span class="keyword">if</span> (operationNumber == <span class="number">1</span>) &#123;</span><br><span class="line">                <span class="comment">// size</span></span><br><span class="line">                <span class="type">int</span> <span class="variable">size1</span> <span class="operator">=</span> L1.size();</span><br><span class="line">                <span class="type">int</span> <span class="variable">size2</span> <span class="operator">=</span> L2.size();</span><br><span class="line">                System.out.println(<span class="string">&quot;size1: &quot;</span> + size1 + <span class="string">&quot;\nsize2: &quot;</span> + size2);</span><br><span class="line">            &#125; <span class="keyword">else</span> <span class="keyword">if</span> (operationNumber == <span class="number">2</span> &amp;&amp; L1.size() &gt; <span class="number">0</span>) &#123;</span><br><span class="line">                <span class="comment">// getLast</span></span><br><span class="line">                <span class="type">int</span> <span class="variable">Last1</span> <span class="operator">=</span> L1.getLast();</span><br><span class="line">                <span class="type">int</span> <span class="variable">Last2</span> <span class="operator">=</span> L2.getLast();</span><br><span class="line">                System.out.println(<span class="string">&quot;LastItem: &quot;</span> + Last1 + <span class="string">&quot;\nLastItem: &quot;</span> + Last2);</span><br><span class="line">            &#125; <span class="keyword">else</span> <span class="keyword">if</span> (operationNumber == <span class="number">3</span> &amp;&amp; L1.size() &gt; <span class="number">0</span>) &#123;</span><br><span class="line">                <span class="comment">// removeLast</span></span><br><span class="line">                <span class="type">int</span> <span class="variable">Last1</span> <span class="operator">=</span> L1.removeLast();</span><br><span class="line">                <span class="type">int</span> <span class="variable">Last2</span> <span class="operator">=</span> L2.removeLast();</span><br><span class="line">                System.out.println(<span class="string">&quot;removeLastItem: &quot;</span> + Last1 + <span class="string">&quot;\nremoveLastItem: &quot;</span> + Last2);</span><br><span class="line">            &#125;</span><br><span class="line">            assertEquals(L1.size(), L2.size());</span><br><span class="line">            <span class="keyword">for</span>  (<span class="type">int</span> <span class="variable">j</span> <span class="operator">=</span> <span class="number">0</span>; j &lt; L1.size(); j += <span class="number">1</span>) &#123;</span><br><span class="line">                assertEquals(L1.get(j), L2.get(j));</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="Running-our-Randomized-Test"><a href="#Running-our-Randomized-Test" class="headerlink" title="Running our Randomized Test"></a>Running our Randomized Test</h2><p>这里需要把N调大一些才能触发bug。改为N&#x3D;5000。</p>
+<h2 id="Fixing-the-Bug-and-Execution-Breakpoints"><a href="#Fixing-the-Bug-and-Execution-Breakpoints" class="headerlink" title="Fixing the Bug and Execution Breakpoints"></a>Fixing the Bug and Execution Breakpoints</h2><p>这里感觉是这个Lab里面的精华了。<br>由于每次bug触发之后的报错信息都类似于：</p>
+<figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">java<span class="selector-class">.lang</span><span class="selector-class">.ArrayIndexOutOfBoundsException</span>: Index <span class="number">7</span> out of bounds <span class="keyword">for</span> length <span class="number">7</span></span><br><span class="line"></span><br><span class="line">at randomizedtest<span class="selector-class">.BuggyAList</span><span class="selector-class">.resize</span>(BuggyAList<span class="selector-class">.java</span>:<span class="number">31</span>)</span><br></pre></td></tr></table></figure>
+<p>而且直接debug又不好找到问题所在，这里交给我们一个方式用来直接在bug处暂停:</p>
+<p>点击Run -&gt; View Breakpoints -&gt; + -&gt; Java Exception Breakpoints -&gt; Any Exception</p>
+<p>添加Conditions: <code>this instanceof java.lang.ArrayIndexOutOfBoundsException</code></p>
+<p>之后直接在测试函数中点击debug,就可以在bug触发时自动暂停了。<br>然后我们在通过观察visualizer窗口以及想象，就能够发现bug所在了。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="comment">/**发现在重设大小的时候新list的大小设置的十分小，</span></span><br><span class="line"><span class="comment"> * 这里应该在检测size小于25%的时候，设置为原来list长度</span></span><br><span class="line"><span class="comment"> * （包含后续一堆null的部分）的四分之一，而不单单是size</span></span><br><span class="line"><span class="comment"> * 的四分之一，修改为resize(items.length / 4)即可。</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> Item <span class="title function_">removeLast</span><span class="params">()</span> &#123;</span><br><span class="line">    <span class="keyword">if</span> ((size &lt; items.length / <span class="number">4</span>) &amp;&amp; (size &gt; <span class="number">4</span>)) &#123;</span><br><span class="line">        resize(size / <span class="number">4</span>); <span class="comment">// &lt;- Bug is here! </span></span><br><span class="line">    &#125;</span><br><span class="line">    <span class="type">Item</span> <span class="variable">x</span> <span class="operator">=</span> getLast();</span><br><span class="line">    items[size - <span class="number">1</span>] = <span class="literal">null</span>; </span><br><span class="line">    size = size - <span class="number">1</span>;</span><br><span class="line">    <span class="keyword">return</span> x;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+
+
+
+
+
+
+
+
+
+  </div>
+</article>
+
+
+
+        
+          <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+        
+          <li><a href="/">首页</a></li>
+        
+          <li><a href="/about/">关于</a></li>
+        
+          <li><a href="/archives/">归档</a></li>
+        
+          <li><a target="_blank" rel="noopener" href="http://github.com/probberechts">项目</a></li>
+        
+      </ul>
+    </div>
+
+    
+    
+      <div id="toc-footer" style="display: none">
+        <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Timing-Tests-for-List61B"><span class="toc-number">1.</span> <span class="toc-text">Timing Tests for List61B</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#Timing-the-getLast-method-of-SLList"><span class="toc-number">1.1.</span> <span class="toc-text">Timing the getLast method of SLList</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Randomized-Comparison-Tests"><span class="toc-number">2.</span> <span class="toc-text">Randomized Comparison Tests</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#Conditional-Breakpoints"><span class="toc-number">2.1.</span> <span class="toc-text">Conditional Breakpoints</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Adding-More-Randomized-Calls"><span class="toc-number">2.2.</span> <span class="toc-text">Adding More Randomized Calls</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Adding-Randomized-Comparisons"><span class="toc-number">2.3.</span> <span class="toc-text">Adding Randomized Comparisons</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Running-our-Randomized-Test"><span class="toc-number">2.4.</span> <span class="toc-text">Running our Randomized Test</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Fixing-the-Bug-and-Execution-Breakpoints"><span class="toc-number">2.5.</span> <span class="toc-text">Fixing the Bug and Execution Breakpoints</span></a></li></ol></li></ol>
+      </div>
+    
+
+    <div id="share-footer" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=http://yatq.xyz/web%E5%9F%BA%E7%A1%80%E7%AC%94%E8%AE%B0/CScourse/CS61B%20Lab3%E4%BD%9C%E4%B8%9A%E8%AE%B0%E5%BD%95/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=http://yatq.xyz/web%E5%9F%BA%E7%A1%80%E7%AC%94%E8%AE%B0/CScourse/CS61B%20Lab3%E4%BD%9C%E4%B8%9A%E8%AE%B0%E5%BD%95/&text=CS61B Lab3作业记录"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=http://yatq.xyz/web%E5%9F%BA%E7%A1%80%E7%AC%94%E8%AE%B0/CScourse/CS61B%20Lab3%E4%BD%9C%E4%B8%9A%E8%AE%B0%E5%BD%95/&title=CS61B Lab3作业记录"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=http://yatq.xyz/web%E5%9F%BA%E7%A1%80%E7%AC%94%E8%AE%B0/CScourse/CS61B%20Lab3%E4%BD%9C%E4%B8%9A%E8%AE%B0%E5%BD%95/&is_video=false&description=CS61B Lab3作业记录"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=CS61B Lab3作业记录&body=Check out this article: http://yatq.xyz/web%E5%9F%BA%E7%A1%80%E7%AC%94%E8%AE%B0/CScourse/CS61B%20Lab3%E4%BD%9C%E4%B8%9A%E8%AE%B0%E5%BD%95/"><i class="fa-solid fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=http://yatq.xyz/web%E5%9F%BA%E7%A1%80%E7%AC%94%E8%AE%B0/CScourse/CS61B%20Lab3%E4%BD%9C%E4%B8%9A%E8%AE%B0%E5%BD%95/&title=CS61B Lab3作业记录"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=http://yatq.xyz/web%E5%9F%BA%E7%A1%80%E7%AC%94%E8%AE%B0/CScourse/CS61B%20Lab3%E4%BD%9C%E4%B8%9A%E8%AE%B0%E5%BD%95/&title=CS61B Lab3作业记录"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=http://yatq.xyz/web%E5%9F%BA%E7%A1%80%E7%AC%94%E8%AE%B0/CScourse/CS61B%20Lab3%E4%BD%9C%E4%B8%9A%E8%AE%B0%E5%BD%95/&title=CS61B Lab3作业记录"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=http://yatq.xyz/web%E5%9F%BA%E7%A1%80%E7%AC%94%E8%AE%B0/CScourse/CS61B%20Lab3%E4%BD%9C%E4%B8%9A%E8%AE%B0%E5%BD%95/&title=CS61B Lab3作业记录"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=http://yatq.xyz/web%E5%9F%BA%E7%A1%80%E7%AC%94%E8%AE%B0/CScourse/CS61B%20Lab3%E4%BD%9C%E4%B8%9A%E8%AE%B0%E5%BD%95/&name=CS61B Lab3作业记录&description="><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=http://yatq.xyz/web%E5%9F%BA%E7%A1%80%E7%AC%94%E8%AE%B0/CScourse/CS61B%20Lab3%E4%BD%9C%E4%B8%9A%E8%AE%B0%E5%BD%95/&t=CS61B Lab3作业记录"><i class="fab fa-hacker-news fa-lg" aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+
+    <div id="actions-footer">
+        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fa-solid fa-bars fa-lg" aria-hidden="true"></i> 菜单</a>
+        
+          <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fa-solid fa-list fa-lg" aria-hidden="true"></i> 目录</a>
+        
+        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fa-solid fa-share-alt fa-lg" aria-hidden="true"></i> 分享</a>
+        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa-solid fa-chevron-up fa-lg" aria-hidden="true"></i> 返回顶部</a>
+    </div>
+
+  </div>
+</div>
+
+        
+        <footer id="footer">
+  <div class="footer-left">
+    Copyright &copy;
+    
+    
+    2016-2025
+    y@7q
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+        <!--
+       --><li><a href="/">首页</a></li><!--
+     --><!--
+       --><li><a href="/about/">关于</a></li><!--
+     --><!--
+       --><li><a href="/archives/">归档</a></li><!--
+     --><!--
+       --><li><a target="_blank" rel="noopener" href="http://github.com/probberechts">项目</a></li><!--
+     -->
+      </ul>
+    </nav>
+  </div>
+</footer>
+
+    </div>
+    <!-- styles -->
+
+
+
+  <link rel="preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" crossorigin="anonymous" onload="this.onload=null;this.rel='stylesheet'"/>
+
+
+    <!-- jquery -->
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js" crossorigin="anonymous"></script>
+
+
+
+
+<!-- clipboard -->
+
+  
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.7/clipboard.min.js" crossorigin="anonymous"></script>
+  
+  <script type="text/javascript">
+  $(function() {
+    // copy-btn HTML
+    var btn = "<span class=\"btn-copy tooltipped tooltipped-sw\" aria-label=\"复制到粘贴板！\">";
+    btn += '<i class="fa-regular fa-clone"></i>';
+    btn += '</span>';
+    // mount it!
+    $(".highlight table").before(btn);
+    var clip = new ClipboardJS('.btn-copy', {
+      text: function(trigger) {
+        return Array.from(trigger.nextElementSibling.querySelectorAll('.code')).reduce((str,it)=>str+it.innerText+'\n','')
+      }
+    });
+    clip.on('success', function(e) {
+      e.trigger.setAttribute('aria-label', "复制成功！");
+      e.clearSelection();
+    })
+  })
+  </script>
+
+
+<script src="/js/main.js"></script>
+
+<!-- search -->
+
+<!-- Baidu Analytics -->
+
+<!-- Cloudflare Analytics -->
+
+<!-- Disqus Comments -->
+
+<!-- utterances Comments -->
+
+</body>
+</html>
